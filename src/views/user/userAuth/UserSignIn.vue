@@ -203,12 +203,26 @@ export default defineComponent({
               customClass: {
                 confirmButton: "btn fw-semobold btn-light-danger",
               },
+            }).then(() => {
+              submitButton.value?.removeAttribute("data-kt-indicator");
+              submitButton.value!.disabled = false;
+            });
+          } else {
+            Swal.fire({
+              text: `${error.message}`,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Try again!",
+              heightAuto: false,
+              customClass: {
+                confirmButton: "btn fw-semobold btn-light-danger",
+              },
+            }).then(() => {
+              submitButton.value?.removeAttribute("data-kt-indicator");
+              submitButton.value!.disabled = false;
             });
           }
         });
-
-      submitButton.value?.removeAttribute("data-kt-indicator");
-      submitButton.value!.disabled = false;
     };
     onMounted(() => {
       if (isAuthenticated.value) {
