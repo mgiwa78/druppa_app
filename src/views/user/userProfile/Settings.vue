@@ -495,26 +495,27 @@ import * as Yup from "yup";
 import { useAuthStore } from "@/stores/auth";
 import axios from "axios";
 
-interface UserData {
-  id?: string;
-  avatar?: string;
-  first_name?: string;
-  last_name?: string;
-  phone?: Number;
-  bio?: Number;
-  address?: string;
-  gender?: string;
-  state?: string;
-  institure?: string;
-  edu_role?: string;
-  faculty?: string;
-  dept?: string;
-  lawclinic?: string;
-  affiliate?: string;
-  created_at?: string;
-  email?: string;
-  email_verified_at?: boolean;
-}
+import type { User } from "@/stores/auth";
+// interface UserData {
+//   id?: Number;
+//   avatar?: string;
+//   first_name?: string;
+//   last_name?: string;
+//   phone?: Number;
+//   bio?: Number;
+//   address?: string;
+//   gender?: string;
+//   state?: string;
+//   institure?: string;
+//   edu_role?: string;
+//   faculty?: string;
+//   dept?: string;
+//   lawclinic?: string;
+//   affiliate?: string;
+//   created_at?: string;
+//   email?: string;
+//   email_verified_at?: boolean;
+// }
 
 export default defineComponent({
   name: "account-settings",
@@ -594,15 +595,17 @@ export default defineComponent({
         last_name: "Max",
         phone: 44327,
         email: "mail",
-      } as UserData,
-      setUserData(res: UserData) {
+      } as User,
+      setUserData(res: User) {
         this.userData = { ...res };
       },
     });
 
     onMounted(() => {
       State.userDataSet = true;
-      State.setUserData(user);
+      if (user) {
+        State.setUserData(user);
+      }
     });
 
     const saveChanges1 = async () => {

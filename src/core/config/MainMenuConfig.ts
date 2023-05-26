@@ -1,19 +1,19 @@
-export interface MenuItem {
+export interface MenuItemType {
   heading?: string;
   sectionTitle?: string;
   route?: string;
-  pages?: Array<MenuItem>;
+  pages?: Array<MenuItemType>;
   keenthemesIcon?: string;
   bootstrapIcon?: string;
-  sub?: Array<MenuItem>;
+  sub?: Array<MenuItemType>;
 }
 
-let MainMenuConfig: Array<MenuItem>;
+let MainMenuConfig: Array<MenuItemType>;
 
 const GenerateMenus = (type) => {
   switch (type) {
     case "user":
-      return [
+      MainMenuConfig = [
         {
           pages: [
             {
@@ -46,8 +46,9 @@ const GenerateMenus = (type) => {
           ],
         },
       ];
+      return MainMenuConfig;
     case "admin":
-      return [
+      MainMenuConfig = [
         {
           pages: [
             {
@@ -63,6 +64,7 @@ const GenerateMenus = (type) => {
           ],
         },
       ];
+      return MainMenuConfig;
   }
 };
 export default GenerateMenus;

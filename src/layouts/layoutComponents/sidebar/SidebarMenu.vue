@@ -175,23 +175,14 @@ import UserMenuConfig from "@/core/config/MainMenuConfig";
 import { sidebarMenuIcons } from "@/core/helpers/config";
 import { useI18n } from "vue-i18n";
 import GenerateMenus from "@/core/config/MainMenuConfig";
+import type { MenuItemType } from "@/core/config/MainMenuConfig";
 
 export default defineComponent({
   name: "sidebar-menu",
   components: {},
   setup() {
-    interface MenuItem {
-      heading?: string;
-      sectionTitle?: string;
-      route?: string;
-      pages?: Array<MenuItem>;
-      keenthemesIcon?: string;
-      bootstrapIcon?: string;
-      sub?: Array<MenuItem>;
-    }
-
     const State = reactive({
-      menu: [] as Array<MenuItem>,
+      menu: [] as MenuItemType[] | undefined,
     });
 
     const menu = ref([]);

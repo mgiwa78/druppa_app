@@ -2,8 +2,8 @@ import { ref } from "vue";
 import { defineStore, skipHydrate } from "pinia";
 import ApiService from "@/core/services/ApiService";
 
-export interface User {
-  id: Number;
+interface User {
+  id?: Number;
   avatar?: string;
   first_name?: string;
   last_name?: string;
@@ -23,7 +23,7 @@ export interface User {
   email_verified_at?: boolean;
 }
 
-export const useAuthStore = defineStore("auth", () => {
+const useAuthStore = defineStore("auth", () => {
   const errors = ref({});
   const user = ref<User | null>({} as User);
   const jwt_token = ref(null);
@@ -118,3 +118,5 @@ export const useAuthStore = defineStore("auth", () => {
     setAuth,
   };
 });
+
+export { useAuthStore, type User };
