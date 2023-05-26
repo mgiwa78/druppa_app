@@ -113,8 +113,13 @@ router.beforeEach((to, from, next) => {
 
   // before page access check if page requires authentication
   if (to.meta.middleware == "auth") {
-    if (authStore.isAuthenticated) {
-      next();
+    console.log(to.meta);
+    if (user) {
+      if (user.id) {
+        next();
+      } else {
+        next({ name: "sign-in" });
+      }
     } else {
       next({ name: "sign-in" });
     }

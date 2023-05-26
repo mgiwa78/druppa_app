@@ -140,7 +140,7 @@
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { defineComponent, onMounted, ref, watch } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import { ErrorMessage, Field, Form as VForm } from "vee-validate";
 import useUserStore from "@/stores/user";
 import { useAuthStore } from "@/stores/auth";
