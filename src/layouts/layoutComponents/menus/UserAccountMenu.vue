@@ -16,14 +16,11 @@
         <!--begin::Username-->
         <div class="d-flex flex-column">
           <div class="fw-bold d-flex align-items-center fs-5">
-            Max Smith
-            <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2"
-              >Pro</span
-            >
+            {{ State.userData.first_name + " " + State.userData.last_name }}
           </div>
-          <a href="#" class="fw-semobold text-muted text-hover-primary fs-7"
-            >max@kt.com</a
-          >
+          <span class="fw-semobold text-muted text-hover-primary fs-7">{{
+            State.userData.email
+          }}</span>
         </div>
         <!--end::Username-->
       </div>
@@ -33,16 +30,13 @@
     <!--begin::Menu separator-->
     <div class="separator my-2"></div>
     <!--end::Menu separator-->
-
-    <!--begin::Menu item-->
+    <!-- 
     <div class="menu-item px-5">
       <router-link to="/pages/profile/overview" class="menu-link px-5">
         My Profile
       </router-link>
     </div>
-    <!--end::Menu item-->
 
-    <!--begin::Menu item-->
     <div class="menu-item px-5">
       <router-link to="/pages/profile/overview" class="menu-link px-5">
         <span class="menu-text">My Projects</span>
@@ -53,9 +47,7 @@
         </span>
       </router-link>
     </div>
-    <!--end::Menu item-->
 
-    <!--begin::Menu item-->
     <div
       class="menu-item px-5"
       data-kt-menu-trigger="hover"
@@ -67,33 +59,25 @@
         <span class="menu-arrow"></span>
       </router-link>
 
-      <!--begin::Menu sub-->
       <div class="menu-sub menu-sub-dropdown w-175px py-4">
-        <!--begin::Menu item-->
         <div class="menu-item px-3">
           <router-link to="/pages/profile/overview" class="menu-link px-5">
             Referrals
           </router-link>
         </div>
-        <!--end::Menu item-->
 
-        <!--begin::Menu item-->
         <div class="menu-item px-3">
           <router-link to="/pages/profile/overview" class="menu-link px-5">
             Billing
           </router-link>
         </div>
-        <!--end::Menu item-->
 
-        <!--begin::Menu item-->
         <div class="menu-item px-3">
           <router-link to="/pages/profile/overview" class="menu-link px-5">
             Payments
           </router-link>
         </div>
-        <!--end::Menu item-->
 
-        <!--begin::Menu item-->
         <div class="menu-item px-3">
           <router-link
             to="/pages/profile/overview"
@@ -108,13 +92,9 @@
             ></i>
           </router-link>
         </div>
-        <!--end::Menu item-->
 
-        <!--begin::Menu separator-->
         <div class="separator my-2"></div>
-        <!--end::Menu separator-->
 
-        <!--begin::Menu item-->
         <div class="menu-item px-3">
           <div class="menu-content px-3">
             <label
@@ -133,48 +113,34 @@
             </label>
           </div>
         </div>
-        <!--end::Menu item-->
       </div>
-      <!--end::Menu sub-->
     </div>
-    <!--end::Menu item-->
 
-    <!--begin::Menu item-->
     <div class="menu-item px-5">
       <router-link to="/pages/profile/overview" class="menu-link px-5">
         My Statements
       </router-link>
     </div>
-    <!--end::Menu item-->
 
-    <!--begin::Menu separator-->
     <div class="separator my-2"></div>
-    <!--end::Menu separator-->
 
-    <!--begin::Menu item-->
 
-    <!--end::Menu item-->
 
-    <!--begin::Menu item-->
     <div class="menu-item px-5 my-1">
       <router-link to="/pages/profile/overview" class="menu-link px-5">
         Account Settings
       </router-link>
-    </div>
-    <!--end::Menu item-->
+    </div> -->
 
-    <!--begin::Menu item-->
     <div class="menu-item px-5">
       <a @click="signOut()" class="menu-link px-5"> Sign Out </a>
     </div>
-    <!--end::Menu item-->
   </div>
-  <!--end::Menu-->
 </template>
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, onMounted, reactive } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
@@ -183,6 +149,40 @@ export default defineComponent({
   name: "kt-user-menu",
   components: {},
   setup() {
+    const AuthStore = useAuthStore();
+    const { user } = AuthStore;
+    type UserData = {
+      first_name?: string;
+      last_name?: string;
+      phone?: Number;
+      bio?: Number;
+      address?: string;
+      gender?: string;
+      state?: string;
+      institure?: string;
+      edu_role?: string;
+      faculty?: string;
+      dept?: string;
+      lawclinic?: string;
+      affiliate?: string;
+      created_at?: string;
+      email?: string;
+      email_verified_at?: boolean;
+    };
+
+    const State = reactive({
+      userDataSet: false,
+      userData: {} as UserData,
+      setUserData(res: UserData) {
+        this.userData = { ...res };
+      },
+    });
+    onMounted(() => {
+      if (user) {
+        State.userDataSet = true;
+        State.setUserData(user);
+      }
+    });
     const router = useRouter();
     const i18n = useI18n();
     const store = useAuthStore();
@@ -206,6 +206,7 @@ export default defineComponent({
       setLang,
       currentLanguage,
       getAssetPath,
+      State,
     };
   },
 });
