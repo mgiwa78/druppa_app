@@ -196,7 +196,7 @@ export default defineComponent({
           router.push({ name: "dashboard" });
         })
         .catch((error) => {
-          if (error.response.data.error == "Invalid User") {
+          if (error.response.data.message == "User does not exist") {
             Swal.fire({
               text: "Invalid Email or Password",
               icon: "error",
