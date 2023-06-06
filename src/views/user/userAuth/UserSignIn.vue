@@ -7,7 +7,10 @@
       id="kt_login_signin_form"
       @submit="onSubmitLogin"
       :validation-schema="login"
-      :initial-values="{ email: 'mgiwa@gmail.com', password: 'Password' }"
+      :initial-values="{
+        email: 'teastaa@test.com',
+        password: 'Password',
+      }"
     >
       <!--begin::Heading-->
       <div class="text-center mb-10">
@@ -183,13 +186,13 @@ export default defineComponent({
         submitButton.value.setAttribute("data-kt-indicator", "on");
       }
       await axios
-        .post("http://localhost/druppa-api/index.php/login", {
+        .post(API_URL + "login", {
           email: values.email,
           password: values.password,
         })
         .then((response) => {
           console.log(response);
-          setAuth(response.data.userCredentials, response.data.jwt);
+          setAuth(response.data.user, response.data.user.verify_token);
           router.push({ name: "dashboard" });
         })
         .catch((error) => {

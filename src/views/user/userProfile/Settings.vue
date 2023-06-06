@@ -19,7 +19,11 @@
     <!--begin::Card header-->
 
     <!--begin::Content-->
-    <div id="kt_account_profile_details" class="collapse show">
+    <div
+      v-if="State.userData"
+      id="kt_account_profile_details"
+      class="collapse show"
+    >
       <!--begin::Form-->
       <VForm
         id="kt_account_profile_details_form"
@@ -44,45 +48,32 @@
               <div
                 class="image-input image-input-outline"
                 data-kt-image-input="true"
-                :style="{
-                  backgroundImage: `url(${getAssetPath(
-                    '/media/avatars/blank.png'
-                  )})`,
-                }"
               >
                 <!--begin::Preview existing avatar-->
-                <div
-                  class="image-input-wrapper w-125px h-125px"
-                  :style="`background-image: url(${State.userData.avatar})`"
-                ></div>
                 <!--end::Preview existing avatar-->
 
                 <!--begin::Label-->
-                <label
-                  class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                  data-kt-image-input-action="change"
-                  data-bs-toggle="tooltip"
-                  title="Change avatar"
-                >
-                  <i class="bi bi-pencil-fill fs-7"></i>
-
+                <div class="image-input image-input-outline">
                   <!--begin::Inputs-->
-                  <input type="file" name="avatar" accept=".png, .jpg, .jpeg" />
-                  <input type="hidden" name="avatar_remove" />
-                  <!--end::Inputs-->
-                </label>
-                <!--end::Label-->
+                  <span
+                    class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                    data-kt-image-input-action="remove"
+                    data-bs-toggle="tooltip"
+                    @click="removeImage()"
+                    title="Remove avatar"
+                  >
+                    <i class="bi bi-x fs-2"></i>
+                  </span>
 
+                  <input
+                    type="file"
+                    @change="State.onChangeFileUpload"
+                    name="avatar"
+                    accept=".png, .jpg, .jpeg"
+                  />
+                </div>
                 <!--begin::Remove-->
-                <span
-                  class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                  data-kt-image-input-action="remove"
-                  data-bs-toggle="tooltip"
-                  @click="removeImage()"
-                  title="Remove avatar"
-                >
-                  <i class="bi bi-x fs-2"></i>
-                </span>
+
                 <!--end::Remove-->
               </div>
               <!--end::Image input-->
@@ -106,41 +97,26 @@
             <!--begin::Col-->
             <div class="col-lg-8">
               <!--begin::Row-->
-              <div class="row">
-                <!--begin::Col-->
-                <div class="col-lg-6 fv-row">
-                  <Field
-                    type="text"
-                    name="fname"
-                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                    placeholder="First name"
-                    v-model="State.userData.first_name"
-                  />
-                  <div class="fv-plugins-message-container">
-                    <div class="fv-help-block">
-                      <ErrorMessage name="fname" />
-                    </div>
+              <!--begin::Col-->
+              <div class="col-lg-6 fv-row">
+                <Field
+                  type="text"
+                  name="fname"
+                  class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                  placeholder="Full name"
+                  v-model="State.userData.name"
+                />
+                <div class="fv-plugins-message-container">
+                  <div class="fv-help-block">
+                    <ErrorMessage name="fname" />
                   </div>
                 </div>
-                <!--end::Col-->
-
-                <!--begin::Col-->
-                <div class="col-lg-6 fv-row">
-                  <Field
-                    type="text"
-                    name="lname"
-                    class="form-control form-control-lg form-control-solid"
-                    placeholder="Last name"
-                    v-model="State.userData.last_name"
-                  />
-                  <div class="fv-plugins-message-container">
-                    <div class="fv-help-block">
-                      <ErrorMessage name="lname" />
-                    </div>
-                  </div>
-                </div>
-                <!--end::Col-->
               </div>
+              <!--end::Col-->
+
+              <!--begin::Col-->
+
+              <!--end::Col-->
               <!--end::Row-->
             </div>
             <!--end::Col-->
@@ -168,7 +144,7 @@
                 name="phone"
                 class="form-control form-control-lg form-control-solid"
                 placeholder="No Phone Number"
-                v-model="State.userData.phone"
+                v-model="State.userData.phone_number"
               />
               <div class="fv-plugins-message-container">
                 <div class="fv-help-block">
@@ -178,15 +154,70 @@
             </div>
             <!--end::Col-->
           </div>
-          <!--end::Input group-->
 
-          <!--end::Input group-->
+          <div class="row mb-6">
+            <!--begin::Label-->
+            <label class="col-lg-4 col-form-label fw-semobold fs-6">
+              <span class="required">Address</span>
 
-          <!--end::Input group-->
+              <i
+                class="fas fa-exclamation-circle ms-1 fs-7"
+                data-bs-toggle="tooltip"
+                title="Address must be valid"
+              ></i>
+            </label>
+            <!--end::Label-->
+
+            <!--begin::Col-->
+            <div class="col-lg-8 fv-row">
+              <Field
+                type="text"
+                name="address"
+                class="form-control form-control-lg form-control-solid"
+                placeholder="Set Your delivery address"
+                v-model="State.userData.address"
+              />
+              <div class="fv-plugins-message-container">
+                <div class="fv-help-block">
+                  <ErrorMessage name="type" />
+                </div>
+              </div>
+            </div>
+            <!--end::Col-->
+          </div>
+
+          <div class="row mb-6">
+            <!--begin::Label-->
+            <label class="col-lg-4 col-form-label fw-semobold fs-6">
+              <span class="required">State</span>
+
+              <i
+                class="fas fa-exclamation-circle ms-1 fs-7"
+                data-bs-toggle="tooltip"
+                title="State must be valid"
+              ></i>
+            </label>
+            <!--end::Label-->
+
+            <!--begin::Col-->
+            <div class="col-lg-8 fv-row">
+              <Field
+                type="text"
+                name="state"
+                class="form-control form-control-lg form-control-solid"
+                placeholder="Set Your delivery state"
+                v-model="State.userData.state"
+              />
+              <div class="fv-plugins-message-container">
+                <div class="fv-help-block">
+                  <ErrorMessage name="state" />
+                </div>
+              </div>
+            </div>
+            <!--end::Col-->
+          </div>
         </div>
-        <!--end::Card body-->
 
-        <!--begin::Actions-->
         <div class="card-footer d-flex justify-content-end py-6 px-9">
           <button
             type="reset"
@@ -201,7 +232,8 @@
             ref="submitButton1"
             class="btn btn-primary"
           >
-            <span class="indicator-label"> Save Changes </span>
+            <span class="indicator-label"> Update </span>
+
             <span class="indicator-progress">
               Please wait...
               <span
@@ -242,7 +274,7 @@
           <div id="kt_signin_email" :class="{ 'd-none': emailFormDisplay }">
             <div class="fs-4 fw-bolder mb-1">Email Address</div>
             <div class="fs-6 fw-semobold text-gray-600">
-              support@keenthemes.com
+              {{ State.userData.email }}
             </div>
           </div>
 
@@ -494,28 +526,8 @@ import Swal from "sweetalert2/dist/sweetalert2.js";
 import * as Yup from "yup";
 import { useAuthStore } from "@/stores/auth";
 import axios from "axios";
-
+import __CONSTANTS__ from "@/constants";
 import type { User } from "@/stores/auth";
-// interface UserData {
-//   id?: Number;
-//   avatar?: string;
-//   first_name?: string;
-//   last_name?: string;
-//   phone?: Number;
-//   bio?: Number;
-//   address?: string;
-//   gender?: string;
-//   state?: string;
-//   institure?: string;
-//   edu_role?: string;
-//   faculty?: string;
-//   dept?: string;
-//   lawclinic?: string;
-//   affiliate?: string;
-//   created_at?: string;
-//   email?: string;
-//   email_verified_at?: boolean;
-// }
 
 export default defineComponent({
   name: "account-settings",
@@ -526,9 +538,10 @@ export default defineComponent({
   },
   setup() {
     const AuthStore = useAuthStore();
-    const { user } = AuthStore;
+    const { user, refreshProfile } = AuthStore;
+    const { API_URL } = __CONSTANTS__;
 
-    const submitButton1 = ref<HTMLElement | null>(null);
+    const submitButton1 = ref<HTMLButtonElement | null>(null);
     const submitButton2 = ref<HTMLElement | null>(null);
     const submitButton3 = ref<HTMLElement | null>(null);
     const submitButton4 = ref<HTMLElement | null>(null);
@@ -540,9 +553,10 @@ export default defineComponent({
     const passwordFormDisplay = ref(false);
 
     const userDataValidator = Yup.object().shape({
-      fname: Yup.string().required().label("First name"),
-      lname: Yup.string().required().label("Last name"),
+      fname: Yup.string().required().label("Full name"),
       phone: Yup.string().label("Contact phone").nullable(),
+      state: Yup.string().label("State").nullable(),
+      address: Yup.string().label("Address").nullable(),
     });
 
     const changeEmail = Yup.object().shape({
@@ -561,20 +575,36 @@ export default defineComponent({
     });
 
     const updateProfile = async () => {
+      if (submitButton1.value) {
+        // eslint-disable-next-line
+        submitButton1.value!.disabled = true;
+        // Activate indicator
+        submitButton1.value.setAttribute("data-kt-indicator", "on");
+      }
       if (!user) return;
+      const formData = new FormData();
+      formData.append("id", `${State.userData.id}`);
+
+      formData.append("name", State.userData.name!);
+      formData.append("type", State.userData.type!);
+      formData.append("gender", State.userData.gender!);
+      formData.append("phone_number", `${State.userData.phone_number}`);
+      formData.append("address", State.userData.address!);
+      formData.append("state", State.userData.state!);
+
+      if (State.newProfile) {
+        console.log(State.newProfile[0]);
+        formData.append("profile", State.newProfile[0]);
+      }
+
       await axios
-        .post(
-          `http://localhost/druppa-api/index.php/users/editProfile/${user.id}`,
-          {
-            ...State.userData,
-          }
-        )
+        .post(API_URL + `customer/updateProfile`, formData)
         .then((response) => {
           console.log(response);
         })
         .catch((error) => {
           if (error.response.data.error == "Invalid User") {
-            Swal.fire({
+            return Swal.fire({
               text: "Invalid Email or Password",
               icon: "error",
               buttonsStyling: false,
@@ -589,15 +619,29 @@ export default defineComponent({
     };
     const State = reactive({
       userDataSet: false,
+      newProfile: null as FileList | null,
       userData: {
-        avatar: getAssetPath("media/avatars/300-1.jpg"),
-        first_name: "Max",
-        last_name: "Max",
-        phone: 44327,
-        email: "mail",
+        id: 0,
+        profile: "",
+        name: " ",
+        type: "",
+        phone_number: 0,
+        address: "",
+        gender: "",
+        state: "",
+        created_at: "",
+        email: "",
+        email_verified_at: false,
       } as User,
       setUserData(res: User) {
         this.userData = { ...res };
+      },
+      onChangeFileUpload({
+        target: { files },
+      }: {
+        target: { files: FileList };
+      }) {
+        this.newProfile = files;
       },
     });
 
@@ -611,7 +655,10 @@ export default defineComponent({
     const saveChanges1 = async () => {
       try {
         await updateProfile();
-        // submitButton1.value.setAttribute("data-kt-indicator", "on");
+        await refreshProfile(State.userData.id).then(() => {
+          submitButton1.value?.removeAttribute("data-kt-indicator");
+          submitButton1.value!.disabled = false;
+        });
       } catch (error) {
         console.log(error);
       }
@@ -620,7 +667,6 @@ export default defineComponent({
 
     const updateEmail = () => {
       if (updateEmailButton.value) {
-        // Activate indicator
         updateEmailButton.value.setAttribute("data-kt-indicator", "on");
 
         setTimeout(() => {
@@ -656,7 +702,9 @@ export default defineComponent({
     };
 
     const removeImage = () => {
-      State.userData.avatar = "/media/avatars/blank.png";
+      if (State.userData) {
+        State.userData.profile = "/media/avatars/blank.png";
+      }
     };
 
     return {

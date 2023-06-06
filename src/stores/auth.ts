@@ -1,23 +1,20 @@
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { defineStore, skipHydrate } from "pinia";
 import ApiService from "@/core/services/ApiService";
+import { useLocalStorage } from "@vueuse/core";
+import axios from "axios";
+import __CONSTANTS__ from "@/constants";
 
+const { API_URL } = __CONSTANTS__;
 interface User {
-  id?: Number;
-  avatar?: string;
-  first_name?: string;
-  last_name?: string;
-  phone?: Number;
-  bio?: Number;
+  id?: number;
+  profile?: string;
+  name: string;
+  type?: string;
+  phone_number?: Number;
   address?: string;
   gender?: string;
   state?: string;
-  institure?: string;
-  edu_role?: string;
-  faculty?: string;
-  dept?: string;
-  lawclinic?: string;
-  affiliate?: string;
   created_at?: string;
   email?: string;
   email_verified_at?: boolean;
@@ -25,25 +22,40 @@ interface User {
 
 const useAuthStore = defineStore("auth", () => {
   const errors = ref({});
-  const user = ref<User | null>({} as User);
+  const userPersist = useLocalStorage("userPersist", "");
   const jwt_token = ref(null);
-  const isAuthenticated = ref(user.value ? true : null);
 
   function setAuth(authUser: User, token) {
     isAuthenticated.value = true;
-    user.value = authUser;
+    userPersist.value = JSON.stringify(authUser);
     errors.value = {};
     jwt_token.value = token;
-    console.log(authUser);
   }
 
+  const refreshProfile = async (id: number | string | undefined) => {
+    const authUser = await axios
+      .get(API_URL + `customer/fetchProfile/${id}`)
+      .then((response) => {
+        return response.data;
+      });
+
+    user.effect;
+    isAuthenticated.value = true;
+    userPersist.value = JSON.stringify(authUser.user);
+  };
+
+  const user = computed(() =>
+    userPersist.value ? JSON.parse(userPersist.value) : null
+  );
+
+  const isAuthenticated = ref(user.value ? true : null);
   function setError(error: any) {
     errors.value = { ...error };
   }
 
   function purgeAuth() {
     isAuthenticated.value = false;
-    user.value = null;
+    userPersist.value = null;
     errors.value = [];
     jwt_token.value = null;
   }
@@ -116,6 +128,7 @@ const useAuthStore = defineStore("auth", () => {
     forgotPassword,
     // verifyAuth,
     setAuth,
+    refreshProfile,
   };
 });
 

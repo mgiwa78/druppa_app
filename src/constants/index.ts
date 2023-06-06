@@ -1,11 +1,8 @@
 import Swal from "sweetalert2";
+import axios from "axios";
 
-const API_URL: string = "http://localhost/druppa-api/index.php/";
-("http://localhost/druppa-api/index.php/login");
-// const API_URL: string = 'https://nulai-compass.com/api/';
-// const ASSETS_URL: string = 'https://nulai-compass.com/api';
-// const WEBSOCKETS_KEY: string = 'myKey';
-// const WEBSOCKETS_SERVER: string = '127.0.0.1';
+const API_URL: string = "http://localhost:8000/api/";
+const ASSETS_URL: string = "http://127.0.0.1:8000";
 
 const successAlert = async (message: string) => {
   await Swal.fire({
@@ -117,8 +114,8 @@ const confirmDate = (dateString: any) => {
 
 const __CONSTANTS__ = {
   API_URL,
-  // WEBSOCKETS_KEY,
-  // WEBSOCKETS_SERVER,
+
+  ASSETS_URL,
   successAlert,
   errorAlert,
   badInternetAlert,

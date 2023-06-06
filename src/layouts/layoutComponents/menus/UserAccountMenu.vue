@@ -9,15 +9,26 @@
       <div class="menu-content d-flex align-items-center px-3">
         <!--begin::Avatar-->
         <div class="symbol symbol-50px me-5">
-          <img alt="Logo" :src="getAssetPath('media/avatars/300-1.jpg')" />
+          <img
+            alt="Logo"
+            :src="
+              State.userData.profile
+                ? `${ASSETS_URL + State.userData.profile}`
+                : getAssetPath('media/avatars/blank.png')
+            "
+          />
         </div>
         <!--end::Avatar-->
 
         <!--begin::Username-->
         <div class="d-flex flex-column">
           <div class="fw-bold d-flex align-items-center fs-5">
-            {{ State.userData.first_name + " " + State.userData.last_name }}
+            {{ State.userData.name }}
           </div>
+          <span
+            class="btn btn-sm btn-light-success fw-semobold text-muted text-hover-primary fs-7 fw-bold ms-2 fs-8 py-1 px-3"
+            >{{ State.userData.type }}</span
+          >
           <span class="fw-semobold text-muted text-hover-primary fs-7">{{
             State.userData.email
           }}</span>
@@ -30,13 +41,14 @@
     <!--begin::Menu separator-->
     <div class="separator my-2"></div>
     <!--end::Menu separator-->
-    <!-- 
+
     <div class="menu-item px-5">
-      <router-link to="/pages/profile/overview" class="menu-link px-5">
+      <router-link to="/profile/view" class="menu-link px-5">
         My Profile
       </router-link>
     </div>
 
+    <!-- 
     <div class="menu-item px-5">
       <router-link to="/pages/profile/overview" class="menu-link px-5">
         <span class="menu-text">My Projects</span>
@@ -144,6 +156,8 @@ import { computed, defineComponent, onMounted, reactive } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
+import type { User } from "@/stores/auth";
+import __CONSTANTS__ from "@/constants";
 
 export default defineComponent({
   name: "kt-user-menu",
@@ -151,29 +165,12 @@ export default defineComponent({
   setup() {
     const AuthStore = useAuthStore();
     const { user } = AuthStore;
-    type UserData = {
-      first_name?: string;
-      last_name?: string;
-      phone?: Number;
-      bio?: Number;
-      address?: string;
-      gender?: string;
-      state?: string;
-      institure?: string;
-      edu_role?: string;
-      faculty?: string;
-      dept?: string;
-      lawclinic?: string;
-      affiliate?: string;
-      created_at?: string;
-      email?: string;
-      email_verified_at?: boolean;
-    };
+    const { ASSETS_URL } = __CONSTANTS__;
 
     const State = reactive({
       userDataSet: false,
-      userData: {} as UserData,
-      setUserData(res: UserData) {
+      userData: {} as User,
+      setUserData(res: User) {
         this.userData = { ...res };
       },
     });
@@ -207,6 +204,7 @@ export default defineComponent({
       currentLanguage,
       getAssetPath,
       State,
+      ASSETS_URL,
     };
   },
 });

@@ -9,7 +9,14 @@
           <div
             class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative"
           >
-            <img :src="getAssetPath('media/avatars/300-1.jpg')" alt="image" />
+            <img
+              :src="
+                State.userData.profile
+                  ? `${ASSETS_URL + State.userData.profile}`
+                  : getAssetPath('media/avatars/blank.png')
+              "
+              alt="image"
+            />
             <div
               class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px"
             ></div>
@@ -30,15 +37,12 @@
                 <a
                   href="#"
                   class="text-gray-800 text-hover-primary fs-2 fw-bold me-1"
-                  >{{ user.first_name }} {{ user.last_name }}</a
+                  >{{ State.userData.name }}</a
                 >
 
-                <a
-                  href="#"
+                <span
                   class="btn btn-sm btn-light-success fw-bold ms-2 fs-8 py-1 px-3"
-                  data-bs-toggle="modal"
-                  data-bs-target="#kt_modal_upgrade_plan"
-                  >{{ user.role_id === 2 ? "Admin" : "user" }}</a
+                  >{{ State.userData.type }}</span
                 >
               </div>
               <!--end::Name-->
@@ -50,21 +54,25 @@
                   class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2"
                 >
                   <KTIcon icon-name="profile-circle" icon-class="fs-4 me-1" />
-                  {{ !user.gender && "No Gender Set" }}
+                  {{ State.userData.gender }}
                 </a>
                 <a
                   href="#"
                   class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2"
                 >
                   <KTIcon icon-name="geolocation" icon-class="fs-4 me-1" />
-                  {{ !user.address && "No Address" }}
+                  {{
+                    State.userData.address
+                      ? State.userData.address
+                      : "Set your delivey address"
+                  }}
                 </a>
                 <a
                   href="#"
                   class="d-flex align-items-center text-gray-400 text-hover-primary mb-2"
                 >
                   <KTIcon icon-name="sms" icon-class="fs-4 me-1" />
-                  {{ user.email ? user.email : "No email" }}
+                  {{ State.userData.email ? user.email : "No email" }}
                 </a>
               </div>
               <!--end::Info-->
@@ -208,8 +216,8 @@
 import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent, onMounted, reactive } from "vue";
 import { useAuthStore } from "@/stores/auth";
-
-const AuthStore = useAuthStore();
+import type { User } from "@/stores/auth";
+import __CONSTANTS__ from "@/constants";
 
 export default defineComponent({
   name: "kt-account",
@@ -217,27 +225,12 @@ export default defineComponent({
   setup() {
     const AuthStore = useAuthStore();
     const { user } = AuthStore;
-    type UserData = {
-      name?: String;
-      phone?: Number;
-      bio?: Number;
-      address?: String;
-      gender?: String;
-      state?: String;
-      institure?: String;
-      edu_role?: String;
-      faculty?: String;
-      dept?: String;
-      lawclinic?: String;
-      affiliate?: String;
-      created_at?: String;
-      email?: String;
-    };
+    const { ASSETS_URL } = __CONSTANTS__;
 
     const State = reactive({
       userDataSet: false,
-      userData: {} as UserData,
-      setUserData(res: UserData) {
+      userData: {} as User,
+      setUserData(res: User) {
         this.userData = { ...res };
       },
     });
@@ -253,6 +246,7 @@ export default defineComponent({
       getAssetPath,
       user,
       State,
+      ASSETS_URL,
     };
   },
 });

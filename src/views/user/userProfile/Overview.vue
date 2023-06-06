@@ -10,9 +10,7 @@
       <!--end::Card title-->
 
       <!--begin::Action-->
-      <router-link
-        to="/account/settings"
-        class="btn btn-primary align-self-center"
+      <router-link to="/profile/edit" class="btn btn-primary align-self-center"
         >Edit Profile</router-link
       >
       <!--end::Action-->
@@ -29,9 +27,7 @@
 
         <!--begin::Col-->
         <div class="col-lg-8">
-          <span class="fw-bold fs-6 text-dark">{{
-            State.userData.first_name + " " + State.userData.last_name
-          }}</span>
+          <span class="fw-bold fs-6 text-dark">{{ State.userData.name }}</span>
         </div>
         <!--end::Col-->
       </div>
@@ -57,7 +53,9 @@
         <!--begin::Col-->
         <div class="col-lg-8 d-flex align-items-center">
           <span class="fw-bold fs-6 me-2">{{
-            State.userData.phone ? State.userData.phone : "No Phone Number"
+            State.userData.phone_number
+              ? State.userData.phone_number
+              : "No Phone Number"
           }}</span>
 
           <!-- <span class="badge badge-success">Verified</span> -->
@@ -83,6 +81,58 @@
         </div>
         <!--end::Col-->
       </div>
+      <div class="row mb-7">
+        <!--begin::Label-->
+        <label class="col-lg-4 fw-semobold text-muted">
+          Address
+          <i
+            class="fas fa-exclamation-circle ms-1 fs-7"
+            v-tooltip
+            title="Address must be valid"
+          ></i>
+        </label>
+        <!--end::Label-->
+
+        <!--begin::Col-->
+        <div class="col-lg-8 d-flex align-items-center">
+          <span class="fw-bold fs-6 me-2">{{
+            State.userData.address ? State.userData.address : "No Address"
+          }}</span>
+
+          <!-- <span class="badge badge-success">Verified</span> -->
+        </div>
+        <!--end::Col-->
+      </div>
+      <div class="row mb-7">
+        <!--begin::Label-->
+        <label class="col-lg-4 fw-semobold text-muted"> Gender </label>
+        <!--end::Label-->
+
+        <!--begin::Col-->
+        <div class="col-lg-8 d-flex align-items-center">
+          <span class="fw-bold fs-6 me-2 capitalize">{{
+            State.userData.gender ? State.userData.gender : "No Gender"
+          }}</span>
+
+          <!-- <span class="badge badge-success">Verified</span> -->
+        </div>
+        <!--end::Col-->
+      </div>
+      <div class="row mb-7">
+        <!--begin::Label-->
+        <label class="col-lg-4 fw-semobold text-muted"> State </label>
+        <!--end::Label-->
+
+        <!--begin::Col-->
+        <div class="col-lg-8 d-flex align-items-center">
+          <span class="fw-bold fs-6 me-2">{{
+            State.userData.state ? State.userData.state : "No State"
+          }}</span>
+
+          <!-- <span class="badge badge-success">Verified</span> -->
+        </div>
+        <!--end::Col-->
+      </div>
       <!--end::Input group-->
 
       <!--begin::Input group-->
@@ -103,7 +153,7 @@
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent, onMounted, reactive } from "vue";
-
+import type { User } from "@/stores/auth";
 import { useAuthStore } from "@/stores/auth";
 
 export default defineComponent({
@@ -113,29 +163,11 @@ export default defineComponent({
   setup() {
     const AuthStore = useAuthStore();
     const { user } = AuthStore;
-    type UserData = {
-      first_name?: string;
-      last_name?: string;
-      phone?: Number;
-      bio?: Number;
-      address?: string;
-      gender?: string;
-      state?: string;
-      institure?: string;
-      edu_role?: string;
-      faculty?: string;
-      dept?: string;
-      lawclinic?: string;
-      affiliate?: string;
-      created_at?: string;
-      email?: string;
-      email_verified_at?: boolean;
-    };
 
     const State = reactive({
       userDataSet: false,
-      userData: {} as UserData,
-      setUserData(res: UserData) {
+      userData: {} as User,
+      setUserData(res: User) {
         this.userData = { ...res };
       },
     });
