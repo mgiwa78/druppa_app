@@ -78,6 +78,7 @@ import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
 import KTHeaderMenu from "@/layouts/layoutComponents/header/menu/Menu.vue";
 import KTHeaderNavbar from "@/layouts/layoutComponents/header/Navbar.vue";
+
 import {
   headerDisplay,
   headerWidthFluid,

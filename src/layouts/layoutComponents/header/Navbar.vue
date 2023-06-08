@@ -101,9 +101,11 @@
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
 import { computed, defineComponent, onMounted, reactive } from "vue";
+
 // import KTSearch from "@/layouts/layoutComponents/search/Search.vue";
 // import KTNotificationMenu from "@/layouts/layoutComponents/menus/NotificationsMenu.vue";
 // import KTQuickLinksMenu from "@/layouts/layoutComponents/menus/QuickLinksMenu.vue";
+
 import KTUserMenu from "@/layouts/layoutComponents/menus/UserAccountMenu.vue";
 import KTThemeModeSwitcher from "@/layouts/layoutComponents/theme-mode/ThemeModeSwitcher.vue";
 import { ThemeModeComponent } from "@/assets/ts/layout";

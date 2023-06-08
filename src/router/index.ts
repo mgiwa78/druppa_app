@@ -21,7 +21,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/user/userDashboard/UserDashboard.vue"),
         meta: {
           pageTitle: "Dashboard",
-          breadcrumbs: ["Dashboards"],
+          breadcrumbs: ["Dashboard"],
         },
       },
       {
@@ -30,7 +30,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/user/userProfile/Profile.vue"),
         meta: {
           pageTitle: "Dashboard",
-          breadcrumbs: ["Dashboards"],
+          breadcrumbs: ["Profile"],
         },
         children: [
           {
@@ -52,6 +52,33 @@ const routes: Array<RouteRecordRaw> = [
             },
           },
         ],
+      },
+      {
+        path: "/customers",
+        name: "Customers",
+        component: () => import("@/components/admin/CustomerListings.vue"),
+        meta: {
+          pageTitle: "Customers",
+          breadcrumbs: ["Customers"],
+        },
+      },
+      {
+        path: "/drivers",
+        name: "Drivers",
+        component: () => import("@/components/admin/DriverListings.vue"),
+        meta: {
+          pageTitle: "Drivers",
+          breadcrumbs: ["Drivers"],
+        },
+      },
+      {
+        path: "/admin",
+        name: "Admin",
+        component: () => import("@/components/admin/AdminListings.vue"),
+        meta: {
+          pageTitle: "Admin",
+          breadcrumbs: ["Admin", "Users"],
+        },
       },
     ],
   },

@@ -1,5 +1,7 @@
 <template>
-  <div class="row g-5 g-xl-10 mb-5 mb-xl-10"></div>
+  <div v-if="true">
+    <AdminDashboard />
+  </div>
 </template>
 
 <script lang="ts">
@@ -7,14 +9,16 @@ import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent, onMounted } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import router from "@/router";
+import type { User } from "@/stores/auth";
+import AdminDashboard from "@/components/admin/AdminDashboard.vue";
 
 export default defineComponent({
   name: "main-dashboard",
-  components: {},
+  components: { AdminDashboard },
 
   setup() {
     const AuthStore = useAuthStore();
-    const { user } = AuthStore;
+    const { user }: { user: User } = AuthStore;
 
     onMounted(() => {
       if (!user.email) {
@@ -23,6 +27,7 @@ export default defineComponent({
     });
     return {
       getAssetPath,
+      user,
     };
   },
 });

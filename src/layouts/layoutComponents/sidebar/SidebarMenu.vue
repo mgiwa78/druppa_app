@@ -26,7 +26,7 @@
           </div>
           <!--end:Menu content-->
         </div>
-        <template v-for="(item, i) in State.menu" :key="i">
+        <template v-for="(item, i) in allpages" :key="i">
           <div v-if="item.heading" class="menu-item pt-5">
             <div class="menu-content">
               <span class="menu-heading fw-bold text-uppercase fs-7">
@@ -169,13 +169,14 @@
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { defineComponent, onMounted, reactive, ref } from "vue";
+import { computed, defineComponent, onMounted, reactive, ref } from "vue";
 import { useRoute } from "vue-router";
 import UserMenuConfig from "@/core/config/MainMenuConfig";
 import { sidebarMenuIcons } from "@/core/helpers/config";
 import { useI18n } from "vue-i18n";
 import GenerateMenus from "@/core/config/MainMenuConfig";
 import type { MenuItemType } from "@/core/config/MainMenuConfig";
+import { useAuthStore } from "@/stores/auth";
 
 export default defineComponent({
   name: "sidebar-menu",
@@ -184,8 +185,10 @@ export default defineComponent({
     const State = reactive({
       menu: [] as MenuItemType[] | undefined,
     });
+    const AuthStore = useAuthStore();
 
-    const menu = ref([]);
+    const { user } = AuthStore;
+
     const { t, te } = useI18n();
     const route = useRoute();
     const scrollElRef = ref<null | HTMLElement>(null);
@@ -194,9 +197,11 @@ export default defineComponent({
       if (scrollElRef.value) {
         scrollElRef.value.scrollTop = 0;
       }
-      const allpages = GenerateMenus("user");
+      const allpages = GenerateMenus(user.type);
       State.menu = allpages;
     });
+
+    const allpages = computed(() => GenerateMenus(user.type));
 
     const translate = (text: string) => {
       if (te(text)) {
@@ -217,6 +222,7 @@ export default defineComponent({
       sidebarMenuIcons,
       translate,
       getAssetPath,
+      allpages,
     };
   },
 });

@@ -1,5 +1,5 @@
 <template>
-  <template v-for="(item, i) in State.menu" :key="i">
+  <template v-for="(item, i) in allpages" :key="i">
     <template v-if="!item.heading">
       <template v-for="(menuItem, j) in item.pages" :key="j">
         <div v-if="menuItem.heading" class="menu-item me-lg-1">
@@ -145,7 +145,7 @@
 <script lang="ts">
 import type { MenuItemType } from "@/core/config/MainMenuConfig";
 import { getAssetPath } from "@/core/helpers/assets";
-import { defineComponent, onMounted, reactive } from "vue";
+import { computed, defineComponent, onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
 import UserMenuConfig from "@/core/config/MainMenuConfig";
 
@@ -153,6 +153,7 @@ import { useI18n } from "vue-i18n";
 import MainMenuConfig from "@/core/config/MainMenuConfig";
 import { headerMenuIcons } from "@/core/helpers/config";
 import GenerateMenus from "@/core/config/MainMenuConfig";
+import { useAuthStore } from "@/stores/auth";
 
 export default defineComponent({
   name: "KTMenu",
@@ -160,6 +161,10 @@ export default defineComponent({
   setup() {
     const { t, te } = useI18n();
     const route = useRoute();
+
+    const AuthStore = useAuthStore();
+
+    const { user } = AuthStore;
 
     const hasActiveChildren = (match: string) => {
       return route.path.indexOf(match) !== -1;
@@ -176,10 +181,9 @@ export default defineComponent({
       }
     };
 
-    onMounted(() => {
-      const allpages = GenerateMenus("user");
-      State.menu = allpages;
-    });
+    const allpages = computed(() => GenerateMenus(user.type));
+
+    console.log(allpages.value);
 
     return {
       hasActiveChildren,
@@ -188,6 +192,7 @@ export default defineComponent({
       translate,
       getAssetPath,
       State,
+      allpages,
     };
   },
 });
