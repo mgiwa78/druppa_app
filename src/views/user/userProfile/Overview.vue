@@ -27,7 +27,9 @@
 
         <!--begin::Col-->
         <div class="col-lg-8">
-          <span class="fw-bold fs-6 text-dark">{{ State.userData.name }}</span>
+          <span class="fw-bold fs-6 text-dark">{{
+            State.userData.firstName + " " + State.userData.lastName
+          }}</span>
         </div>
         <!--end::Col-->
       </div>

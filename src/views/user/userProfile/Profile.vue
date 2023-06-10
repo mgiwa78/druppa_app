@@ -37,7 +37,9 @@
                 <a
                   href="#"
                   class="text-gray-800 text-hover-primary fs-2 fw-bold me-1"
-                  >{{ State.userData.name }}</a
+                  >{{
+                    State.userData.firstName + " " + State.userData.lastName
+                  }}</a
                 >
 
                 <span
@@ -54,7 +56,11 @@
                   class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2"
                 >
                   <KTIcon icon-name="profile-circle" icon-class="fs-4 me-1" />
-                  {{ State.userData.gender }}
+                  {{
+                    State.userData.gender
+                      ? State.userData.gender
+                      : "Gender not set"
+                  }}
                 </a>
                 <a
                   href="#"

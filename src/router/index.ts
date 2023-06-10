@@ -74,7 +74,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: "/admin",
         name: "Admin",
-        component: () => import("@/components/admin/AdminListings.vue"),
+        component: () => import("@/components/admin/tables/AdminTable.vue"),
         meta: {
           pageTitle: "Admin",
           breadcrumbs: ["Admin", "Users"],

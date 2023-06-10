@@ -106,23 +106,23 @@
         checkbox-label="id"
       >
         <template v-slot:name="{ row: customer }">
-          {{ customer.name }}
+          {{ customer.firstName + " " + customer.lastName }}
         </template>
         <template v-slot:email="{ row: customer }">
           <a href="#" class="text-gray-600 text-hover-primary mb-1">
-            {{ customer.email }}
+            {{ customer.email ? customer.email : "No Email" }}
           </a>
         </template>
-        <template v-slot:company="{ row: customer }">
-          {{ customer.company }}
+        <template v-slot:username="{ row: customer }">
+          {{ customer.username ? customer.username : "No Username" }}
         </template>
+
         <template v-slot:paymentMethod="{ row: customer }">
-          <img :src="customer.payment.icon" class="w-35px me-3" alt="" />{{
-            customer.payment.ccnumber
-          }}
+          {{ customer.paymentMethod ? customer.paymentMethod : "Not Set" }}
         </template>
+
         <template v-slot:date="{ row: customer }">
-          {{ customer.date }}
+          {{ customer.created_at ? customer.created_at : "Not Set" }}
         </template>
         <template v-slot:actions="{ row: customer }">
           <a
@@ -178,6 +178,9 @@ import AddCustomerModal from "@/components/modals/forms/AddCustomerModal.vue";
 import type { ICustomer } from "@/core/data/customers";
 import customers from "@/core/data/customers";
 import arraySort from "array-sort";
+import __CONSTANTS__ from "@/constants";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 export default defineComponent({
   name: "customers-listing",
@@ -201,8 +204,15 @@ export default defineComponent({
         columnWidth: 230,
       },
       {
-        columnName: "Company",
-        columnLabel: "company",
+        columnName: "Email",
+        columnLabel: "email",
+        sortEnabled: true,
+        columnWidth: 175,
+      },
+
+      {
+        columnName: "Username",
+        columnLabel: "username",
         sortEnabled: true,
         columnWidth: 175,
       },
@@ -229,9 +239,38 @@ export default defineComponent({
 
     const tableData = ref<Array<ICustomer>>(customers);
     const initCustomers = ref<Array<ICustomer>>([]);
+    const { API_URL, ASSETS_URL } = __CONSTANTS__;
 
-    onMounted(() => {
-      initCustomers.value.splice(0, tableData.value.length, ...tableData.value);
+    const fetchPageData = async (page: number) => {
+      if (typeof page === "number") {
+        return await fetchAllAdminProfiles(page);
+      } else {
+        return await fetchAllAdminProfiles(1);
+      }
+    };
+    const fetchAllAdminProfiles = async (page) => {
+      const profiles = await axios
+        .get(API_URL + "fetchCustomerProfiles")
+        .then((response) => response.data)
+        .catch((error) => {
+          Swal.fire({
+            text: error.message,
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Error Fetching Data!",
+            heightAuto: false,
+            customClass: {
+              confirmButton: "btn fw-semobold btn-light-danger",
+            },
+          });
+        });
+      return profiles.admin_users;
+    };
+
+    onMounted(async () => {
+      const profiles = await fetchPageData(1);
+      console.log(profiles);
+      tableData.value = profiles.data;
     });
 
     const deleteFewCustomers = () => {
