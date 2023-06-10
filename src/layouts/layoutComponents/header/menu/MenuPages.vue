@@ -183,8 +183,6 @@ export default defineComponent({
 
     const allpages = computed(() => GenerateMenus(user.type));
 
-    console.log(allpages.value);
-
     return {
       hasActiveChildren,
       headerMenuIcons,

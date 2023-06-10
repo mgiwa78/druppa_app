@@ -2894,10 +2894,10 @@ svg.select.js@^3.0.1:
   dependencies:
     svg.js "^2.6.5"
 
-sweetalert2@^11.6.8:
-  version "11.7.0"
-  resolved "https://registry.npmjs.org/sweetalert2/-/sweetalert2-11.7.0.tgz"
-  integrity sha512-ICeeGhIsmzCwRD/XjZrBYk+SDQzwfGvIdxkeSpPFgkPwbnoaGnaZ4cOb7AD/iC5o50snQUF6w23MfFAGk1+J7A==
+sweetalert2@^11.4.8:
+  version "11.4.8"
+  resolved "https://registry.npmjs.org/sweetalert2/-/sweetalert2-11.4.8.tgz"
+  integrity sha512-BDS/+E8RwaekGSxCPUbPnsRAyQ439gtXkTF/s98vY2l9DaVEOMjGj1FaQSorfGREKsbbxGSP7UXboibL5vgTMA==
 
 tapable@^2.1.1, tapable@^2.2.0:
   version "2.2.1"
@@ -3106,6 +3106,11 @@ vue-inline-svg@^3.1.0:
   version "3.1.0"
   resolved "https://registry.npmjs.org/vue-inline-svg/-/vue-inline-svg-3.1.0.tgz"
   integrity sha512-4FUu6q7l6jSL0sc8bs0lzV7MgWMsuSSQAJiQdKsxhGP9sNJfepCWiPfWxU1IPY1mf4LZjTtX93DAiEegWt6cTg==
+
+vue-multiselect@^2.1.7:
+  version "2.1.7"
+  resolved "https://registry.npmjs.org/vue-multiselect/-/vue-multiselect-2.1.7.tgz"
+  integrity sha512-KIegcN+Ntwg3cbkY/jhw2s/+XJUM0Lpi/LcKFYCS8PrZHcWBl2iKCVze7ZCnRj3w8H7/lUJ9v7rj9KQiNxApBw==
 
 vue-router@^4.1.5:
   version "4.1.6"

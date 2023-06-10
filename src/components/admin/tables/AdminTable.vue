@@ -14,7 +14,7 @@
           </h3>
           <div class="card-toolbar">
             <!--begin::Menu-->
-            <div class="d-flex align-items-center position-relative my-1">
+            <div class="d-flex align-items-center position-relative my-1 mx-10">
               <KTIcon
                 icon-name="magnifier"
                 icon-class="fs-1 position-absolute ms-6"
@@ -44,8 +44,17 @@
         <!--begin::Body-->
         <div class="card-body py-3">
           <!--begin::Table container-->
-          <div class="table-responsive">
+          <div
+            v-if="!dataToDisplay.length"
+            class="d-flex align-items-center justify-content-center w-100 py-5"
+          >
+            <div
+              class="spinner-border spinner-border-sm align-middle ms-2 w-25px h-25px"
+            ></div>
+          </div>
+          <div v-else class="table-responsive">
             <!--begin::Table-->
+
             <table class="table align-middle gs-0 gy-4">
               <!--begin::Table head-->
               <thead>
@@ -120,6 +129,7 @@
                         data-bs-toggle="modal"
                         data-bs-target="#kt_modal_view_admin"
                         class="btn btn-bg-light btn-color-muted btn-active-color-primary btn-sm px-4 me-2"
+                        @click.prevent="updateViewProfile(profile)"
                       >
                         View
                       </button>
@@ -156,7 +166,7 @@
     </div>
   </div>
   <AddAdminModal></AddAdminModal>
-  <ViewAdminModal></ViewAdminModal>
+  <ViewAdminModal :ProfileData="viewProfileData"></ViewAdminModal>
 
   <EditAdminModal :ProfileData="editProfileData"></EditAdminModal>
 </template>
@@ -206,6 +216,16 @@ export default defineComponent({
 
     const dataToDisplay = ref<Array<AdminProfile>>([]);
     const editProfileData = ref<AdminProfile>({
+      username: "",
+      email: "",
+      id: 0,
+      firstName: "",
+      lastName: "",
+      profile: "",
+      last_login: "",
+      permissions: [],
+    });
+    const viewProfileData = ref<AdminProfile>({
       username: "",
       email: "",
       id: 0,
@@ -300,6 +320,9 @@ export default defineComponent({
 
     const updateEditProfile = async (profile: AdminProfile) => {
       editProfileData.value = profile;
+    };
+    const updateViewProfile = async (profile: AdminProfile) => {
+      viewProfileData.value = profile;
     };
 
     const searchingFunc = (obj: any, value: string): boolean => {
@@ -455,6 +478,8 @@ export default defineComponent({
       ASSETS_URL,
       editProfileData,
       updateEditProfile,
+      viewProfileData,
+      updateViewProfile,
     };
   },
 });

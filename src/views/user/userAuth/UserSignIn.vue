@@ -210,6 +210,21 @@ export default defineComponent({
               submitButton.value?.removeAttribute("data-kt-indicator");
               submitButton.value!.disabled = false;
             });
+          }
+          if (error.response.data.message == "User does not exist") {
+            Swal.fire({
+              text: "User does not exist",
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Try again!",
+              heightAuto: false,
+              customClass: {
+                confirmButton: "btn fw-semobold btn-light-danger",
+              },
+            }).then(() => {
+              submitButton.value?.removeAttribute("data-kt-indicator");
+              submitButton.value!.disabled = false;
+            });
           } else {
             Swal.fire({
               text: `${error.message}`,

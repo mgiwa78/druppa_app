@@ -1,7 +1,7 @@
 <template>
   <div
     class="modal fade"
-    id="kt_modal_add_admin"
+    id="kt_modal_add_customer"
     ref="addCustomerModalRef"
     tabindex="-1"
     aria-hidden="true"
@@ -13,7 +13,7 @@
         <!--begin::Modal header-->
         <div class="modal-header" id="kt_modal_add_admin_header">
           <!--begin::Modal title-->
-          <h2 class="fw-bold">Create Admin User</h2>
+          <h2 class="fw-bold">Create Customer</h2>
 
           <div
             id="kt_modal_add_admin_close"
@@ -27,7 +27,7 @@
         <!--end::Modal header-->
         <!--begin::Form-->
         <VForm
-          id="kt_modal_add_admin_form"
+          id="kt_modal_create_api_key_form"
           class="form"
           @submit="submit"
           :validation-schema="validationSchema"
@@ -37,12 +37,12 @@
             <!--begin::Scroll-->
             <div
               class="scroll-y me-n7 pe-7"
-              id="kt_modal_add_admin_scroll"
+              id="kt_modal_create_api_key_scroll"
               data-kt-scroll="true"
               data-kt-scroll-activate="{default: false, lg: true}"
               data-kt-scroll-max-height="auto"
-              data-kt-scroll-dependencies="#kt_modal_add_admin_header"
-              data-kt-scroll-wrappers="#kt_modal_add_admin_scroll"
+              data-kt-scroll-dependencies="#kt_modal_create_api_key_header"
+              data-kt-scroll-wrappers="#kt_modal_create_api_key_scroll"
               data-kt-scroll-offset="300px"
             >
               <!--begin::Input group-->
@@ -160,38 +160,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-6">
-                  <label class="fw-bold font-weight-bolderfs-5 fw-semobold mb-2"
-                    >Permissions</label
-                  >
-                  <!--end::Label-->
-                  <Multiselect
-                    class="form-select form-select-solid"
-                    v-model="permissionsSelect.value"
-                    v-bind="permissionsSelect"
-                  >
-                    <template
-                      v-slot:tag="{ option, handleTagRemove, disabled }"
-                    >
-                      <div class="multiselect-tag is-user">
-                        <img :src="option.image" />
-                        {{ option.name }}
-                        <i
-                          v-if="!disabled"
-                          @click.prevent
-                          @mousedown.prevent.stop="
-                            handleTagRemove(option, $event)
-                          "
-                        ></i>
-                      </div>
-                    </template>
 
-                    <template v-slot:option="{ option }">
-                      <img class="user-image" :src="option.image" />
-                      {{ option.name }}
-                    </template>
-                  </Multiselect>
-                </div>
                 <!--end::Input-->
               </div>
               <!--end::Input group-->
@@ -215,7 +184,7 @@
             <!--begin::Button-->
             <button
               type="reset"
-              id="kt_modal_add_admin_cancel"
+              id="kt_modal_create_api_key_cancel"
               class="btn btn-light me-3"
             >
               Discard
@@ -226,7 +195,7 @@
             <button
               ref="submitButtonRef"
               type="submit"
-              id="kt_modal_add_admin_submit"
+              id="kt_modal_create_api_key_submit"
               class="btn btn-primary"
             >
               <span class="indicator-label"> Submit </span>
@@ -256,7 +225,6 @@ import { ErrorMessage, Field, Form as VForm } from "vee-validate";
 import * as Yup from "yup";
 import __CONSTANTS__ from "@/constants";
 import axios from "axios";
-import Multiselect from "@vueform/multiselect";
 
 interface FormData {
   firstName: string;
@@ -264,12 +232,11 @@ interface FormData {
   userName: string;
   email: string;
   password: string;
-  permissions: Array<string>;
 }
 
 export default defineComponent({
   name: "add-admin-modal",
-  components: { ErrorMessage, Field, VForm, Multiselect },
+  components: { ErrorMessage, Field, VForm },
   setup() {
     const submitButtonRef = ref<null | HTMLButtonElement>(null);
 
@@ -277,39 +244,16 @@ export default defineComponent({
     const backdropRef = ref<null | HTMLDivElement>(null);
 
     const modalRef = ref<null | HTMLElement>(null);
-
+    const createAPIKeyModalRef = ref<null | HTMLElement>(null);
     const { API_URL, badInternetAlert, errorAlert, successAlert } =
       __CONSTANTS__;
 
-    const permissionsSelect = ref({
-      mode: "tags",
-      value: [],
-      placeholder: "Select permissions",
-      search: true,
-      trackBy: "name",
-      label: "name",
-      options: [
-        {
-          value: "editCustomer",
-          name: "Edit Customer",
-        },
-        {
-          value: "addCustomer",
-          name: "Add Customer",
-        },
-        {
-          value: "deleteCustomer",
-          name: "Delete Customer",
-        },
-      ],
-    });
     const newAdminData = ref<FormData>({
       firstName: "",
       lastName: "",
       email: "",
       userName: "",
       password: "",
-      permissions: [],
     });
 
     const validationSchema = Yup.object().shape({
@@ -317,8 +261,6 @@ export default defineComponent({
       lastName: Yup.string().required().label("Last Name"),
       email: Yup.string().required().label("Email"),
       userName: Yup.string().required().label("UserName"),
-      password: Yup.string().required().label("Password"),
-      permissions: Yup.string().required().label("Permissions"),
     });
 
     onMounted(() => {
@@ -328,9 +270,7 @@ export default defineComponent({
     });
     const CreateAdminProfile = async () => {
       if (submitButtonRef.value) {
-        // eslint-disable-next-line
         submitButtonRef.value!.disabled = true;
-        // Activate indicator
         submitButtonRef.value.setAttribute("data-kt-indicator", "on");
       }
 
@@ -368,9 +308,6 @@ export default defineComponent({
               customClass: {
                 confirmButton: "btn fw-semobold btn-light-danger",
               },
-            }).then(() => {
-              submitButtonRef.value?.removeAttribute("data-kt-indicator");
-              submitButtonRef.value!.disabled = false;
             });
           } else {
             Swal.fire({
@@ -382,38 +319,39 @@ export default defineComponent({
               customClass: {
                 confirmButton: "btn fw-semobold btn-light-danger",
               },
-            }).then(() => {
-              submitButtonRef.value?.removeAttribute("data-kt-indicator");
-              submitButtonRef.value!.disabled = false;
             });
           }
+        })
+        .then(() => {
+          submitButtonRef.value?.removeAttribute("data-kt-indicator");
+          submitButtonRef.value!.disabled = false;
         });
     };
+
     const submit = async () => {
       if (!submitButtonRef.value) {
         return;
       }
 
-      //Disable button
       submitButtonRef.value.disabled = true;
-      // Activate indicator
       submitButtonRef.value.setAttribute("data-kt-indicator", "on");
 
       await CreateAdminProfile();
+      hideModal(addCustomerModalRef.value);
 
-      backdropRef.value = document.querySelector(
-        ".modal-backdrop"
-      ) as HTMLDivElement;
+      // backdropRef.value = document.querySelector(
+      //   ".modal-backdrop"
+      // ) as HTMLDivElement;
 
-      console.log(backdropRef.value);
-      addCustomerModalRef.value?.removeAttribute("aria-modal");
-      addCustomerModalRef.value?.removeAttribute("role");
-      addCustomerModalRef.value?.setAttribute("aria-hidden", "true");
+      // console.log(backdropRef.value);
+      // addCustomerModalRef.value?.removeAttribute("aria-modal");
+      // addCustomerModalRef.value?.removeAttribute("role");
+      // addCustomerModalRef.value?.setAttribute("aria-hidden", "true");
 
-      addCustomerModalRef.value!.style.display = "none";
-      addCustomerModalRef.value?.classList.remove("show");
-      backdropRef.value?.classList.remove("show");
-      backdropRef.value?.remove();
+      // addCustomerModalRef.value!.style.display = "none";
+      // addCustomerModalRef.value?.classList.remove("show");
+      // backdropRef.value?.classList.remove("show");
+      // backdropRef.value?.remove();
       //Disable button
       submitButtonRef.value?.removeAttribute("data-kt-indicator");
       submitButtonRef.value!.disabled = false;
@@ -425,9 +363,8 @@ export default defineComponent({
       submit,
       submitButtonRef,
       modalRef,
+      createAPIKeyModalRef,
       getAssetPath,
-      permissionsSelect,
-      Multiselect,
     };
   },
 });

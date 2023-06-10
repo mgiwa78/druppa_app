@@ -14,7 +14,7 @@
             v-model="search"
             @input="searchItems()"
             class="form-control form-control-solid w-250px ps-15"
-            placeholder="Search Customers"
+            placeholder="Search Drivers"
           />
         </div>
         <!--end::Search-->
@@ -24,20 +24,11 @@
       <div class="card-toolbar">
         <!--begin::Toolbar-->
         <div
-          v-if="selectedIds.length === 0"
           class="d-flex justify-content-end"
           data-kt-customer-table-toolbar="base"
         >
           <!--begin::Export-->
-          <button
-            type="button"
-            class="btn btn-light-primary me-3"
-            data-bs-toggle="modal"
-            data-bs-target="#kt_customers_export_modal"
-          >
-            <KTIcon icon-name="exit-up" icon-class="fs-2" />
-            Export
-          </button>
+
           <!--end::Export-->
           <!--begin::Add customer-->
           <button
@@ -53,23 +44,7 @@
         </div>
         <!--end::Toolbar-->
         <!--begin::Group actions-->
-        <div
-          v-else
-          class="d-flex justify-content-end align-items-center"
-          data-kt-customer-table-toolbar="selected"
-        >
-          <div class="fw-bold me-5">
-            <span class="me-2">{{ selectedIds.length }}</span
-            >Selected
-          </div>
-          <button
-            type="button"
-            class="btn btn-danger"
-            @click="deleteFewCustomers()"
-          >
-            Delete Selected
-          </button>
-        </div>
+
         <!--end::Group actions-->
         <!--begin::Group actions-->
         <div

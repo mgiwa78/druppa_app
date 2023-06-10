@@ -4,6 +4,7 @@ export interface MenuItemType {
   route?: string;
   pages?: Array<MenuItemType>;
   keenthemesIcon?: string;
+  bootstrapIcon?: string;
   sub?: Array<MenuItemType>;
 }
 
@@ -20,6 +21,7 @@ const GenerateMenus = (type) => {
               route: "/dashboard",
 
               keenthemesIcon: "bi-app-indicator",
+              bootstrapIcon: "bi-app-indicator",
             },
           ],
         },
@@ -31,6 +33,7 @@ const GenerateMenus = (type) => {
               route: "/myprofile",
 
               keenthemesIcon: "profile-circle",
+              bootstrapIcon: "profile-circle",
 
               sub: [
                 {
@@ -56,6 +59,7 @@ const GenerateMenus = (type) => {
               route: "/dashboard",
 
               keenthemesIcon: "bi-app-indicator",
+              bootstrapIcon: "bi-app-indicator",
             },
           ],
         },
@@ -66,6 +70,7 @@ const GenerateMenus = (type) => {
               sectionTitle: "Admin",
               route: "/admin",
               keenthemesIcon: "bi bi-person-workspace",
+              bootstrapIcon: "bi bi-person-workspace",
               sub: [
                 {
                   heading: "View All",
@@ -77,6 +82,7 @@ const GenerateMenus = (type) => {
               sectionTitle: "Customers",
               route: "/customers",
               keenthemesIcon: "bi bi-people",
+              bootstrapIcon: "bi bi-people",
               sub: [
                 {
                   heading: "View All",
@@ -88,6 +94,7 @@ const GenerateMenus = (type) => {
               sectionTitle: "Drivers",
               route: "/drivers",
               keenthemesIcon: "bi bi-person-badge",
+              bootstrapIcon: "bi bi-person-badge",
               sub: [
                 {
                   heading: "View All",
@@ -100,6 +107,7 @@ const GenerateMenus = (type) => {
               sectionTitle: "Deliveries",
               route: "/myprofile",
               keenthemesIcon: "bi bi-box-seam",
+              bootstrapIcon: "bi bi-box-seam",
               sub: [
                 {
                   heading: "View All",
@@ -112,6 +120,7 @@ const GenerateMenus = (type) => {
               sectionTitle: "Inventory",
               route: "/myprofile",
               keenthemesIcon: "bi bi-box-seam",
+              bootstrapIcon: "bi bi-box-seam",
               sub: [
                 {
                   heading: "View All",
@@ -124,6 +133,7 @@ const GenerateMenus = (type) => {
               sectionTitle: "Reports",
               route: "/myprofile",
               keenthemesIcon: "bi bi-file-text",
+              bootstrapIcon: "bi bi-file-text",
               sub: [
                 {
                   heading: "Delivery",
@@ -140,6 +150,7 @@ const GenerateMenus = (type) => {
               sectionTitle: "My Profile",
               route: "/myprofile",
               keenthemesIcon: "bi bi-person-circle",
+              bootstrapIcon: "bi bi-person-circle",
               sub: [
                 {
                   heading: "View",
