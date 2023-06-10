@@ -264,13 +264,13 @@ export default defineComponent({
             },
           });
         });
-      return profiles.admin_users;
+      return profiles.customer_users;
     };
 
     onMounted(async () => {
       const profiles = await fetchPageData(1);
       console.log(profiles);
-      tableData.value = profiles.data;
+      tableData.value = profiles;
     });
 
     const deleteFewCustomers = () => {
