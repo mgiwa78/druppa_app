@@ -264,35 +264,51 @@
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { computed, defineComponent, onMounted, ref, watch } from "vue";
-import { hideModal } from "@/core/helpers/dom";
+import { computed, defineComponent, ref } from "vue";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import { ErrorMessage, Field, Form as VForm } from "vee-validate";
 import * as Yup from "yup";
-import Profile from "@/views/user/userProfile/Profile.vue";
 import axios from "axios";
 import __CONSTANTS__ from "@/constants";
 import { useAuthStore } from "@/stores/auth";
 
-interface AdminProfile {
-  username: string;
-  email: string;
-  id: number | null;
-  firstName: string;
-  lastName: string;
-  profile?: string;
-  last_login: string;
-  permissions: Array<Permission>;
-}
-interface Permission {
-  id: number;
-  admin_id: number;
-  permission: string;
-  status: string;
-}
+// interface AdminProfile {
+//   username: string;
+//   email: string;
+//   id: number | null;
+//   firstName: string;
+//   lastName: string;
+//   profile?: string;
+//   last_login: string;
+//   permissions: Array<Permission>;
+// }
+// interface Permission {
+//   id: number;
+//   admin_id: number;
+//   permission: string;
+//   status: string;
+// }
 export default defineComponent({
   name: "edit-admin-modal",
-  props: { ProfileData: Object },
+  props: {
+    ProfileData: {
+      type: Object as () => {
+        username: string;
+        email: string;
+        id: number;
+        firstName: string;
+        lastName: string;
+        profile?: string;
+        last_login: string;
+        permissions: {
+          id: number;
+          admin_id: number;
+          permission: string;
+          status: string;
+        }[];
+      },
+    },
+  },
   components: { ErrorMessage, Field, VForm },
   setup(props) {
     const { API_URL } = __CONSTANTS__;

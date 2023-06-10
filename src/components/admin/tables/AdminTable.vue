@@ -151,9 +151,7 @@
             </div>
             <!--end::Table-->
           </div>
-          <!--end::Table container-->
         </div>
-        <!--begin::Body-->
       </div>
     </div>
   </div>
@@ -166,8 +164,6 @@
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
 import { computed, defineComponent, onMounted, ref, watch } from "vue";
-import type { ICustomer } from "@/core/data/customers";
-import customers from "@/core/data/customers";
 import AddAdminModal from "@/components/admin/forms/AddAdminModal.vue";
 import EditAdminModal from "@/components/admin/forms/EditAdminModal.vue";
 import ViewAdminModal from "@/components/admin/forms/ViewAdminModal.vue";
@@ -176,7 +172,6 @@ import TableFooter from "@/components/kt-datatable/table-partials/TableFooter.vu
 
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
-import { number } from "yup";
 
 interface AdminProfile {
   username: string;
@@ -210,7 +205,16 @@ export default defineComponent({
     const AdminPaginationData = ref<any>({});
 
     const dataToDisplay = ref<Array<AdminProfile>>([]);
-    const editProfileData = ref<AdminProfile | null>(null);
+    const editProfileData = ref<AdminProfile>({
+      username: "",
+      email: "",
+      id: 0,
+      firstName: "",
+      lastName: "",
+      profile: "",
+      last_login: "",
+      permissions: [],
+    });
 
     const itemsInTable = ref<number>(5);
     const totalProfiles = ref<Array<number>>([0]);

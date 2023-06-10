@@ -23,12 +23,15 @@ interface User {
   email_verified_at?: boolean;
 }
 
+interface AuthUser {
+  admin_user: User;
+}
 const useAuthStore = defineStore("auth", () => {
   const errors = ref({});
   const userPersist = useLocalStorage("userPersist", "");
   const jwt_token = ref(null);
 
-  const authUser = ref(null);
+  const authUser = ref<AuthUser | null>(null);
 
   function setAuth(authUser: User, token) {
     isAuthenticated.value = true;
@@ -52,7 +55,7 @@ const useAuthStore = defineStore("auth", () => {
     authUser.value = auth;
 
     isAuthenticated.value = true;
-    userPersist.value = JSON.stringify(authUser.value.admin_user);
+    userPersist.value = JSON.stringify(authUser.value?.admin_user);
   };
 
   watch(authUser, () => {
