@@ -1,8 +1,8 @@
 <template>
   <div
     class="modal fade"
-    id="kt_modal_view_admin"
-    ref="viewAdminModalRef"
+    id="kt_modal_view_customer"
+    ref="viewCustomerModalRef"
     tabindex="-1"
     aria-hidden="true"
   >
@@ -24,8 +24,8 @@
             <div class="symbol symbol-100px symbol-circle mb-7">
               <img
                 :src="
-                  viewAdminData.profile
-                    ? `${ASSETS_URL + viewAdminData.profile}`
+                  viewCustomerData.profile
+                    ? `${ASSETS_URL + viewCustomerData.profile}`
                     : getAssetPath('media/avatars/blank.png')
                 "
                 alt="image"
@@ -36,11 +36,11 @@
               href="#"
               class="fs-3 text-gray-800 text-hover-primary fw-bold mb-1"
             >
-              {{ viewAdminData.firstName + " " + viewAdminData.lastName }}
+              {{ viewCustomerData.firstName + " " + viewCustomerData.lastName }}
             </a>
 
             <div class="fs-5 fw-semobold text-muted mb-6">
-              {{ viewAdminData.type }}
+              {{ viewCustomerData.type }}
             </div>
           </div>
 
@@ -67,13 +67,13 @@
               <div class="row">
                 <div class="col-6">
                   <div class="fw-bold mt-5">Account ID</div>
-                  <div class="text-gray-600">{{ viewAdminData.id }}</div>
+                  <div class="text-gray-600">{{ viewCustomerData.id }}</div>
                 </div>
                 <div class="col-6">
                   <div class="fw-bold mt-5">Email</div>
                   <div class="text-gray-600">
                     <a href="#" class="text-gray-600 text-hover-primary">
-                      {{ viewAdminData.created_at }}</a
+                      {{ viewCustomerData.created_at }}</a
                     >
                   </div>
                 </div>
@@ -82,19 +82,19 @@
                 <div class="col-6">
                   <div class="fw-bold mt-5">Address</div>
                   <div class="text-gray-600">
-                    {{ viewAdminData.address }}
+                    {{ viewCustomerData.address }}
                   </div>
                 </div>
                 <div class="col-3">
                   <div class="fw-bold mt-5">State</div>
                   <div class="text-gray-600">
-                    {{ viewAdminData.state }}
+                    {{ viewCustomerData.state }}
                   </div>
                 </div>
                 <div class="col-3">
                   <div class="fw-bold mt-5">City</div>
                   <div class="text-gray-600">
-                    {{ viewAdminData.city }}
+                    {{ viewCustomerData.city }}
                   </div>
                 </div>
               </div>
@@ -102,33 +102,13 @@
                 <div class="col-6">
                   <div class="fw-bold mt-5">Gender</div>
                   <div class="text-gray-600">
-                    {{ viewAdminData.gender }}
+                    {{ viewCustomerData.gender }}
                   </div>
                 </div>
                 <div class="col-6">
                   <div class="fw-bold mt-5">Phone Number</div>
                   <div class="text-gray-600">
-                    {{ viewAdminData.phone_number }}
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-6">
-                  <div class="fw-bold mt-5">Permissions</div>
-                  <div class="text-gray-600">
-                    {{
-                      viewAdminData.permissions.length
-                        ? viewAdminData.permissions.forEach((perm) => perm)
-                        : "No Permissions"
-                    }}
-                    <ul v-if="viewAdminData.permissions.length">
-                      <li
-                        v-for="perm in viewAdminData.permissions"
-                        :key="perm.id"
-                      >
-                        {{ perm.permission }}
-                      </li>
-                    </ul>
+                    {{ viewCustomerData.phone_number }}
                   </div>
                 </div>
               </div>
@@ -155,7 +135,7 @@ interface FormData {
 }
 
 export default defineComponent({
-  name: "add-admin-modal",
+  name: "add-customer-modal",
   components: {
     // ErrorMessage, Field, VForm
   },
@@ -189,7 +169,7 @@ export default defineComponent({
   setup(props) {
     const { API_URL, ASSETS_URL } = __CONSTANTS__;
 
-    const viewAdminData = computed(() => {
+    const viewCustomerData = computed(() => {
       if (props.ProfileData && props.ProfileData.id) {
         console.log(props.ProfileData);
         return {
@@ -226,12 +206,11 @@ export default defineComponent({
         last_login: "",
         phone_number: undefined,
         id: undefined,
-        permissions: [],
       };
     });
     return {
       getAssetPath,
-      viewAdminData,
+      viewCustomerData,
       ASSETS_URL,
     };
   },

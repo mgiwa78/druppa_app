@@ -2,7 +2,7 @@
   <div
     class="modal fade"
     id="kt_modal_edit_admin"
-    ref="editAdminModalRef"
+    ref="editCustomerModalRef"
     tabindex="-1"
     aria-hidden="true"
   >
@@ -13,10 +13,10 @@
         <!--begin::Modal header-->
         <div class="modal-header" id="kt_modal_edit_admin_header">
           <!--begin::Modal title-->
-          <h2 class="fw-bold">Edit Admin User</h2>
+          <h2 class="fw-bold">Edit Customer</h2>
 
           <div
-            id="kt_modal_edit_admin_close"
+            id="kt_modal_edit_customer_close"
             data-bs-dismiss="modal"
             class="btn btn-icon btn-sm btn-active-icon-primary"
           >
@@ -27,7 +27,7 @@
         <!--end::Modal header-->
         <!--begin::Form-->
         <VForm
-          id="kt_modal_create_api_key_form"
+          id="kt_modal_edit_customer_form"
           class="form"
           @submit="submit"
           :validation-schema="validationSchema"
@@ -61,7 +61,7 @@
                     class="form-control form-control-solid"
                     placeholder="First Name"
                     name="firstName"
-                    v-model="editAdminData.firstName"
+                    v-model="editCustomerData.firstName"
                   />
                   <div class="fv-plugins-message-container">
                     <div class="fv-help-block">
@@ -82,7 +82,7 @@
                     class="form-control form-control-solid"
                     placeholder="Last Name"
                     name="lastName"
-                    v-model="editAdminData.lastName"
+                    v-model="editCustomerData.lastName"
                   />
                   <div class="fv-plugins-message-container">
                     <div class="fv-help-block">
@@ -107,7 +107,7 @@
                     class="form-control form-control-solid"
                     placeholder="Username"
                     name="username"
-                    v-model="editAdminData.username"
+                    v-model="editCustomerData.username"
                   />
                   <div class="fv-plugins-message-container">
                     <div class="fv-help-block">
@@ -116,89 +116,16 @@
                   </div>
                 </div>
                 <div class="col-6">
-                  <label
-                    class="fw-bold font-weight-bolder required fs-5 fw-semobold mb-2"
-                    >Permissions</label
-                  >
-                  <!--end::Label-->
-
-                  <Field
-                    name="permissions"
-                    data-control="select2"
-                    data-hide-search="true"
-                    data-placeholder="Select a Permissions..."
-                    class="form-select form-select-solid"
-                    as="select"
-                    v-model="editAdminData.permissions"
-                  >
-                    <option value="">Select a Category...</option>
-                    <option value="1">CRM</option>
-                    <option value="2">Project Alice</option>
-                    <option value="3">Keenthemes</option>
-                    <option value="4">General</option>
-                  </Field>
-                  <div class="fv-plugins-message-container">
-                    <div class="fv-help-block">
-                      <ErrorMessage name="permissions" />
-                    </div>
-                  </div>
-                </div>
-                <!--
-                <div class="col-6">
-                  <label
-                    class="fw-bold font-weight-bolder required fs-5 fw-semobold mb-2"
-                    >Password</label
-                  >
-
-                <Field
-                    type="text"
-                    class="form-control form-control-solid"
-                    placeholder="Your API Name"
-                    name="password"
-                    v-model="editAdminData.password"
-                  />
-                  <div class="fv-plugins-message-container">
-                    <div class="fv-help-block">
-                      <ErrorMessage name="password" />
-                    </div>
-                  </div>
-                </div> -->
-              </div>
-              <div class="mb-5 row">
-                <!--begin::Label-->
-                <div class="col-6">
-                  <label class="fw-bold required fs-5 fw-semobold mb-2"
-                    >Phone Number</label
-                  >
-                  <!--end::Label-->
-
-                  <!--begin::Input-->
-                  <Field
-                    type="text"
-                    class="form-control form-control-solid"
-                    placeholder="phone_number"
-                    name="phone_number"
-                    v-model="editAdminData.phone_number"
-                  />
-                  <div class="fv-plugins-message-container">
-                    <div class="fv-help-block">
-                      <ErrorMessage name="phone_number" />
-                    </div>
-                  </div>
-                </div>
-                <div class="col-6">
                   <label class="fw-bold required fs-5 fw-semobold mb-2"
                     >Email</label
                   >
-                  <!--end::Label-->
 
-                  <!--begin::Input-->
                   <Field
                     type="text"
                     class="form-control form-control-solid"
                     placeholder="Email"
                     name="email"
-                    v-model="editAdminData.email"
+                    v-model="editCustomerData.email"
                   />
                   <div class="fv-plugins-message-container">
                     <div class="fv-help-block">
@@ -206,28 +133,32 @@
                     </div>
                   </div>
                 </div>
-
-                <!--end::Input-->
               </div>
-              <!--end::Input group-->
+              <div class="mb-5 row">
+                <!--begin::Label-->
+                <div class="col-6">
+                  <label class="fw-bold required fs-5 fw-semobold mb-2"
+                    >Phone Number</label
+                  >
 
-              <!--begin::Input group-->
-
-              <!--end::Input group-->
-
-              <!--end::Input group-->
-
-              <!--begin::Input group-->
-
-              <!--end::Input group-->
+                  <Field
+                    type="text"
+                    class="form-control form-control-solid"
+                    placeholder="phone_number"
+                    name="phone_number"
+                    v-model="editCustomerData.phone_number"
+                  />
+                  <div class="fv-plugins-message-container">
+                    <div class="fv-help-block">
+                      <ErrorMessage name="phone_number" />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <!--end::Scroll-->
           </div>
-          <!--end::Modal body-->
 
-          <!--begin::Modal footer-->
           <div class="modal-footer flex-center">
-            <!--begin::Button-->
             <button
               type="reset"
               id="kt_modal_create_api_key_cancel"
@@ -235,9 +166,7 @@
             >
               Discard
             </button>
-            <!--end::Button-->
 
-            <!--begin::Button-->
             <button
               ref="submitButtonRef"
               type="submit"
@@ -252,11 +181,8 @@
                 ></span>
               </span>
             </button>
-            <!--end::Button-->
           </div>
-          <!--end::Modal footer-->
         </VForm>
-        <!--end::Form-->
       </div>
     </div>
   </div>
@@ -271,6 +197,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import __CONSTANTS__ from "@/constants";
 import { useAuthStore } from "@/stores/auth";
+import { hideModal } from "@/core/helpers/dom";
 
 // interface AdminProfile {
 //   username: string;
@@ -298,14 +225,9 @@ export default defineComponent({
         id: number;
         firstName: string;
         lastName: string;
+        phone_number: string;
         profile?: string;
         last_login: string;
-        permissions: {
-          id: number;
-          admin_id: number;
-          permission: string;
-          status: string;
-        }[];
       },
     },
   },
@@ -315,21 +237,10 @@ export default defineComponent({
 
     const submitButtonRef = ref<null | HTMLButtonElement>(null);
     const modalRef = ref<null | HTMLElement>(null);
-    const createAPIKeyModalRef = ref<null | HTMLElement>(null);
+    const editCustomerModalRef = ref<null | HTMLElement>(null);
 
     const AuthStore = useAuthStore();
     const { user, refreshProfile } = AuthStore;
-
-    // const editAdminData = ref<AdminProfile>({
-    //   firstName: "",
-    //   lastName: "",
-    //   email: "",
-    //   username: "",
-    //   profile: "",
-    //   last_login: "",
-    //   id: null,
-    //   permissions: [],
-    // });
 
     const validationSchema = Yup.object().shape({
       firstName: Yup.string().required().label("First Name"),
@@ -345,7 +256,7 @@ export default defineComponent({
 
     //   if (props.ProfileData?.id) {
     //     console.log(props.ProfileData);
-    //     editAdminData.value = props.ProfileData;
+    //     editCustomerData.value = props.ProfileData;
     //   }
     // });
     const updateProfile = async () => {
@@ -358,19 +269,22 @@ export default defineComponent({
       if (!user) return;
 
       const formData = new FormData();
-      formData.append("id", `${editAdminData.value.id}`);
+      formData.append("id", `${editCustomerData.value.id}`);
 
-      formData.append("firstName", editAdminData.value.lastName!);
-      formData.append("lastName", editAdminData.value.firstName!);
-      formData.append("username", editAdminData.value.username!);
-      formData.append("phone_number", editAdminData.value.phone_number!);
-      // formData.append("gender", editAdminData.value.gender!);
-      // formData.append("phone_number", `${editAdminData.value.phone_number}`);
-      formData.append("email", editAdminData.value.email!);
-      // formData.append("state", editAdminData.value.state!);
+      formData.append("firstName", editCustomerData.value.lastName!);
+      formData.append("lastName", editCustomerData.value.firstName!);
+      formData.append("username", editCustomerData.value.username!);
+      formData.append("phone_number", editCustomerData.value.phone_number!);
+      // formData.append("gender", editCustomerData.value.gender!);
+      // formData.append("phone_number", `${editCustomerData.value.phone_number}`);
+      formData.append("email", editCustomerData.value.email!);
+      // formData.append("state", editCustomerData.value.state!);
 
       await axios
-        .post(API_URL + `EditAdminProfile/${editAdminData.value.id}`, formData)
+        .post(
+          API_URL + `EditAdminProfile/${editCustomerData.value.id}`,
+          formData
+        )
         .then((res) => console.log(res))
         .catch((error) => {
           return Swal.fire({
@@ -386,7 +300,7 @@ export default defineComponent({
         });
     };
 
-    const editAdminData = computed(() => {
+    const editCustomerData = computed(() => {
       if (props.ProfileData && props.ProfileData.id) {
         console.log(props.ProfileData);
         return {
@@ -396,9 +310,8 @@ export default defineComponent({
           username: props.ProfileData.username || "",
           profile: props.ProfileData.profile || "",
           last_login: props.ProfileData.last_login || "",
-          phone_number: props.ProfileData.last_login || "",
+          phone_number: props.ProfileData.phone_number || "0",
           id: props.ProfileData.id || "",
-          permissions: [] || "",
         };
       }
       return {
@@ -408,33 +321,28 @@ export default defineComponent({
         username: "",
         profile: "",
         last_login: "",
-        phone_number: undefined,
-        id: undefined,
-        permissions: [],
+        phone_number: "0",
+        id: 0,
       };
     });
-
     const submit = async () => {
       if (!submitButtonRef.value) {
         return;
       }
       await updateProfile();
+      hideModal(editCustomerModalRef.value);
 
-      //Disable button
-      if (submitButtonRef.value) {
-        submitButtonRef.value.disabled = false;
-
-        submitButtonRef.value?.removeAttribute("data-kt-indicator");
-      }
+      submitButtonRef.value.disabled = true;
+      submitButtonRef.value.setAttribute("data-kt-indicator", "on");
     };
 
     return {
-      editAdminData,
+      editCustomerData,
       validationSchema,
       submit,
       submitButtonRef,
       modalRef,
-      createAPIKeyModalRef,
+      editCustomerModalRef,
       getAssetPath,
     };
   },

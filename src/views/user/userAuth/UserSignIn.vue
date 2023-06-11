@@ -196,9 +196,24 @@ export default defineComponent({
           router.push({ name: "dashboard" });
         })
         .catch((error) => {
-          if (error.response.data.message == "User does not exist") {
+          if (error.response.data.message == "Invalid login credentials") {
             Swal.fire({
               text: "Invalid Email or Password",
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Try again!",
+              heightAuto: false,
+              customClass: {
+                confirmButton: "btn fw-semobold btn-light-danger",
+              },
+            }).then(() => {
+              submitButton.value?.removeAttribute("data-kt-indicator");
+              submitButton.value!.disabled = false;
+            });
+          }
+          if (error.response.data.message == "User does not exist") {
+            Swal.fire({
+              text: "User does not exist",
               icon: "error",
               buttonsStyling: false,
               confirmButtonText: "Try again!",

@@ -163,7 +163,6 @@ class ToggleComponent {
 
   // Event API
   public on = (name: string, handler: Function) => {
-    console.log("on", this.element, name, handler);
     return EventHandlerUtil.on(this.element, name, handler);
   };
 

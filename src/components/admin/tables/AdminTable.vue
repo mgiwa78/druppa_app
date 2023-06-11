@@ -9,12 +9,12 @@
             <span class="card-label fw-bold fs-3 mb-1">Admin Users</span>
 
             <span class="text-muted mt-1 fw-semobold fs-7"
-              >13 Administrative users</span
+              >{{ totalItems }} Administrative users</span
             >
           </h3>
           <div class="card-toolbar">
             <!--begin::Menu-->
-            <div class="d-flex align-items-center position-relative my-1">
+            <div class="d-flex align-items-center position-relative my-1 mx-10">
               <KTIcon
                 icon-name="magnifier"
                 icon-class="fs-1 position-absolute ms-6"
@@ -22,7 +22,6 @@
               <input
                 type="text"
                 v-model="search"
-                @input="searchItems()"
                 class="form-control form-control-solid w-250px ps-15 mx-50"
                 placeholder="Search Users"
               />
@@ -45,8 +44,17 @@
         <!--begin::Body-->
         <div class="card-body py-3">
           <!--begin::Table container-->
-          <div class="table-responsive">
+          <div
+            v-if="!dataToDisplay.length"
+            class="d-flex align-items-center justify-content-center w-100 py-5"
+          >
+            <div
+              class="spinner-border spinner-border-sm align-middle ms-2 w-25px h-25px"
+            ></div>
+          </div>
+          <div v-else class="table-responsive">
             <!--begin::Table-->
+
             <table class="table align-middle gs-0 gy-4">
               <!--begin::Table head-->
               <thead>
@@ -121,6 +129,7 @@
                         data-bs-toggle="modal"
                         data-bs-target="#kt_modal_view_admin"
                         class="btn btn-bg-light btn-color-muted btn-active-color-primary btn-sm px-4 me-2"
+                        @click.prevent="updateViewProfile(profile)"
                       >
                         View
                       </button>
@@ -130,6 +139,7 @@
                         data-bs-toggle="modal"
                         data-bs-target="#kt_modal_edit_admin"
                         class="btn btn-bg-light btn-color-muted btn-active-color-primary btn-sm px-4"
+                        @click.prevent="updateEditProfile(profile)"
                       >
                         Edit
                       </button>
@@ -151,22 +161,19 @@
             </div>
             <!--end::Table-->
           </div>
-          <!--end::Table container-->
         </div>
-        <!--begin::Body-->
       </div>
     </div>
   </div>
   <AddAdminModal></AddAdminModal>
-  <ViewAdminModal></ViewAdminModal>
-  <EditAdminModal></EditAdminModal>
+  <ViewAdminModal :ProfileData="viewProfileData"></ViewAdminModal>
+
+  <EditAdminModal :ProfileData="editProfileData"></EditAdminModal>
 </template>
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
 import { computed, defineComponent, onMounted, ref, watch } from "vue";
-import type { ICustomer } from "@/core/data/customers";
-import customers from "@/core/data/customers";
 import AddAdminModal from "@/components/admin/forms/AddAdminModal.vue";
 import EditAdminModal from "@/components/admin/forms/EditAdminModal.vue";
 import ViewAdminModal from "@/components/admin/forms/ViewAdminModal.vue";
@@ -175,7 +182,6 @@ import TableFooter from "@/components/kt-datatable/table-partials/TableFooter.vu
 
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
-import { number } from "yup";
 
 interface AdminProfile {
   username: string;
@@ -183,7 +189,7 @@ interface AdminProfile {
   id: number;
   firstName: string;
   lastName: string;
-  profile?: string;
+  profile: string;
   last_login: string;
   permissions: Array<Permission>;
 }
@@ -206,11 +212,29 @@ export default defineComponent({
     "on-items-per-page-change",
   ],
   setup(props, { emit }) {
-    const tableData = ref<Array<ICustomer>>(customers);
-    const initCustomers = ref<Array<ICustomer>>([]);
     const AdminPaginationData = ref<any>({});
 
     const dataToDisplay = ref<Array<AdminProfile>>([]);
+    const editProfileData = ref<AdminProfile>({
+      username: "",
+      email: "",
+      id: 0,
+      firstName: "",
+      lastName: "",
+      profile: "",
+      last_login: "",
+      permissions: [],
+    });
+    const viewProfileData = ref<AdminProfile>({
+      username: "",
+      email: "",
+      id: 0,
+      firstName: "",
+      lastName: "",
+      profile: "",
+      last_login: "",
+      permissions: [],
+    });
 
     const itemsInTable = ref<number>(5);
     const totalProfiles = ref<Array<number>>([0]);
@@ -229,18 +253,18 @@ export default defineComponent({
       }
     );
 
-    const searchItems = () => {
-      tableData.value.splice(0, tableData.value.length, ...initCustomers.value);
-      if (search.value !== "") {
-        let results: Array<ICustomer> = [];
-        for (let j = 0; j < tableData.value.length; j++) {
-          if (searchingFunc(tableData.value[j], search.value)) {
-            results.push(tableData.value[j]);
-          }
-        }
-        tableData.value.splice(0, tableData.value.length, ...results);
-      }
-    };
+    // const searchItems = () => {
+    //   tableData.value.splice(0, tableData.value.length, ...initCustomers.value);
+    //   if (search.value !== "") {
+    //     let results: Array<ICustomer> = [];
+    //     for (let j = 0; j < tableData.value.length; j++) {
+    //       if (searchingFunc(tableData.value[j], search.value)) {
+    //         results.push(tableData.value[j]);
+    //       }
+    //     }
+    //     tableData.value.splice(0, tableData.value.length, ...results);
+    //   }
+    // };
 
     const totalItems = computed(() => {
       if (totalProfiles.value) {
@@ -252,6 +276,22 @@ export default defineComponent({
       }
       return 0;
     });
+
+    watch(
+      () => currentPage.value,
+      async (newValue) => {
+        const data = await fetchPageData(newValue);
+        console.log(data);
+        dataToDisplay.value = data.data;
+      }
+    );
+
+    const updateEditProfile = async (profile: AdminProfile) => {
+      editProfileData.value = profile;
+    };
+    const updateViewProfile = async (profile: AdminProfile) => {
+      viewProfileData.value = profile;
+    };
 
     watch(
       () => currentPage.value,
@@ -438,7 +478,6 @@ export default defineComponent({
       list,
       getAssetPath,
       pageChange,
-      searchItems,
       currentPage,
       itemsInTable,
       totalProfiles,
@@ -446,6 +485,10 @@ export default defineComponent({
       dataToDisplay,
       itemsPerPageDropdownEnabled,
       ASSETS_URL,
+      editProfileData,
+      updateEditProfile,
+      viewProfileData,
+      updateViewProfile,
     };
   },
 });

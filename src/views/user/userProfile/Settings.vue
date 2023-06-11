@@ -103,12 +103,26 @@
                   type="text"
                   name="fname"
                   class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                  placeholder="Full name"
-                  v-model="State.userData.name"
+                  placeholder="First name"
+                  v-model="State.userData.firstName"
                 />
                 <div class="fv-plugins-message-container">
                   <div class="fv-help-block">
                     <ErrorMessage name="fname" />
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6 fv-row">
+                <Field
+                  type="text"
+                  name="lname"
+                  class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                  placeholder="Last name"
+                  v-model="State.userData.lastName"
+                />
+                <div class="fv-plugins-message-container">
+                  <div class="fv-help-block">
+                    <ErrorMessage name="lname" />
                   </div>
                 </div>
               </div>
@@ -553,7 +567,8 @@ export default defineComponent({
     const passwordFormDisplay = ref(false);
 
     const userDataValidator = Yup.object().shape({
-      fname: Yup.string().required().label("Full name"),
+      fname: Yup.string().required().label("First name"),
+      lname: Yup.string().required().label("Last name"),
       phone: Yup.string().label("Contact phone").nullable(),
       state: Yup.string().label("State").nullable(),
       address: Yup.string().label("Address").nullable(),
@@ -585,8 +600,9 @@ export default defineComponent({
       const formData = new FormData();
       formData.append("id", `${State.userData.id}`);
 
-      formData.append("name", State.userData.name!);
-      formData.append("type", State.userData.type!);
+      formData.append("firstName", State.userData.lastName!);
+      formData.append("lastName", State.userData.firstName!);
+      formData.append("username", State.userData.username!);
       formData.append("gender", State.userData.gender!);
       formData.append("phone_number", `${State.userData.phone_number}`);
       formData.append("address", State.userData.address!);
@@ -596,25 +612,25 @@ export default defineComponent({
         console.log(State.newProfile[0]);
         formData.append("profile", State.newProfile[0]);
       }
+      const url =
+        State.userData.type === "Admin"
+          ? `EditAdminProfile/` + State.userData.id
+          : "customer/updateProfile";
 
       await axios
-        .post(API_URL + `customer/updateProfile`, formData)
-        .then((response) => {
-          console.log(response);
-        })
+        .post(API_URL + url, formData)
+        .then((response) => {})
         .catch((error) => {
-          if (error.response.data.error == "Invalid User") {
-            return Swal.fire({
-              text: "Invalid Email or Password",
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Try again!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn fw-semobold btn-light-danger",
-              },
-            });
-          }
+          return Swal.fire({
+            text: error.message,
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Try again!",
+            heightAuto: false,
+            customClass: {
+              confirmButton: "btn fw-semobold btn-light-danger",
+            },
+          });
         });
     };
     const State = reactive({
@@ -623,10 +639,12 @@ export default defineComponent({
       userData: {
         id: 0,
         profile: "",
-        name: " ",
+        lastName: " ",
+        firstName: " ",
         type: "",
         phone_number: 0,
         address: "",
+        password: "",
         gender: "",
         state: "",
         created_at: "",
@@ -634,6 +652,7 @@ export default defineComponent({
         email_verified_at: false,
       } as User,
       setUserData(res: User) {
+        console.log(res);
         this.userData = { ...res };
       },
       onChangeFileUpload({
@@ -655,10 +674,15 @@ export default defineComponent({
     const saveChanges1 = async () => {
       try {
         await updateProfile();
-        await refreshProfile(State.userData.id).then(() => {
-          submitButton1.value?.removeAttribute("data-kt-indicator");
-          submitButton1.value!.disabled = false;
-        });
+
+        if (State.userData.type) {
+          await refreshProfile(State.userData.id, State.userData.type).then(
+            () => {
+              submitButton1.value?.removeAttribute("data-kt-indicator");
+              submitButton1.value!.disabled = false;
+            }
+          );
+        }
       } catch (error) {
         console.log(error);
       }
