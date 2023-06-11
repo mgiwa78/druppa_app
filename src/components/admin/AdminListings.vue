@@ -4,18 +4,14 @@
       <AdminTable />
     </div>
   </div>
-
-  <ExportCustomerModal></ExportCustomerModal>
-  <AddCustomerModal></AddCustomerModal>
+  <AddAdminModal></AddAdminModal>
 </template>
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent, onMounted, ref } from "vue";
 import type { Sort } from "@/components/kt-datatable//table-partials/models";
-
-import ExportCustomerModal from "@/components/modals/forms/ExportCustomerModal.vue";
-import AddCustomerModal from "@/components/modals/forms/AddCustomerModal.vue";
+import AddAdminModal from "./forms/AddAdminModal.vue";
 
 import type { ICustomer } from "@/core/data/customers";
 import customers from "@/core/data/customers";
@@ -26,8 +22,8 @@ export default defineComponent({
   name: "customers-listing",
   components: {
     AdminTable,
-    ExportCustomerModal,
-    AddCustomerModal,
+
+    AddAdminModal,
   },
   setup() {
     const tableHeader = ref([

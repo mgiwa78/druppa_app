@@ -79,7 +79,7 @@
               ? `${ASSETS_URL + State.userData.profile}`
               : getAssetPath('media/avatars/blank.png')
           "
-        />
+        />{{ State.userData.profile }}
       </div>
       <KTUserMenu />
     </div>

@@ -8,7 +8,7 @@
       @submit="onSubmitLogin"
       :validation-schema="login"
       :initial-values="{
-        email: 'teastaa@test.com',
+        email: 'admin@mail.com',
         password: 'Password',
       }"
     >
@@ -186,7 +186,7 @@ export default defineComponent({
         submitButton.value.setAttribute("data-kt-indicator", "on");
       }
       await axios
-        .post(API_URL + "login", {
+        .post(API_URL + "loginAdmin", {
           email: values.email,
           password: values.password,
         })
@@ -227,6 +227,7 @@ export default defineComponent({
           }
         });
     };
+
     onMounted(() => {
       if (isAuthenticated.value) {
         return router.push({ name: "dashboard" });
