@@ -1,57 +1,15 @@
 <template>
   <!--begin::Navbar-->
   <div>
-    <div class="row g-5 g-xl-8 mb-10 mb-xl-1">
-      <div class="col-xl-4">
-        <StatisticsWidget5
-          widget-classes="card-xl-stretch mb-xl-8"
-          icon-name="cheque"
-          color="dark"
-          icon-color="white"
-          title="20"
-          description="Customers"
-        ></StatisticsWidget5>
-      </div>
-      <div class="col-xl-4">
-        <StatisticsWidget5
-          widget-classes="card-xl-stretch mb-xl-8"
-          icon-name="cheque"
-          color="primary"
-          icon-color="white"
-          title="5"
-          description="Admins"
-        ></StatisticsWidget5>
-      </div>
-      <div class="col-xl-4">
-        <StatisticsWidget5
-          widget-classes="card-xl-stretch mb-xl-8"
-          icon-name="cheque"
-          color="danger"
-          icon-color="white"
-          title="30"
-          description="Drivers"
-        ></StatisticsWidget5>
-      </div>
-    </div>
     <div class="row g-5 g-xl-8">
-      <!--begin::Col-->
-      <div
-        class="col-xl-4"
-        v-for="summaryData in summary"
-        :key="summaryData.title"
-      >
-        <MixedWidget14
-          :data="summaryData"
-          widget-classes="card-xxl-stretch mb-5 mb-xl-8"
-          widget-color="#CBD4F4"
-        ></MixedWidget14>
+      <div class="col-xl-4">
+        <CustomerNotifications
+          widget-classes="card-xl-stretch mb-5 mb-xl-8"
+        ></CustomerNotifications>
       </div>
-
-      <!--end::Col-->
-
-      <!--begin::Col-->
-
-      <!--end::Col-->
+      <div class="col-xl-8">
+        <CustomerShipmentsStats className="h-md-100" />
+      </div>
     </div>
   </div>
 </template>
@@ -60,10 +18,12 @@
 import { defineComponent } from "vue";
 import StatisticsWidget5 from "@/components/widgets/statsistics/Widget5.vue";
 import MixedWidget14 from "@/components/widgets/mixed/Widget14.vue";
+import CustomerNotifications from "./widgets/CustomerNotifications.vue";
+import CustomerShipmentsStats from "./widgets/CustomerShipmentsStats.vue";
 
 export default defineComponent({
-  name: "admin-dashboard",
-  components: { StatisticsWidget5, MixedWidget14 },
+  name: "customer-dashboard",
+  components: { CustomerNotifications, CustomerShipmentsStats },
   setup() {
     type Metric = {
       icon: string;

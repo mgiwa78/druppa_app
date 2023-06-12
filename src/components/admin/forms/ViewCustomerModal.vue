@@ -147,7 +147,7 @@ export default defineComponent({
         id: number;
         firstName: string;
         lastName: string;
-        profile?: string;
+        profile: string;
         city: string;
         last_login: string;
         address: string;
@@ -157,12 +157,6 @@ export default defineComponent({
         type: string;
         created_at: string;
         title: string;
-        permissions: {
-          id: number;
-          admin_id: number;
-          permission: string;
-          status: string;
-        }[];
       },
     },
   },
@@ -188,7 +182,6 @@ export default defineComponent({
           phone_number: props.ProfileData.phone_number || "",
           address: props.ProfileData.address || "",
           id: props.ProfileData.id || "",
-          permissions: props.ProfileData.permissions || "",
         };
       }
       return {
@@ -204,8 +197,8 @@ export default defineComponent({
         state: "",
         title: "",
         last_login: "",
-        phone_number: undefined,
-        id: undefined,
+        phone_number: 1,
+        id: 0,
       };
     });
     return {

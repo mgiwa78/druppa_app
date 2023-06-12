@@ -26,15 +26,88 @@ const GenerateMenus = (type) => {
           ],
         },
         {
-          heading: "Menu",
+          heading: "Customer Menu",
           pages: [
+            {
+              sectionTitle: "Shipment",
+              route: "/shipment",
+              keenthemesIcon: "bi bi-truck",
+              bootstrapIcon: "bi bi-truck",
+              sub: [
+                {
+                  heading: "Records",
+                  route: "/shipment/records",
+                },
+                {
+                  heading: "Make Order",
+                  route: "/shipment/makeOrder",
+                },
+                {
+                  heading: "Tracking",
+                  route: "/shipment/tracking",
+                },
+              ],
+            },
+            {
+              heading: "Feedback",
+              route: "/customer/feedback ",
+              keenthemesIcon: "bi bi-chat-left-text",
+              bootstrapIcon: "bi bi-chat-left-text",
+            },
             {
               sectionTitle: "My Profile",
               route: "/myprofile",
+              keenthemesIcon: "bi bi-person-circle",
+              bootstrapIcon: "bi bi-person-circle",
+              sub: [
+                {
+                  heading: "View",
+                  route: "/profile/view",
+                },
+                {
+                  heading: "Edit",
+                  route: "/profile/edit",
+                },
+              ],
+            },
+          ],
+        },
+      ];
+      return MainMenuConfig;
+    case "Driver":
+      MainMenuConfig = [
+        {
+          pages: [
+            {
+              heading: "Dashboard",
+              route: "/dashboard",
 
-              keenthemesIcon: "profile-circle",
-              bootstrapIcon: "profile-circle",
+              keenthemesIcon: "bi-app-indicator",
+              bootstrapIcon: "bi-app-indicator",
+            },
+          ],
+        },
+        {
+          heading: "Driver Menu",
+          pages: [
+            {
+              sectionTitle: "Deliveries",
+              route: "/deliveries",
+              keenthemesIcon: "bi bi-truck",
+              bootstrapIcon: "bi bi-truck",
+              sub: [
+                {
+                  heading: "My Records",
+                  route: "/deliveries/myRecords",
+                },
+              ],
+            },
 
+            {
+              sectionTitle: "My Profile",
+              route: "/myprofile",
+              keenthemesIcon: "bi bi-person-circle",
+              bootstrapIcon: "bi bi-person-circle",
               sub: [
                 {
                   heading: "View",

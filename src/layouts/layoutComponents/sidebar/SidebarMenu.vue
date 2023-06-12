@@ -191,17 +191,18 @@ export default defineComponent({
 
     const { t, te } = useI18n();
     const route = useRoute();
+
     const scrollElRef = ref<null | HTMLElement>(null);
 
     onMounted(() => {
       if (scrollElRef.value) {
         scrollElRef.value.scrollTop = 0;
       }
-      const allpages = GenerateMenus(user.type);
-      State.menu = allpages;
+      // const allpages = GenerateMenus("Customer");
     });
 
-    const allpages = computed(() => GenerateMenus(user.type));
+    const allpages = computed(() => GenerateMenus("Admin"));
+    State.menu = allpages.value;
 
     const translate = (text: string) => {
       if (te(text)) {

@@ -10,9 +10,9 @@
       <!--begin::Wrapper-->
       <div class="d-flex flex-column mb-7">
         <!--begin::Title-->
-        <a href="#" class="text-dark text-hover-primary fw-bold fs-3">{{
+        <span class="text-dark text-hover-primary fw-bold fs-3">{{
           data?.title
-        }}</a>
+        }}</span>
         <!--end::Title-->
       </div>
       <!--end::Wrapper-->

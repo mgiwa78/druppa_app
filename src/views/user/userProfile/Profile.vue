@@ -73,8 +73,6 @@
               </div>
             </div>
           </div>
-
-          <div class="d-flex flex-wrap flex-stack"></div>
         </div>
       </div>
 

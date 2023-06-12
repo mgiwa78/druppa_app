@@ -12,7 +12,7 @@
           <input
             type="text"
             v-model="search"
-            @input="searchItems()"
+            @keyup="searchItems()"
             class="form-control form-control-solid w-250px ps-15"
             placeholder="Search Customers"
           />
@@ -85,12 +85,9 @@
           {{ customer.firstName + " " + customer.lastName }}
         </template>
         <template v-slot:email="{ row: customer }">
-          <a href="#" class="text-gray-600 text-hover-primary mb-1">
+          <span href="#" class="text-gray-600 text-hover-primary mb-1">
             {{ customer.email ? customer.email : "No Email" }}
-          </a>
-        </template>
-        <template v-slot:username="{ row: customer }">
-          {{ customer.username ? customer.username : "No Username" }}
+          </span>
         </template>
 
         <template v-slot:paymentMethod="{ row: customer }">
@@ -98,7 +95,9 @@
         </template>
 
         <template v-slot:date="{ row: customer }">
-          {{ customer.created_at ? customer.created_at : "Not Set" }}
+          {{
+            customer.created_at ? formatDate(customer.created_at) : "Not Set"
+          }}
         </template>
         <template v-slot:actions="{ row: customer }">
           <button
@@ -114,7 +113,7 @@
           <button
             href="#"
             data-bs-toggle="modal"
-            data-bs-target="#kt_modal_edit_admin"
+            data-bs-target="#kt_modal_edit_customer"
             class="btn btn-bg-light btn-color-muted btn-active-color-primary btn-sm px-4"
             @click.prevent="updateEditProfile(customer)"
           >
@@ -142,6 +141,7 @@ import EditCustomerModal from "@/components/admin/forms/EditCustomerModal.vue";
 import ViewCustomerModal from "@/components/admin/forms/ViewCustomerModal.vue";
 import AddCustomerModal from "@/components/admin/forms/AddCustomerModal.vue";
 
+import formatDate from "@/core/helpers/formatDate";
 import __CONSTANTS__ from "@/constants";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -153,6 +153,31 @@ interface CustomerProfile {
   id: number;
   firstName: string;
   lastName: string;
+  profile: string;
+  city: string;
+  password: string;
+  last_login: string;
+  address: string;
+  phone_number: string;
+  gender: string;
+  state: string;
+  type: string;
+  created_at: string;
+  title: string;
+}
+interface EditCustomerProfile {
+  username: string;
+  email: string;
+  id: number;
+  title: string;
+  state: string;
+  city: string;
+  address: string;
+  password: string;
+  gender: string;
+  firstName: string;
+  lastName: string;
+  phone_number: string;
   profile?: string;
   last_login: string;
 }
@@ -164,6 +189,7 @@ export default defineComponent({
     EditCustomerModal,
     ViewCustomerModal,
   },
+
   setup() {
     const tableHeader = ref([
       {
@@ -178,12 +204,7 @@ export default defineComponent({
         sortEnabled: true,
         columnWidth: 230,
       },
-      {
-        columnName: "Username",
-        columnLabel: "username",
-        sortEnabled: true,
-        columnWidth: 175,
-      },
+
       {
         columnName: "Payment Method",
         columnLabel: "paymentMethod",
@@ -207,8 +228,42 @@ export default defineComponent({
     const isLoading = ref<boolean>(true);
 
     const tableData = ref<Array<ICustomer>>([]);
-    const editProfileData = ref<CustomerProfile | null>(null);
-    const viewProfileData = ref<CustomerProfile | null>(null);
+    const DeftableData = ref<Array<ICustomer>>([]);
+
+    const editProfileData = ref<EditCustomerProfile>({
+      username: "",
+      email: "",
+      id: 0,
+      firstName: "",
+      lastName: "",
+      phone_number: "",
+      profile: "",
+      title: "",
+      state: "",
+      city: "",
+      address: "",
+      password: "",
+      gender: "",
+      last_login: "",
+    });
+    const viewProfileData = ref<CustomerProfile>({
+      username: "",
+      email: "",
+      id: 0,
+      firstName: "",
+      lastName: "",
+      profile: "",
+      password: "",
+      city: "",
+      last_login: "",
+      address: "",
+      phone_number: "",
+      gender: "",
+      state: "",
+      type: "",
+      created_at: "",
+      title: "",
+    });
 
     const { API_URL, ASSETS_URL } = __CONSTANTS__;
 
@@ -225,9 +280,10 @@ export default defineComponent({
     const updateViewProfile = async (profile: CustomerProfile) => {
       viewProfileData.value = profile;
     };
+
     const fetchAllAdminProfiles = async (page) => {
       const profiles = await axios
-        .get(API_URL + "fetchCustomerProfiles")
+        .get(API_URL + "customers")
         .then((response) => response.data)
         .catch((error) => {
           Swal.fire({
@@ -248,6 +304,7 @@ export default defineComponent({
       const profiles = await fetchPageData(1);
       console.log(profiles);
       tableData.value = profiles;
+      DeftableData.value = profiles;
 
       isLoading.value = false;
     });
@@ -270,15 +327,16 @@ export default defineComponent({
     const search = ref<string>("");
 
     const searchItems = () => {
-      tableData.value.splice(0, tableData.value.length);
       if (search.value !== "") {
         let results: Array<ICustomer> = [];
-        for (let j = 0; j < tableData.value.length; j++) {
-          if (searchingFunc(tableData.value[j], search.value)) {
-            results.push(tableData.value[j]);
+        for (let j = 0; j < DeftableData.value.length; j++) {
+          if (searchingFunc(DeftableData.value[j], search.value)) {
+            results.push(DeftableData.value[j]);
           }
         }
-        tableData.value.splice(0, tableData.value.length, ...results);
+        tableData.value = results;
+      } else {
+        tableData.value = DeftableData.value;
       }
     };
 
@@ -320,6 +378,7 @@ export default defineComponent({
       editProfileData,
       updateViewProfile,
       viewProfileData,
+      formatDate,
     };
   },
 });

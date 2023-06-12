@@ -29,7 +29,7 @@ const routes: Array<RouteRecordRaw> = [
         name: "profile",
         component: () => import("@/views/user/userProfile/Profile.vue"),
         meta: {
-          pageTitle: "Dashboard",
+          pageTitle: "Profile",
           breadcrumbs: ["Profile"],
         },
         children: [
@@ -54,6 +54,43 @@ const routes: Array<RouteRecordRaw> = [
         ],
       },
       {
+        path: "/shipment",
+        name: "shipment",
+        meta: {
+          pageTitle: "Shipment",
+          breadcrumbs: ["Shipment"],
+        },
+        children: [
+          {
+            path: "records",
+            name: "records",
+            component: () => import("@/views/customer/ShipmentRecords.vue"),
+            meta: {
+              pageTitle: "Shipment Records",
+              breadcrumbs: ["Shipment", "Records"],
+            },
+          },
+          {
+            path: "makeOrder",
+            name: "Make Order",
+            component: () => import("@/views/customer/MakeOrder.vue"),
+            meta: {
+              pageTitle: "Shipment Records",
+              breadcrumbs: ["Shipment", "Make Order"],
+            },
+          },
+          {
+            path: "tracking",
+            name: "Tracking",
+            component: () => import("@/views/customer/Tracking.vue"),
+            meta: {
+              pageTitle: "Shipment Records",
+              breadcrumbs: ["Shipment", "Tracking"],
+            },
+          },
+        ],
+      },
+      {
         path: "/customers",
         name: "Customers",
         component: () => import("@/components/admin/CustomerListings.vue"),
@@ -63,13 +100,23 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
-        path: "/drivers",
-        name: "Drivers",
-        component: () => import("@/components/admin/DriverListings.vue"),
+        path: "/deliveries",
+        name: "Deliveries",
         meta: {
-          pageTitle: "Drivers",
-          breadcrumbs: ["Drivers"],
+          pageTitle: "Deliveries",
+          breadcrumbs: ["Deliveries"],
         },
+        children: [
+          {
+            path: "myRecords",
+            name: "My Records",
+            component: () => import("@/views/driver/DriverRecord.vue"),
+            meta: {
+              pageTitle: "Delivery Records",
+              breadcrumbs: ["Deliveries", "Records"],
+            },
+          },
+        ],
       },
       {
         path: "/admin",

@@ -88,10 +88,9 @@
                         </div>
 
                         <div class="d-flex justify-content-start flex-column">
-                          <a
-                            href="#"
+                          <span
                             class="text-dark fw-bold text-hover-primary mb-1 fs-6"
-                            >{{ profile.firstName }}</a
+                            >{{ profile.firstName }}</span
                           >
                           <span
                             class="text-muted fw-semobold text-muted d-block fs-7"
@@ -102,10 +101,9 @@
                     </td>
 
                     <td>
-                      <a
-                        href="#"
+                      <span
                         class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                        >{{ profile.last_login }}</a
+                        >{{ formatDate(profile.last_login) }}</span
                       >
                       <span
                         class="text-muted fw-semobold text-muted d-block fs-7"
@@ -114,12 +112,11 @@
                     </td>
 
                     <td class="text-center">
-                      <a
+                      <span
                         v-for="perm in profile.permissions"
                         :key="perm.id"
-                        href="#"
                         class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                        >{{ perm.permission }}</a
+                        >{{ perm.permission }}</span
                       >
                     </td>
 
@@ -179,6 +176,7 @@ import EditAdminModal from "@/components/admin/forms/EditAdminModal.vue";
 import ViewAdminModal from "@/components/admin/forms/ViewAdminModal.vue";
 import __CONSTANTS__ from "@/constants";
 import TableFooter from "@/components/kt-datatable/table-partials/TableFooter.vue";
+import formatDate from "@/core/helpers/formatDate";
 
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
@@ -189,8 +187,16 @@ interface AdminProfile {
   id: number;
   firstName: string;
   lastName: string;
-  profile: string;
+  profile?: string;
+  city: string;
   last_login: string;
+  address: string;
+  phone_number: string;
+  gender: string;
+  state: string;
+  type: string;
+  created_at: string;
+  title: string;
   permissions: Array<Permission>;
 }
 interface Permission {
@@ -222,7 +228,15 @@ export default defineComponent({
       firstName: "",
       lastName: "",
       profile: "",
+      city: "",
       last_login: "",
+      address: "",
+      phone_number: "",
+      gender: "",
+      state: "",
+      type: "",
+      created_at: "",
+      title: "",
       permissions: [],
     });
     const viewProfileData = ref<AdminProfile>({
@@ -232,7 +246,15 @@ export default defineComponent({
       firstName: "",
       lastName: "",
       profile: "",
+      city: "",
       last_login: "",
+      address: "",
+      phone_number: "",
+      gender: "",
+      state: "",
+      type: "",
+      created_at: "",
+      title: "",
       permissions: [],
     });
 
@@ -297,7 +319,6 @@ export default defineComponent({
       () => currentPage.value,
       async (newValue) => {
         const data = await fetchPageData(newValue);
-        console.log(data);
         dataToDisplay.value = data.data;
       }
     );
@@ -350,7 +371,6 @@ export default defineComponent({
       AdminPaginationData.value = profiles;
 
       dataToDisplay.value = profiles.data;
-      console.log(profiles.data);
 
       total.value = profiles.total;
       currentPage.value = profiles.currentPage;
@@ -489,6 +509,7 @@ export default defineComponent({
       updateEditProfile,
       viewProfileData,
       updateViewProfile,
+      formatDate,
     };
   },
 });
