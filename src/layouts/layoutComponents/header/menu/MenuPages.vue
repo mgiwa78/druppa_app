@@ -181,7 +181,7 @@ export default defineComponent({
       }
     };
 
-    const allpages = computed(() => GenerateMenus("Admin"));
+    const allpages = computed(() => GenerateMenus(user.type));
 
     return {
       hasActiveChildren,

@@ -1,11 +1,11 @@
 <template>
-  <div v-if="true">
+  <div v-if="user.type === 'Admin'">
     <AdminDashboard />
   </div>
-  <div v-if="false">
+  <div v-if="user.type === 'Customer'">
     <CustomerDashboard />
   </div>
-  <div v-if="false">
+  <div v-if="user.type === 'Driver'">
     <DriverDashboard />
   </div>
 </template>
@@ -29,8 +29,8 @@ export default defineComponent({
     const { user }: { user: User } = AuthStore;
 
     onMounted(() => {
-      if (!user.email) {
-        return router.push({ name: "dashboard" });
+      if (!user) {
+        return router.push({ name: "sign-in" });
       }
     });
     return {

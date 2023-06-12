@@ -10,6 +10,7 @@
       :initial-values="{
         email: 'admin@mail.com',
         password: 'Password',
+        userType: 'Customer',
       }"
     >
       <!--begin::Heading-->
@@ -83,6 +84,37 @@
           <div class="fv-help-block">
             <ErrorMessage name="password" />
           </div>
+        </div>
+      </div>
+      <div class="fv row mb-10">
+        <div class="col-4 form-check form-check-custom form-check-solid">
+          <Field
+            class="form-check-input"
+            name="userType"
+            type="radio"
+            value="Customer"
+          />
+          <label class="form-check-label" for="flexCheckDefault"
+            >Customer</label
+          >
+        </div>
+        <div class="col-4 form-check form-check-custom form-check-solid">
+          <Field
+            class="form-check-input"
+            name="userType"
+            type="radio"
+            value="Admin"
+          />
+          <label class="form-check-label" for="flexCheckDefault">Admin</label>
+        </div>
+        <div class="col-4 form-check form-check-custom form-check-solid">
+          <Field
+            class="form-check-input"
+            name="userType"
+            type="radio"
+            value="Driver"
+          />
+          <label class="form-check-label" for="flexCheckDefault">Driver</label>
         </div>
       </div>
       <!--end::Input group-->
@@ -185,10 +217,12 @@ export default defineComponent({
         // Activate indicator
         submitButton.value.setAttribute("data-kt-indicator", "on");
       }
+
       await axios
-        .post(API_URL + "loginAdmin", {
+        .post(API_URL + "login", {
           email: values.email,
           password: values.password,
+          type: values.userType,
         })
         .then((response) => {
           console.log(response);
@@ -252,6 +286,7 @@ export default defineComponent({
     const login = Yup.object().shape({
       email: Yup.string().email().required().label("Email"),
       password: Yup.string().min(4).required().label("Password"),
+      userType: Yup.string().min(4).required().label("User Type"),
     });
 
     // watch(loggedIn, (newLoggedIn) => {

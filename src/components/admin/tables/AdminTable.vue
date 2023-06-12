@@ -3,7 +3,6 @@
     <div class="card-body pt-0">
       <!--begin::Tables Widget 12-->
       <div :class="widgetClasses" class="card">
-        <!--begin::Header-->
         <div class="card-header border-0 pt-5">
           <h3 class="card-title align-items-start flex-column">
             <span class="card-label fw-bold fs-3 mb-1">Admin Users</span>
@@ -13,8 +12,7 @@
             >
           </h3>
           <div class="card-toolbar">
-            <!--begin::Menu-->
-            <div class="d-flex align-items-center position-relative my-1 mx-10">
+            <!-- <div class="d-flex align-items-center position-relative my-1 mx-10">
               <KTIcon
                 icon-name="magnifier"
                 icon-class="fs-1 position-absolute ms-6"
@@ -25,7 +23,7 @@
                 class="form-control form-control-solid w-250px ps-15 mx-50"
                 placeholder="Search Users"
               />
-            </div>
+            </div> -->
             <button
               type="button"
               class="btn btn-primary"
@@ -35,8 +33,6 @@
               <KTIcon icon-name="plus" icon-class="fs-2" />
               Create Admin
             </button>
-
-            <!--end::Menu-->
           </div>
         </div>
         <!--end::Header-->
@@ -330,7 +326,7 @@ export default defineComponent({
 
     const fetchAllAdminProfiles = async (page) => {
       const profiles = await axios
-        .get(API_URL + "fetchAdminProfiles" + `?page=${page}`)
+        .get(API_URL + "admin" + `?page=${page}`)
         .then((response) => response.data)
         .catch((error) => {
           Swal.fire({

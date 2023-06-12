@@ -201,7 +201,7 @@ export default defineComponent({
       // const allpages = GenerateMenus("Customer");
     });
 
-    const allpages = computed(() => GenerateMenus("Admin"));
+    const allpages = computed(() => GenerateMenus(user.type));
     State.menu = allpages.value;
 
     const translate = (text: string) => {
