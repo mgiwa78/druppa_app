@@ -542,6 +542,7 @@ import { useAuthStore } from "@/stores/auth";
 import axios from "axios";
 import __CONSTANTS__ from "@/constants";
 import type { User } from "@/stores/auth";
+import { method } from "lodash";
 
 export default defineComponent({
   name: "account-settings",
@@ -614,11 +615,11 @@ export default defineComponent({
       }
       const url =
         State.userData.type === "Admin"
-          ? `EditAdminProfile/` + State.userData.id
-          : "customer/updateProfile";
+          ? `admin/` + State.userData.id
+          : "customer/" + State.userData.id;
 
       await axios
-        .post(API_URL + url, formData)
+        .put(API_URL + url, formData, { method: "put" })
         .then((response) => {})
         .catch((error) => {
           return Swal.fire({
@@ -692,12 +693,9 @@ export default defineComponent({
     const updateEmail = () => {
       if (updateEmailButton.value) {
         updateEmailButton.value.setAttribute("data-kt-indicator", "on");
+        updateEmailButton.value?.removeAttribute("data-kt-indicator");
 
-        setTimeout(() => {
-          updateEmailButton.value?.removeAttribute("data-kt-indicator");
-
-          emailFormDisplay.value = false;
-        }, 2000);
+        emailFormDisplay.value = false;
       }
     };
 

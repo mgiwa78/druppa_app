@@ -44,14 +44,10 @@ const useAuthStore = defineStore("auth", () => {
     id: number | string | undefined,
     type: string
   ) => {
-    const url =
-      type === "Admin"
-        ? `fetchAdminProfile/${id}`
-        : `fetchCustomerProfile/${id}`;
+    const url = type === "Admin" ? `admin/${id}` : `customer/${id}`;
     const auth = await axios.get(API_URL + `${url}`).then((response) => {
       return response.data;
     });
-    console.log(auth);
     authUser.value = auth;
 
     isAuthenticated.value = true;
@@ -59,7 +55,6 @@ const useAuthStore = defineStore("auth", () => {
   };
 
   watch(authUser, () => {
-    console.log("object");
     userPersist.value = JSON.stringify(
       authUser.value ? authUser.value.admin_user : null
     );
@@ -88,29 +83,9 @@ const useAuthStore = defineStore("auth", () => {
     }
   }
 
-  // function login(credentials: User) {
-  //   return ApiService.post("login", credentials)
-  //     .then(({ data }) => {
-  //       setAuth(data);
-  //     })
-  //     .catch(({ response }) => {
-  //       setError(response.data.errors);
-  //     });
-  // }
-
   function logout() {
     purgeAuth();
   }
-
-  // function register(credentials: User) {
-  //   return ApiService.post("register", credentials)
-  //     .then(({ data }) => {
-  //       setAuth(data);
-  //     })
-  //     .catch(({ response }) => {
-  //       setError(response.data.errors);
-  //     });
-  // }
 
   function forgotPassword(email: string) {
     return ApiService.post("forgot_password", email)

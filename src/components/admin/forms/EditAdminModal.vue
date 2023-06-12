@@ -370,7 +370,9 @@ export default defineComponent({
       // formData.append("state", editAdminData.value.state!);
 
       await axios
-        .post(API_URL + `EditAdminProfile/${editAdminData.value.id}`, formData)
+        .post(API_URL + `admin/${editAdminData.value.id}`, formData, {
+          method: "put",
+        })
         .then((res) => console.log(res))
         .catch((error) => {
           return Swal.fire({

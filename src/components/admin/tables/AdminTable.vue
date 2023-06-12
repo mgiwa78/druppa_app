@@ -330,7 +330,7 @@ export default defineComponent({
 
     const fetchAllAdminProfiles = async (page) => {
       const profiles = await axios
-        .get(API_URL + "fetchAdminProfiles" + "/5" + `?page=${page}`)
+        .get(API_URL + "fetchAdminProfiles" + `?page=${page}`)
         .then((response) => response.data)
         .catch((error) => {
           Swal.fire({
