@@ -318,7 +318,7 @@ export default defineComponent({
     const createAPIKeyModalRef = ref<null | HTMLElement>(null);
 
     const AuthStore = useAuthStore();
-    const { user, refreshProfile } = AuthStore;
+    const { user } = AuthStore;
 
     // const editAdminData = ref<AdminProfile>({
     //   firstName: "",

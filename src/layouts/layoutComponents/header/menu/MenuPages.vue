@@ -145,9 +145,8 @@
 <script lang="ts">
 import type { MenuItemType } from "@/core/config/MainMenuConfig";
 import { getAssetPath } from "@/core/helpers/assets";
-import { computed, defineComponent, onMounted, reactive } from "vue";
+import { computed, defineComponent, reactive } from "vue";
 import { useRoute } from "vue-router";
-import UserMenuConfig from "@/core/config/MainMenuConfig";
 
 import { useI18n } from "vue-i18n";
 import MainMenuConfig from "@/core/config/MainMenuConfig";

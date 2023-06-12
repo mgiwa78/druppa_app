@@ -265,14 +265,10 @@ export default defineComponent({
       title: "",
     });
 
-    const { API_URL, ASSETS_URL } = __CONSTANTS__;
+    const { API_URL } = __CONSTANTS__;
 
-    const fetchPageData = async (page: number) => {
-      if (typeof page === "number") {
-        return await fetchAllAdminProfiles(page);
-      } else {
-        return await fetchAllAdminProfiles(1);
-      }
+    const fetchPageData = async () => {
+      return await fetchCustomerProfiles();
     };
     const updateEditProfile = async (profile: CustomerProfile) => {
       editProfileData.value = profile;
@@ -281,7 +277,7 @@ export default defineComponent({
       viewProfileData.value = profile;
     };
 
-    const fetchAllAdminProfiles = async (page) => {
+    const fetchCustomerProfiles = async () => {
       const profiles = await axios
         .get(API_URL + "customers")
         .then((response) => response.data)
@@ -301,7 +297,7 @@ export default defineComponent({
     };
 
     onMounted(async () => {
-      const profiles = await fetchPageData(1);
+      const profiles = await fetchPageData();
       console.log(profiles);
       tableData.value = profiles;
       DeftableData.value = profiles;

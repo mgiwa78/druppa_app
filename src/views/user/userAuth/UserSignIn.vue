@@ -195,13 +195,11 @@ export default defineComponent({
   },
   watch: {},
   setup() {
-    const { API_URL, badInternetAlert, errorAlert, successAlert } =
-      __CONSTANTS__;
+    const { API_URL } = __CONSTANTS__;
 
     const userStore = useUserStore();
     const authStore = useAuthStore();
 
-    const { saveLogin } = userStore;
     const { setAuth } = authStore;
     const { isAuthenticated } = storeToRefs(authStore);
 

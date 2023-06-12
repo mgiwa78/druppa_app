@@ -542,7 +542,6 @@ import { useAuthStore } from "@/stores/auth";
 import axios from "axios";
 import __CONSTANTS__ from "@/constants";
 import type { User } from "@/stores/auth";
-import { method } from "lodash";
 
 export default defineComponent({
   name: "account-settings",
@@ -620,7 +619,7 @@ export default defineComponent({
 
       await axios
         .put(API_URL + url, formData, { method: "put" })
-        .then((response) => {})
+        .then(() => {})
         .catch((error) => {
           return Swal.fire({
             text: error.message,

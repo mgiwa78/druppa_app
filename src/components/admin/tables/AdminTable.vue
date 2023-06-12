@@ -351,16 +351,16 @@ export default defineComponent({
       }
     };
 
-    const searchingFunc = (obj: any, value: string): boolean => {
-      for (let key in obj) {
-        if (!Number.isInteger(obj[key]) && !(typeof obj[key] === "object")) {
-          if (obj[key].indexOf(value) != -1) {
-            return true;
-          }
-        }
-      }
-      return false;
-    };
+    // const searchingFunc = (obj: any, value: string): boolean => {
+    //   for (let key in obj) {
+    //     if (!Number.isInteger(obj[key]) && !(typeof obj[key] === "object")) {
+    //       if (obj[key].indexOf(value) != -1) {
+    //         return true;
+    //       }
+    //     }
+    //   }
+    //   return false;
+    // };
 
     onMounted(async () => {
       const profiles = await fetchPageData(1);

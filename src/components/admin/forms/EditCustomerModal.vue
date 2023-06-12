@@ -429,7 +429,7 @@ export default defineComponent({
     const editCustomerModalRef = ref<null | HTMLElement>(null);
 
     const AuthStore = useAuthStore();
-    const { user, refreshProfile } = AuthStore;
+    const { user } = AuthStore;
 
     const validationSchema = Yup.object().shape({
       firstName: Yup.string().required().label("First Name"),
@@ -470,7 +470,7 @@ export default defineComponent({
           EditformData,
           { method: "put" }
         )
-        .then((res) => {
+        .then(() => {
           Swal.fire({
             text: "Profile has been Updated!",
             icon: "success",
