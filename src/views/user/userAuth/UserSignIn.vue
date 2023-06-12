@@ -10,7 +10,6 @@
       :initial-values="{
         email: 'admin@mail.com',
         password: 'Password',
-        userType: 'Customer',
       }"
     >
       <!--begin::Heading-->
