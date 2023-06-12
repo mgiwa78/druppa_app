@@ -13,9 +13,11 @@ const useUserStore = defineStore("user", () => {
   const userIdForVerification = ref(0);
 
   const loggedIn = computed(() => !!token.value);
+
   const user = computed(() =>
     userState.value ? JSON.parse(userState.value) : null
   );
+  
   const userIsAdmin = computed(() => user.value.role_id === 2);
   const userIsActivated = computed(() => user.value.active === 1);
 

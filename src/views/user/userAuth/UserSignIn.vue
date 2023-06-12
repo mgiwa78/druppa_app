@@ -224,11 +224,12 @@ export default defineComponent({
         })
         .then((response) => {
           console.log(response);
-          setAuth(response.data.user, response.data.user.verify_token);
+          setAuth(response.data.user, response.data.user.token);
           router.push({ name: "dashboard" });
         })
         .catch((error) => {
-          if (error.response.data.message == "Invalid login credentials") {
+          console.log(error.response.data.message);
+          if (error.response.data.message === "Invalid login credentials") {
             Swal.fire({
               text: "Invalid Email or Password",
               icon: "error",
@@ -242,8 +243,7 @@ export default defineComponent({
               submitButton.value?.removeAttribute("data-kt-indicator");
               submitButton.value!.disabled = false;
             });
-          }
-          if (error.response.data.message == "User does not exist") {
+          } else if (error.response.data.message === "User does not exist") {
             Swal.fire({
               text: "User does not exist",
               icon: "error",

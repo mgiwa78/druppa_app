@@ -29,15 +29,17 @@ interface AuthUser {
 const useAuthStore = defineStore("auth", () => {
   const errors = ref({});
   const userPersist = useLocalStorage("userPersist", "");
-  const jwt_token = ref(null);
+  const token = useLocalStorage("token", "");
+
+  const loggedIn = computed(() => !!token.value);
 
   const authUser = ref<AuthUser | null>(null);
 
-  function setAuth(authUser: User, token) {
+  function setAuth(authUser: User, authToken) {
     isAuthenticated.value = true;
     userPersist.value = JSON.stringify(authUser);
     errors.value = {};
-    jwt_token.value = token;
+    token.value = authToken;
   }
 
   const refreshProfile = async (
@@ -45,9 +47,15 @@ const useAuthStore = defineStore("auth", () => {
     type: string
   ) => {
     const url = type === "Admin" ? `admin/${id}` : `customer/${id}`;
-    const auth = await axios.get(API_URL + `${url}`).then((response) => {
-      return response.data;
-    });
+    const auth = await axios
+      .get(API_URL + `${url}`, {
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+        },
+      })
+      .then((response) => {
+        return response.data;
+      });
     authUser.value = auth;
 
     isAuthenticated.value = true;
@@ -73,7 +81,7 @@ const useAuthStore = defineStore("auth", () => {
     isAuthenticated.value = false;
     userPersist.value = null;
     errors.value = [];
-    jwt_token.value = null;
+    token.value = null;
   }
   function userIsAdmin() {
     if (user.value) {
@@ -116,11 +124,10 @@ const useAuthStore = defineStore("auth", () => {
   return {
     errors,
     user: skipHydrate(user),
+    token: skipHydrate(token),
     isAuthenticated: skipHydrate(isAuthenticated),
     userIsAdmin: skipHydrate(userIsAdmin),
-    // login,
     logout,
-    // register,/
     forgotPassword,
     // verifyAuth,
     setAuth,
