@@ -345,7 +345,7 @@ export default defineComponent({
             },
           });
         });
-      return profiles.admin_users;
+      return profiles.data;
     };
 
     const fetchPageData = async (page: number) => {

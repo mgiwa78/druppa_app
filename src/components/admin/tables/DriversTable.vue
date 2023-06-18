@@ -190,7 +190,7 @@ export default defineComponent({
 
   setup() {
     const AuthStore = useAuthStore();
-    const { user, token, refreshProfile } = AuthStore;
+    const { token } = AuthStore;
 
     const tableHeader = ref([
       {
@@ -296,7 +296,7 @@ export default defineComponent({
             },
           });
         });
-      return profiles.drivers;
+      return profiles.data;
     };
 
     onMounted(async () => {
