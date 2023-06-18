@@ -1,8 +1,8 @@
 <template>
   <div
     class="modal fade"
-    id="kt_modal_edit_customer"
-    ref="editCustomerModalRef"
+    id="kt_modal_edit_driver"
+    ref="editDriverModalRef"
     tabindex="-1"
     aria-hidden="true"
   >
@@ -11,12 +11,12 @@
       <!--begin::Modal content-->
       <div class="modal-content">
         <!--begin::Modal header-->
-        <div class="modal-header" id="kt_modal_edit_customer_header">
+        <div class="modal-header" id="kt_modal_edit_driver_header">
           <!--begin::Modal title-->
-          <h2 class="fw-bold">Edit Customer</h2>
+          <h2 class="fw-bold">Edit Driver</h2>
 
           <div
-            id="kt_modal_edit_customer_close"
+            id="kt_modal_edit_driver_close"
             data-bs-dismiss="modal"
             class="btn btn-icon btn-sm btn-active-icon-primary"
           >
@@ -27,7 +27,7 @@
         <!--end::Modal header-->
         <!--begin::Form-->
         <VForm
-          id="kt_modal_edit_customer_form"
+          id="kt_modal_edit_driver_form"
           class="form"
           @submit="submit"
           :validation-schema="validationSchema"
@@ -37,12 +37,12 @@
             <!--begin::Scroll-->
             <div
               class="scroll-y me-n7 pe-7"
-              id="kt_modal_edit_customer_scroll"
+              id="kt_modal_edit_driver_scroll"
               data-kt-scroll="true"
               data-kt-scroll-activate="{default: false, lg: true}"
               data-kt-scroll-max-height="auto"
-              data-kt-scroll-dependencies="#kt_modal_edit_customer_header"
-              data-kt-scroll-wrappers="#kt_modal_edit_customer_scroll"
+              data-kt-scroll-dependencies="#kt_modal_edit_driver_header"
+              data-kt-scroll-wrappers="#kt_modal_edit_driver_scroll"
               data-kt-scroll-offset="300px"
             >
               <!--begin::Input group-->
@@ -63,7 +63,7 @@
                     class="form-control form-control-solid"
                     placeholder="Last Name"
                     name="lastName"
-                    v-model="editCustomerData.lastName"
+                    v-model="editDriverData.lastName"
                   />
                   <div class="fv-plugins-message-container">
                     <div class="fv-help-block">
@@ -83,7 +83,7 @@
                     class="form-control form-control-solid"
                     placeholder="First Name"
                     name="firstName"
-                    v-model="editCustomerData.firstName"
+                    v-model="editDriverData.firstName"
                   />
                   <div class="fv-plugins-message-container">
                     <div class="fv-help-block">
@@ -108,13 +108,13 @@
                     name="title"
                     class="form-select"
                     as="select"
-                    v-model="editCustomerData.title"
+                    v-model="editDriverData.title"
                   >
                     <option value="">Select a Title...</option>
                     <option
                       :selected="
-                        editCustomerData.title === 'Mr' ||
-                        editCustomerData.title === 'Mr.'
+                        editDriverData.title === 'Mr' ||
+                        editDriverData.title === 'Mr.'
                       "
                       :value="'Mr.' || 'Mr'"
                     >
@@ -122,8 +122,8 @@
                     </option>
                     <option
                       :selected="
-                        editCustomerData.title === 'Mrs' ||
-                        editCustomerData.title === 'Mrs.'
+                        editDriverData.title === 'Mrs' ||
+                        editDriverData.title === 'Mrs.'
                       "
                       :value="'Mrs.' || 'Mrs'"
                     >
@@ -131,8 +131,8 @@
                     </option>
                     <option
                       :selected="
-                        editCustomerData.title === 'Prof.' ||
-                        editCustomerData.title === 'Prof.'
+                        editDriverData.title === 'Prof.' ||
+                        editDriverData.title === 'Prof.'
                       "
                       :value="'Prof.' || 'Prof'"
                     >
@@ -140,8 +140,8 @@
                     </option>
                     <option
                       :selected="
-                        editCustomerData.title === 'Miss' ||
-                        editCustomerData.title === 'Miss.'
+                        editDriverData.title === 'Miss' ||
+                        editDriverData.title === 'Miss.'
                       "
                       :value="'Miss.' || 'Miss'"
                     >
@@ -149,8 +149,8 @@
                     </option>
                     <option
                       :selected="
-                        editCustomerData.title === 'Ms.' ||
-                        editCustomerData.title === 'Ms.'
+                        editDriverData.title === 'Ms.' ||
+                        editDriverData.title === 'Ms.'
                       "
                       :value="'Ms.' || 'Ms'"
                     >
@@ -158,8 +158,8 @@
                     </option>
                     <option
                       :selected="
-                        editCustomerData.title === 'Dr' ||
-                        editCustomerData.title === 'Dr.'
+                        editDriverData.title === 'Dr' ||
+                        editDriverData.title === 'Dr.'
                       "
                       :value="'Dr.' || 'Dr'"
                     >
@@ -183,17 +183,17 @@
                     name="gender"
                     class="form-select"
                     as="select"
-                    v-model="editCustomerData.gender"
+                    v-model="editDriverData.gender"
                   >
                     <option value="">Select a Gender...</option>
                     <option
-                      :selected="editCustomerData.gender === 'male'"
+                      :selected="editDriverData.gender === 'male'"
                       value="male"
                     >
                       Male
                     </option>
                     <option
-                      :selected="editCustomerData.gender === 'female'"
+                      :selected="editDriverData.gender === 'female'"
                       value="female"
                     >
                       Female
@@ -222,7 +222,7 @@
                     class="form-control form-control-solid"
                     placeholder="Email"
                     name="email"
-                    v-model="editCustomerData.email"
+                    v-model="editDriverData.email"
                   />
                   <div class="fv-plugins-message-container">
                     <div class="fv-help-block">
@@ -243,7 +243,7 @@
                     class="form-control form-control-solid"
                     placeholder="Password"
                     name="password"
-                    v-model="editCustomerData.password"
+                    v-model="editDriverData.password"
                   />
                   <div class="fv-plugins-message-container">
                     <div class="fv-help-block">
@@ -267,7 +267,7 @@
                     class="form-control form-control-solid"
                     placeholder="Phone Number"
                     name="phone_number"
-                    v-model="editCustomerData.phone_number"
+                    v-model="editDriverData.phone_number"
                   />
                   <div class="fv-plugins-message-container">
                     <div class="fv-help-block">
@@ -286,7 +286,7 @@
                     name="state"
                     class="form-select"
                     as="select"
-                    v-model="editCustomerData.state"
+                    v-model="editDriverData.state"
                   >
                     <option value="">Select a State...</option>
                     <option
@@ -320,15 +320,15 @@
                     name="city"
                     class="form-select"
                     as="select"
-                    v-model="editCustomerData.city"
-                    ><option v-if="editCustomerData.state" selected value="">
+                    v-model="editDriverData.city"
+                    ><option v-if="editDriverData.state" selected value="">
                       Select a State
                     </option>
-                    <template v-if="editCustomerData.state">
-                      <template v-if="citiesInNigeria[editCustomerData.state]">
+                    <template v-if="editDriverData.state">
+                      <template v-if="citiesInNigeria[editDriverData.state]">
                         <option
                           v-for="city in citiesInNigeria[
-                            editCustomerData.state
+                            editDriverData.state
                           ]"
                           :key="city.code"
                           :value="city.city"
@@ -336,8 +336,8 @@
                           {{ city.city }}
                         </option>
                       </template>
-                      <option v-else :value="editCustomerData.state">
-                        {{ editCustomerData.state }}
+                      <option v-else :value="editDriverData.state">
+                        {{ editDriverData.state }}
                       </option>
                     </template>
                     <option v-else selected value="">
@@ -358,7 +358,7 @@
           <div class="modal-footer flex-center">
             <button
               type="reset"
-              id="kt_modal_edit_customer_cancel"
+              id="kt_modal_edit_driver_cancel"
               class="btn btn-light me-3"
             >
               Discard
@@ -367,7 +367,7 @@
             <button
               ref="editSubmitButtonRef"
               type="submit"
-              id="kt_edit_customer_submit"
+              id="kt_edit_driver_submit"
               class="btn btn-primary"
             >
               <span class="indicator-label"> Submit </span>
@@ -427,7 +427,7 @@ export default defineComponent({
     const editSubmitButtonRef = ref<null | HTMLButtonElement>(null);
 
     const modalRef = ref<null | HTMLElement>(null);
-    const editCustomerModalRef = ref<null | HTMLElement>(null);
+    const editDriverModalRef = ref<null | HTMLElement>(null);
 
     const AuthStore = useAuthStore();
     const { user , token} = AuthStore;
@@ -453,21 +453,21 @@ export default defineComponent({
 
       const EditformData = new FormData();
 
-      EditformData.append("firstName", editCustomerData.value.lastName);
-      EditformData.append("lastName", editCustomerData.value.firstName);
-      EditformData.append("phone_number", editCustomerData.value.phone_number);
-      EditformData.append("city", editCustomerData.value.city);
-      EditformData.append("address", editCustomerData.value.address);
+      EditformData.append("firstName", editDriverData.value.lastName);
+      EditformData.append("lastName", editDriverData.value.firstName);
+      EditformData.append("phone_number", editDriverData.value.phone_number);
+      EditformData.append("city", editDriverData.value.city);
+      EditformData.append("address", editDriverData.value.address);
 
-      EditformData.append("state", editCustomerData.value.state);
-      EditformData.append("gender", editCustomerData.value.gender);
-      EditformData.append("title", editCustomerData.value.title);
-      EditformData.append("email", editCustomerData.value.email);
+      EditformData.append("state", editDriverData.value.state);
+      EditformData.append("gender", editDriverData.value.gender);
+      EditformData.append("title", editDriverData.value.title);
+      EditformData.append("email", editDriverData.value.email);
       EditformData.append("_method", "put");
 
       await axios
         .post(
-          API_URL + `customers/${editCustomerData.value.id}`,
+          API_URL + `drivers/${editDriverData.value.id}`,
           EditformData,
           { method: "put", headers: { Authorization: `Bearer ${token}` } }
         )
@@ -481,7 +481,7 @@ export default defineComponent({
             customClass: {
               confirmButton: "btn btn-primary",
             },
-          }).then(() => hideModal(editCustomerModalRef.value));
+          }).then(() => hideModal(editDriverModalRef.value));
         })
         .catch((error) => {
           if (error.response.data.message == "User does not exist") {
@@ -515,7 +515,7 @@ export default defineComponent({
         });
     };
 
-    const editCustomerData = computed(() => {
+    const editDriverData = computed(() => {
       if (props.ProfileData && props.ProfileData.id) {
         console.log(props.ProfileData);
         return {
@@ -564,12 +564,12 @@ export default defineComponent({
     };
 
     return {
-      editCustomerData,
+      editDriverData,
       validationSchema,
       submit,
       editSubmitButtonRef,
       modalRef,
-      editCustomerModalRef,
+      editDriverModalRef,
       getAssetPath,
       statesInNigeria,
       citiesInNigeria,

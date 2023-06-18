@@ -14,7 +14,7 @@
             v-model="search"
             @keyup="searchItems()"
             class="form-control form-control-solid w-250px ps-15"
-            placeholder="Search Customers"
+            placeholder="Search Drivers"
           />
         </div>
         <!--end::Search-->
@@ -25,22 +25,22 @@
         <!--begin::Toolbar-->
         <div
           class="d-flex justify-content-end"
-          data-kt-customer-table-toolbar="base"
+          data-kt-driver-table-toolbar="base"
         >
           <!--begin::Export-->
 
           <!--end::Export-->
-          <!--begin::Add customer-->
+          <!--begin::Add driver-->
           <button
             type="button"
             class="btn btn-primary"
             data-bs-toggle="modal"
-            data-bs-target="#kt_modal_add_customer"
+            data-bs-target="#kt_modal_add_driver"
           >
             <KTIcon icon-name="plus" icon-class="fs-2" />
-            Add Customer
+            Add Driver
           </button>
-          <!--end::Add customer-->
+          <!--end::Add driver-->
         </div>
         <!--end::Toolbar-->
         <!--begin::Group actions-->
@@ -49,19 +49,19 @@
         <!--begin::Group actions-->
         <div
           class="d-flex justify-content-end align-items-center d-none"
-          data-kt-customer-table-toolbar="selected"
+          data-kt-driver-table-toolbar="selected"
         >
           <div class="fw-bold me-5">
             <span
               class="me-2"
-              data-kt-customer-table-select="selected_count"
+              data-kt-driver-table-select="selected_count"
             ></span
             >Selected
           </div>
           <button
             type="button"
             class="btn btn-danger"
-            data-kt-customer-table-select="delete_selected"
+            data-kt-driver-table-select="delete_selected"
           >
             Delete Selected
           </button>
@@ -81,31 +81,29 @@
         :checkbox-enabled="true"
         checkbox-label="id"
       >
-        <template v-slot:name="{ row: customer }">
-          {{ customer.firstName + " " + customer.lastName }}
+        <template v-slot:name="{ row: driver }">
+          {{ driver.firstName + " " + driver.lastName }}
         </template>
-        <template v-slot:email="{ row: customer }">
+        <template v-slot:email="{ row: driver }">
           <span href="#" class="text-gray-600 text-hover-primary mb-1">
-            {{ customer.email ? customer.email : "No Email" }}
+            {{ driver.email ? driver.email : "No Email" }}
           </span>
         </template>
 
-        <template v-slot:paymentMethod="{ row: customer }">
-          {{ customer.paymentMethod ? customer.paymentMethod : "Not Set" }}
+        <template v-slot:paymentMethod="{ row: driver }">
+          {{ driver.paymentMethod ? driver.paymentMethod : "Not Set" }}
         </template>
 
-        <template v-slot:date="{ row: customer }">
-          {{
-            customer.created_at ? formatDate(customer.created_at) : "Not Set"
-          }}
+        <template v-slot:date="{ row: driver }">
+          {{ driver.created_at ? formatDate(driver.created_at) : "Not Set" }}
         </template>
-        <template v-slot:actions="{ row: customer }">
+        <template v-slot:actions="{ row: driver }">
           <button
             href="#"
             data-bs-toggle="modal"
-            data-bs-target="#kt_modal_view_customer"
+            data-bs-target="#kt_modal_view_driver"
             class="btn btn-bg-light btn-color-muted btn-active-color-primary btn-sm px-4 me-2"
-            @click.prevent="updateViewProfile(customer)"
+            @click.prevent="updateViewProfile(driver)"
           >
             View
           </button>
@@ -113,9 +111,9 @@
           <button
             href="#"
             data-bs-toggle="modal"
-            data-bs-target="#kt_modal_edit_customer"
+            data-bs-target="#kt_modal_edit_driver"
             class="btn btn-bg-light btn-color-muted btn-active-color-primary btn-sm px-4"
-            @click.prevent="updateEditProfile(customer)"
+            @click.prevent="updateEditProfile(driver)"
           >
             Edit
           </button>
@@ -125,9 +123,9 @@
     </div>
   </div>
 
-  <AddCustomerModal></AddCustomerModal>
-  <ViewCustomerModal :ProfileData="viewProfileData"></ViewCustomerModal>
-  <EditCustomerModal :ProfileData="editProfileData"></EditCustomerModal>
+  <AddDriverModal></AddDriverModal>
+  <ViewDriverModal :ProfileData="viewProfileData"></ViewDriverModal>
+  <EditDriverModal :ProfileData="editProfileData"></EditDriverModal>
 </template>
 
 <script lang="ts">
@@ -136,18 +134,18 @@ import { defineComponent, onMounted, ref } from "vue";
 import Datatable from "@/components/kt-datatable/KTDataTable.vue";
 import type { Sort } from "@/components/kt-datatable//table-partials/models";
 
-import type { ICustomer } from "@/core/data/customers";
-import EditCustomerModal from "@/components/admin/forms/EditCustomerModal.vue";
-import ViewCustomerModal from "@/components/admin/forms/ViewCustomerModal.vue";
-import AddCustomerModal from "@/components/admin/forms/AddCustomerModal.vue";
+import EditDriverModal from "@/components/admin/forms/EditDriverModal.vue";
+import ViewDriverModal from "@/components/admin/forms/ViewDriverModal.vue";
+import AddDriverModal from "@/components/admin/forms/AddDriverModal.vue";
 
 import formatDate from "@/core/helpers/formatDate";
 import __CONSTANTS__ from "@/constants";
 import axios from "axios";
 import Swal from "sweetalert2";
 import arraySort from "array-sort";
+import { useAuthStore } from "@/stores/auth";
 
-interface CustomerProfile {
+interface DriverProfile {
   username: string;
   email: string;
   id: number;
@@ -165,7 +163,7 @@ interface CustomerProfile {
   created_at: string;
   title: string;
 }
-interface EditCustomerProfile {
+interface EditDriverProfile {
   username: string;
   email: string;
   id: number;
@@ -182,18 +180,21 @@ interface EditCustomerProfile {
   last_login: string;
 }
 export default defineComponent({
-  name: "customers-listing",
+  name: "drivers-listing",
   components: {
     Datatable,
-    AddCustomerModal,
-    EditCustomerModal,
-    ViewCustomerModal,
+    AddDriverModal,
+    EditDriverModal,
+    ViewDriverModal,
   },
 
   setup() {
+    const AuthStore = useAuthStore();
+    const { user, token, refreshProfile } = AuthStore;
+
     const tableHeader = ref([
       {
-        columnName: "Customer Name",
+        columnName: "Driver Name",
         columnLabel: "name",
         sortEnabled: true,
         columnWidth: 175,
@@ -227,10 +228,10 @@ export default defineComponent({
     const selectedIds = ref<Array<number>>([]);
     const isLoading = ref<boolean>(true);
 
-    const tableData = ref<Array<ICustomer>>([]);
-    const DeftableData = ref<Array<ICustomer>>([]);
+    const tableData = ref<Array<DriverProfile>>([]);
+    const DeftableData = ref<Array<DriverProfile>>([]);
 
-    const editProfileData = ref<EditCustomerProfile>({
+    const editProfileData = ref<EditDriverProfile>({
       username: "",
       email: "",
       id: 0,
@@ -246,7 +247,7 @@ export default defineComponent({
       gender: "",
       last_login: "",
     });
-    const viewProfileData = ref<CustomerProfile>({
+    const viewProfileData = ref<DriverProfile>({
       username: "",
       email: "",
       id: 0,
@@ -268,18 +269,20 @@ export default defineComponent({
     const { API_URL } = __CONSTANTS__;
 
     const fetchPageData = async () => {
-      return await fetchCustomerProfiles();
+      return await fetchDriverProfiles();
     };
-    const updateEditProfile = async (profile: CustomerProfile) => {
+    const updateEditProfile = async (profile: DriverProfile) => {
       editProfileData.value = profile;
     };
-    const updateViewProfile = async (profile: CustomerProfile) => {
+    const updateViewProfile = async (profile: DriverProfile) => {
       viewProfileData.value = profile;
     };
 
-    const fetchCustomerProfiles = async () => {
+    const fetchDriverProfiles = async () => {
       const profiles = await axios
-        .get(API_URL + "customers")
+        .get(API_URL + "drivers", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
         .then((response) => response.data)
         .catch((error) => {
           Swal.fire({
@@ -293,7 +296,7 @@ export default defineComponent({
             },
           });
         });
-      return profiles.customer_users;
+      return profiles.drivers;
     };
 
     onMounted(async () => {
@@ -305,14 +308,14 @@ export default defineComponent({
       isLoading.value = false;
     });
 
-    const deleteFewCustomers = () => {
+    const deleteFewDrivers = () => {
       selectedIds.value.forEach((item) => {
-        deleteCustomer(item);
+        deleteDriver(item);
       });
       selectedIds.value.length = 0;
     };
 
-    const deleteCustomer = (id: number) => {
+    const deleteDriver = (id: number) => {
       for (let i = 0; i < tableData.value.length; i++) {
         if (tableData.value[i].id === id) {
           tableData.value.splice(i, 1);
@@ -324,7 +327,7 @@ export default defineComponent({
 
     const searchItems = () => {
       if (search.value !== "") {
-        let results: Array<ICustomer> = [];
+        let results: Array<DriverProfile> = [];
         for (let j = 0; j < DeftableData.value.length; j++) {
           if (searchingFunc(DeftableData.value[j], search.value)) {
             results.push(DeftableData.value[j]);
@@ -360,17 +363,17 @@ export default defineComponent({
     return {
       tableData,
       tableHeader,
-      deleteCustomer,
+      deleteDriver,
       search,
       searchItems,
       selectedIds,
-      deleteFewCustomers,
+      deleteFewDrivers,
       sort,
       onItemSelect,
       getAssetPath,
       isLoading,
       updateEditProfile,
-      ViewCustomerModal,
+      ViewDriverModal,
       editProfileData,
       updateViewProfile,
       viewProfileData,

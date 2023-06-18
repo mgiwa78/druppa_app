@@ -318,7 +318,7 @@ export default defineComponent({
     const createAPIKeyModalRef = ref<null | HTMLElement>(null);
 
     const AuthStore = useAuthStore();
-    const { user } = AuthStore;
+    const { user, token } = AuthStore;
 
     // const editAdminData = ref<AdminProfile>({
     //   firstName: "",
@@ -372,6 +372,7 @@ export default defineComponent({
       await axios
         .post(API_URL + `admin/${editAdminData.value.id}`, formData, {
           method: "put",
+          headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => console.log(res))
         .catch((error) => {

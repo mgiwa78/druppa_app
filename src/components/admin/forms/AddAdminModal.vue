@@ -2,7 +2,7 @@
   <div
     class="modal fade"
     id="kt_modal_add_admin"
-    ref="addCustomerModalRef"
+    ref="addDriverModalRef"
     tabindex="-1"
     aria-hidden="true"
   >
@@ -257,6 +257,7 @@ import * as Yup from "yup";
 import __CONSTANTS__ from "@/constants";
 import axios from "axios";
 import Multiselect from "@vueform/multiselect";
+import { useAuthStore } from "@/stores/auth";
 
 interface FormData {
   firstName: string;
@@ -271,9 +272,12 @@ export default defineComponent({
   name: "add-admin-modal",
   components: { ErrorMessage, Field, VForm, Multiselect },
   setup() {
+    const AuthStore = useAuthStore();
+    const { user, token, refreshProfile } = AuthStore;
+
     const submitButtonRef = ref<null | HTMLButtonElement>(null);
 
-    const addCustomerModalRef = ref<null | HTMLDivElement>(null);
+    const addDriverModalRef = ref<null | HTMLDivElement>(null);
     const backdropRef = ref<null | HTMLDivElement>(null);
 
     const modalRef = ref<null | HTMLElement>(null);
@@ -290,16 +294,16 @@ export default defineComponent({
       label: "name",
       options: [
         {
-          value: "editCustomer",
-          name: "Edit Customer",
+          value: "editDriver",
+          name: "Edit Driver",
         },
         {
-          value: "addCustomer",
-          name: "Add Customer",
+          value: "addDriver",
+          name: "Add Driver",
         },
         {
-          value: "deleteCustomer",
-          name: "Delete Customer",
+          value: "deleteDriver",
+          name: "Delete Driver",
         },
       ],
     });
@@ -322,7 +326,7 @@ export default defineComponent({
     });
 
     onMounted(() => {
-      addCustomerModalRef.value = document.getElementById(
+      addDriverModalRef.value = document.getElementById(
         "kt_modal_add_admin"
       ) as HTMLDivElement;
     });
@@ -343,7 +347,9 @@ export default defineComponent({
       formData.append("password", newAdminData.value.password);
 
       await axios
-        .post(API_URL + "createAdminProfile", formData)
+        .post(API_URL + "createAdminProfile", formData, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
         .then(() => {
           Swal.fire({
             text: "Profile has been created!",
@@ -406,12 +412,12 @@ export default defineComponent({
       ) as HTMLDivElement;
 
       console.log(backdropRef.value);
-      addCustomerModalRef.value?.removeAttribute("aria-modal");
-      addCustomerModalRef.value?.removeAttribute("role");
-      addCustomerModalRef.value?.setAttribute("aria-hidden", "true");
+      addDriverModalRef.value?.removeAttribute("aria-modal");
+      addDriverModalRef.value?.removeAttribute("role");
+      addDriverModalRef.value?.setAttribute("aria-hidden", "true");
 
-      addCustomerModalRef.value!.style.display = "none";
-      addCustomerModalRef.value?.classList.remove("show");
+      addDriverModalRef.value!.style.display = "none";
+      addDriverModalRef.value?.classList.remove("show");
       backdropRef.value?.classList.remove("show");
       backdropRef.value?.remove();
       //Disable button

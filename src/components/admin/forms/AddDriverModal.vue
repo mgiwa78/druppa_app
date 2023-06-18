@@ -1,8 +1,8 @@
 <template>
   <div
     class="modal fade"
-    id="kt_modal_edit_customer"
-    ref="editCustomerModalRef"
+    id="kt_modal_add_driver"
+    ref="addCustomerModalRef"
     tabindex="-1"
     aria-hidden="true"
   >
@@ -11,12 +11,12 @@
       <!--begin::Modal content-->
       <div class="modal-content">
         <!--begin::Modal header-->
-        <div class="modal-header" id="kt_modal_edit_customer_header">
+        <div class="modal-header" id="kt_modal_add_admin_header">
           <!--begin::Modal title-->
-          <h2 class="fw-bold">Edit Customer</h2>
+          <h2 class="fw-bold">Create Customer</h2>
 
           <div
-            id="kt_modal_edit_customer_close"
+            id="kt_modal_add_admin_close"
             data-bs-dismiss="modal"
             class="btn btn-icon btn-sm btn-active-icon-primary"
           >
@@ -27,22 +27,23 @@
         <!--end::Modal header-->
         <!--begin::Form-->
         <VForm
-          id="kt_modal_edit_customer_form"
+          id="kt_modal_add_driver_form"
           class="form"
           @submit="submit"
           :validation-schema="validationSchema"
+          v-slot="{ errors }"
         >
           <!--begin::Modal body-->
           <div class="modal-body py-10 px-lg-17">
             <!--begin::Scroll-->
             <div
               class="scroll-y me-n7 pe-7"
-              id="kt_modal_edit_customer_scroll"
+              id="kt_modal_add_driver_scroll"
               data-kt-scroll="true"
               data-kt-scroll-activate="{default: false, lg: true}"
               data-kt-scroll-max-height="auto"
-              data-kt-scroll-dependencies="#kt_modal_edit_customer_header"
-              data-kt-scroll-wrappers="#kt_modal_edit_customer_scroll"
+              data-kt-scroll-dependencies="#kt_modal_add_driver_header"
+              data-kt-scroll-wrappers="#kt_modal_add_driver_scroll"
               data-kt-scroll-offset="300px"
             >
               <!--begin::Input group-->
@@ -63,7 +64,7 @@
                     class="form-control form-control-solid"
                     placeholder="Last Name"
                     name="lastName"
-                    v-model="editCustomerData.lastName"
+                    v-model="newCustomerData.lastName"
                   />
                   <div class="fv-plugins-message-container">
                     <div class="fv-help-block">
@@ -83,7 +84,7 @@
                     class="form-control form-control-solid"
                     placeholder="First Name"
                     name="firstName"
-                    v-model="editCustomerData.firstName"
+                    v-model="newCustomerData.firstName"
                   />
                   <div class="fv-plugins-message-container">
                     <div class="fv-help-block">
@@ -108,63 +109,13 @@
                     name="title"
                     class="form-select"
                     as="select"
-                    v-model="editCustomerData.title"
+                    v-model="newCustomerData.title"
                   >
                     <option value="">Select a Title...</option>
-                    <option
-                      :selected="
-                        editCustomerData.title === 'Mr' ||
-                        editCustomerData.title === 'Mr.'
-                      "
-                      :value="'Mr.' || 'Mr'"
-                    >
-                      Mr
-                    </option>
-                    <option
-                      :selected="
-                        editCustomerData.title === 'Mrs' ||
-                        editCustomerData.title === 'Mrs.'
-                      "
-                      :value="'Mrs.' || 'Mrs'"
-                    >
-                      Mrs
-                    </option>
-                    <option
-                      :selected="
-                        editCustomerData.title === 'Prof.' ||
-                        editCustomerData.title === 'Prof.'
-                      "
-                      :value="'Prof.' || 'Prof'"
-                    >
-                      Prof
-                    </option>
-                    <option
-                      :selected="
-                        editCustomerData.title === 'Miss' ||
-                        editCustomerData.title === 'Miss.'
-                      "
-                      :value="'Miss.' || 'Miss'"
-                    >
-                      Miss
-                    </option>
-                    <option
-                      :selected="
-                        editCustomerData.title === 'Ms.' ||
-                        editCustomerData.title === 'Ms.'
-                      "
-                      :value="'Ms.' || 'Ms'"
-                    >
-                      Ms
-                    </option>
-                    <option
-                      :selected="
-                        editCustomerData.title === 'Dr' ||
-                        editCustomerData.title === 'Dr.'
-                      "
-                      :value="'Dr.' || 'Dr'"
-                    >
-                      Dr
-                    </option>
+                    <option value="Mr">Mr</option>
+                    <option value="Mrs">Mrs</option>
+                    <option value="Ms">Ms</option>
+                    <option value="Dr">Dr</option>
                   </Field>
                   <div class="fv-plugins-message-container">
                     <div class="fv-help-block">
@@ -182,22 +133,13 @@
                   <Field
                     name="gender"
                     class="form-select"
+                    :class="errors.country ? 'is-invalid' : ''"
                     as="select"
-                    v-model="editCustomerData.gender"
+                    v-model="newCustomerData.gender"
                   >
                     <option value="">Select a Gender...</option>
-                    <option
-                      :selected="editCustomerData.gender === 'male'"
-                      value="male"
-                    >
-                      Male
-                    </option>
-                    <option
-                      :selected="editCustomerData.gender === 'female'"
-                      value="female"
-                    >
-                      Female
-                    </option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
                   </Field>
                   <div class="fv-plugins-message-container">
                     <div class="fv-help-block">
@@ -222,7 +164,7 @@
                     class="form-control form-control-solid"
                     placeholder="Email"
                     name="email"
-                    v-model="editCustomerData.email"
+                    v-model="newCustomerData.email"
                   />
                   <div class="fv-plugins-message-container">
                     <div class="fv-help-block">
@@ -243,7 +185,7 @@
                     class="form-control form-control-solid"
                     placeholder="Password"
                     name="password"
-                    v-model="editCustomerData.password"
+                    v-model="newCustomerData.password"
                   />
                   <div class="fv-plugins-message-container">
                     <div class="fv-help-block">
@@ -267,7 +209,7 @@
                     class="form-control form-control-solid"
                     placeholder="Phone Number"
                     name="phone_number"
-                    v-model="editCustomerData.phone_number"
+                    v-model="newCustomerData.phone_number"
                   />
                   <div class="fv-plugins-message-container">
                     <div class="fv-help-block">
@@ -275,6 +217,30 @@
                     </div>
                   </div>
                 </div>
+                <div class="col-6">
+                  <label class="fw-bold required fs-5 fw-semobold mb-2"
+                    >Username</label
+                  >
+                  <!--end::Label-->
+
+                  <!--begin::Input-->
+                  <Field
+                    type="text"
+                    class="form-control form-control-solid"
+                    placeholder="Username"
+                    name="userName"
+                    v-model="newCustomerData.userName"
+                  />
+                  <div class="fv-plugins-message-container">
+                    <div class="fv-help-block">
+                      <ErrorMessage name="userName" />
+                    </div>
+                  </div>
+                </div>
+                <!--end::Input-->
+              </div>
+              <div class="mb-5 row">
+                <!--begin::Label-->
                 <div class="col-6">
                   <label class="fw-bold required fs-5 fw-semobold mb-2"
                     >State</label
@@ -286,7 +252,7 @@
                     name="state"
                     class="form-select"
                     as="select"
-                    v-model="editCustomerData.state"
+                    v-model="newCustomerData.state"
                   >
                     <option value="">Select a State...</option>
                     <option
@@ -303,11 +269,6 @@
                     </div>
                   </div>
                 </div>
-                <!--end::Input-->
-              </div>
-              <div class="mb-5 row">
-                <!--begin::Label-->
-
                 <div class="col-6">
                   <label
                     class="fw-bold font-weight-bolder required fs-5 fw-semobold mb-2"
@@ -320,24 +281,22 @@
                     name="city"
                     class="form-select"
                     as="select"
-                    v-model="editCustomerData.city"
-                    ><option v-if="editCustomerData.state" selected value="">
+                    v-model="newCustomerData.city"
+                    ><option v-if="newCustomerData.state" selected value="">
                       Select a State
                     </option>
-                    <template v-if="editCustomerData.state">
-                      <template v-if="citiesInNigeria[editCustomerData.state]">
+                    <template v-if="newCustomerData.state">
+                      <template v-if="citiesInNigeria[newCustomerData.state]">
                         <option
-                          v-for="city in citiesInNigeria[
-                            editCustomerData.state
-                          ]"
+                          v-for="city in citiesInNigeria[newCustomerData.state]"
                           :key="city.code"
                           :value="city.city"
                         >
                           {{ city.city }}
                         </option>
                       </template>
-                      <option v-else :value="editCustomerData.state">
-                        {{ editCustomerData.state }}
+                      <option v-else :value="newCustomerData.state">
+                        {{ newCustomerData.state }}
                       </option>
                     </template>
                     <option v-else selected value="">
@@ -352,22 +311,66 @@
                 </div>
                 <!--end::Input-->
               </div>
-            </div>
-          </div>
+              <div class="mb-5 row">
+                <!--begin::Label-->
 
+                <div class="col-12">
+                  <label
+                    class="fw-bold font-weight-bolder required fs-5 fw-semobold mb-2"
+                    >Address</label
+                  >
+                  <!--end::Label-->
+
+                  <!--begin::Input-->
+                  <textarea
+                    type="textarea"
+                    class="form-control form-control-solid"
+                    placeholder="Address"
+                    name="address"
+                    v-model="newCustomerData.address"
+                  />
+                  <div class="fv-plugins-message-container">
+                    <div class="fv-help-block">
+                      <ErrorMessage name="address" />
+                    </div>
+                  </div>
+                </div>
+                <!--end::Input-->
+              </div>
+
+              <!--end::Input group-->
+
+              <!--begin::Input group-->
+
+              <!--end::Input group-->
+
+              <!--end::Input group-->
+
+              <!--begin::Input group-->
+
+              <!--end::Input group-->
+            </div>
+            <!--end::Scroll-->
+          </div>
+          <!--end::Modal body-->
+
+          <!--begin::Modal footer-->
           <div class="modal-footer flex-center">
+            <!--begin::Button-->
             <button
               type="reset"
-              id="kt_modal_edit_customer_cancel"
+              id="kt_modal_add_driver_cancel"
               class="btn btn-light me-3"
             >
               Discard
             </button>
+            <!--end::Button-->
 
+            <!--begin::Button-->
             <button
-              ref="editSubmitButtonRef"
+              ref="submitButtonRef"
               type="submit"
-              id="kt_edit_customer_submit"
+              id="kt_add_driver_submit"
               class="btn btn-primary"
             >
               <span class="indicator-label"> Submit </span>
@@ -378,8 +381,11 @@
                 ></span>
               </span>
             </button>
+            <!--end::Button-->
           </div>
+          <!--end::Modal footer-->
         </VForm>
+        <!--end::Form-->
       </div>
     </div>
   </div>
@@ -387,93 +393,102 @@
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { computed, defineComponent, ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
+import { hideModal } from "@/core/helpers/dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import { ErrorMessage, Field, Form as VForm } from "vee-validate";
 import * as Yup from "yup";
-import axios from "axios";
 import __CONSTANTS__ from "@/constants";
-import { useAuthStore } from "@/stores/auth";
-import { hideModal } from "@/core/helpers/dom";
+import axios from "axios";
 import statesInNigeria from "@/core/data/nigeriaStates";
 import citiesInNigeria from "@/core/data/citiesInNigeria";
+import { useAuthStore } from "@/stores/auth";
+
+interface FormData {
+  firstName: string;
+  lastName: string;
+  userName: string;
+  email: string;
+  phone_number: string;
+  state: string;
+  address: string;
+  city: string;
+  password: string;
+  gender: string;
+  title: string;
+}
 
 export default defineComponent({
-  name: "edit-admin-modal",
-  props: {
-    ProfileData: {
-      type: Object as () => {
-        username: string;
-        email: string;
-        id: number;
-        firstName: string;
-        lastName: string;
-        phone_number: string;
-        title: string;
-        state: string;
-        city: string;
-        address: string;
-        gender: string;
-        profile?: string;
-        last_login: string;
-      },
-    },
-  },
+  name: "add-admin-modal",
   components: { ErrorMessage, Field, VForm },
-  setup(props) {
- 
-    const { API_URL } = __CONSTANTS__;
+  setup() {
+    const AuthStore = useAuthStore();
+    const { user, token, refreshProfile } = AuthStore;
 
-    const editSubmitButtonRef = ref<null | HTMLButtonElement>(null);
+    const submitButtonRef = ref<null | HTMLButtonElement>(null);
+
+    const backdropRef = ref<null | HTMLDivElement>(null);
+    const addCustomerModalRef = ref<null | HTMLElement>(null);
 
     const modalRef = ref<null | HTMLElement>(null);
-    const editCustomerModalRef = ref<null | HTMLElement>(null);
+    const createAPIKeyModalRef = ref<null | HTMLElement>(null);
+    const { API_URL, badInternetAlert, errorAlert, successAlert } =
+      __CONSTANTS__;
 
-    const AuthStore = useAuthStore();
-    const { user , token} = AuthStore;
+    const newCustomerData = ref<FormData>({
+      firstName: "",
+      lastName: "",
+      email: "",
+      address: "",
+      state: "",
+      userName: "",
+      gender: "",
+      city: "",
+      password: "",
+      title: "",
+      phone_number: "",
+    });
 
     const validationSchema = Yup.object().shape({
       firstName: Yup.string().required().label("First Name"),
       lastName: Yup.string().required().label("Last Name"),
       email: Yup.string().required().label("Email"),
+      userName: Yup.string().required().label("UserName"),
       gender: Yup.string().required().label("gender"),
-      password: Yup.string().label("password"),
-      phone_number: Yup.string().required().label("phone_number"),
-      state: Yup.string().required().label("state"),
-      city: Yup.string().required().label("city"),
-      title: Yup.string().required().label("title"),
+      phone_number: Yup.string().required().label("Phone Number"),
+      city: Yup.string().required().label("City"),
+      state: Yup.string().required().label("State"),
+      title: Yup.string().required().label("Title"),
     });
 
-    const updateProfile = async () => {
-      if (editSubmitButtonRef.value) {
-        editSubmitButtonRef.value!.disabled = true;
-        editSubmitButtonRef.value.setAttribute("data-kt-indicator", "on");
+    const CreateAdminProfile = async () => {
+      if (submitButtonRef.value) {
+        submitButtonRef.value!.disabled = true;
+        submitButtonRef.value.setAttribute("data-kt-indicator", "on");
       }
-      if (!user) return;
 
-      const EditformData = new FormData();
+      const formData = new FormData();
 
-      EditformData.append("firstName", editCustomerData.value.lastName);
-      EditformData.append("lastName", editCustomerData.value.firstName);
-      EditformData.append("phone_number", editCustomerData.value.phone_number);
-      EditformData.append("city", editCustomerData.value.city);
-      EditformData.append("address", editCustomerData.value.address);
-
-      EditformData.append("state", editCustomerData.value.state);
-      EditformData.append("gender", editCustomerData.value.gender);
-      EditformData.append("title", editCustomerData.value.title);
-      EditformData.append("email", editCustomerData.value.email);
-      EditformData.append("_method", "put");
+      formData.append("firstName", newCustomerData.value.firstName);
+      formData.append("lastName", newCustomerData.value.lastName);
+      formData.append("email", newCustomerData.value.email);
+      formData.append("username", newCustomerData.value.userName);
+      formData.append("password", newCustomerData.value.password);
+      formData.append("address", newCustomerData.value.address);
+      formData.append("city", newCustomerData.value.city);
+      formData.append("state", newCustomerData.value.state);
+      formData.append("title", newCustomerData.value.title);
+      formData.append("gender", newCustomerData.value.gender);
+      formData.append("phone_number", newCustomerData.value.phone_number);
 
       await axios
-        .post(
-          API_URL + `customers/${editCustomerData.value.id}`,
-          EditformData,
-          { method: "put", headers: { Authorization: `Bearer ${token}` } }
-        )
+        .post(API_URL + "drivers", formData, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
         .then(() => {
+          hideModal(addCustomerModalRef.value);
           Swal.fire({
-            text: "Profile has been Updated!",
+            text: "Profile has been created!",
             icon: "success",
             buttonsStyling: false,
             confirmButtonText: "Ok!",
@@ -481,8 +496,9 @@ export default defineComponent({
             customClass: {
               confirmButton: "btn btn-primary",
             },
-          }).then(() => hideModal(editCustomerModalRef.value));
+          });
         })
+
         .catch((error) => {
           if (error.response.data.message == "User does not exist") {
             Swal.fire({
@@ -509,70 +525,37 @@ export default defineComponent({
             });
           }
         })
-        .finally(() => {
-          editSubmitButtonRef.value?.removeAttribute("data-kt-indicator");
-          editSubmitButtonRef.value!.disabled = false;
+        .then(() => {
+          submitButtonRef.value?.removeAttribute("data-kt-indicator");
+          submitButtonRef.value!.disabled = false;
         });
     };
 
-    const editCustomerData = computed(() => {
-      if (props.ProfileData && props.ProfileData.id) {
-        console.log(props.ProfileData);
-        return {
-          firstName: props.ProfileData.firstName || "",
-          lastName: props.ProfileData.lastName || "",
-          email: props.ProfileData.email || "",
-          username: props.ProfileData.username || "",
-          profile: props.ProfileData.profile || "",
-          last_login: props.ProfileData.last_login || "",
-          phone_number: props.ProfileData.phone_number || "0",
-          id: props.ProfileData.id || "",
-          title: props.ProfileData.title || "",
-          city: props.ProfileData.city || "",
-          password: "",
-          state: props.ProfileData.state || "",
-          address: props.ProfileData.address || "",
-          gender: props.ProfileData.gender || "",
-        };
-      }
-      return {
-        firstName: "",
-        lastName: "",
-        email: "",
-        username: "",
-        profile: "",
-        password: "",
-        phone_number: "",
-        last_login: "",
-        title: "",
-        city: "",
-        state: "",
-        address: "",
-        gender: "",
-        id: 0,
-      };
-    });
     const submit = async () => {
-      console.log("aaa");
-      if (!editSubmitButtonRef.value) {
+      if (!submitButtonRef.value) {
         return;
       }
-      await updateProfile();
 
-      editSubmitButtonRef.value.disabled = true;
-      editSubmitButtonRef.value.setAttribute("data-kt-indicator", "on");
+      submitButtonRef.value.disabled = true;
+      submitButtonRef.value.setAttribute("data-kt-indicator", "on");
+
+      await CreateAdminProfile();
+
+      submitButtonRef.value?.removeAttribute("data-kt-indicator");
+      submitButtonRef.value!.disabled = false;
     };
 
     return {
-      editCustomerData,
+      newCustomerData,
       validationSchema,
       submit,
-      editSubmitButtonRef,
+      submitButtonRef,
       modalRef,
-      editCustomerModalRef,
+      createAPIKeyModalRef,
       getAssetPath,
       statesInNigeria,
       citiesInNigeria,
+      addCustomerModalRef,
     };
   },
 });

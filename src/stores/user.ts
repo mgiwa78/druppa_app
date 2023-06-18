@@ -17,7 +17,7 @@ const useUserStore = defineStore("user", () => {
   const user = computed(() =>
     userState.value ? JSON.parse(userState.value) : null
   );
-  
+
   const userIsAdmin = computed(() => user.value.role_id === 2);
   const userIsActivated = computed(() => user.value.active === 1);
 
@@ -34,6 +34,7 @@ const useUserStore = defineStore("user", () => {
     }
     saveLogout();
   };
+
   const refreshUserAPI = async () => {
     try {
       const RESPONSE = await axios.get(
@@ -55,16 +56,19 @@ const useUserStore = defineStore("user", () => {
     const stringifiedData = JSON.stringify(userParam);
     userState.value = stringifiedData;
   };
+
   const saveLogin = (userParam: any, tokenParam: string) => {
     const stringifiedData = JSON.stringify(userParam);
     userState.value = stringifiedData;
     token.value = tokenParam;
     console.log(loggedIn.value);
   };
+
   const saveInfoForVerification = (id: number, email: string) => {
     userIdForVerification.value = id;
     emailForVerification.value = email;
   };
+
   const removeInfoForVerification = () => {
     userIdForVerification.value = 0;
     emailForVerification.value = "";

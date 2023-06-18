@@ -35,7 +35,7 @@ const useAuthStore = defineStore("auth", () => {
 
   const authUser = ref<AuthUser | null>(null);
 
-  function setAuth(authUser: User, authToken) {
+  function setAuth(authUser: User, authToken: string) {
     isAuthenticated.value = true;
     userPersist.value = JSON.stringify(authUser);
     errors.value = {};

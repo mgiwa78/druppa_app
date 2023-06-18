@@ -141,7 +141,7 @@ const GenerateMenus = (type) => {
           pages: [
             {
               sectionTitle: "Admin",
-              route: "/admin",
+              route: "/admin/admin",
               keenthemesIcon: "bi bi-person-workspace",
               bootstrapIcon: "bi bi-person-workspace",
               sub: [
@@ -153,7 +153,7 @@ const GenerateMenus = (type) => {
             },
             {
               sectionTitle: "Customers",
-              route: "/customers",
+              route: "/admin/customers",
               keenthemesIcon: "bi bi-people",
               bootstrapIcon: "bi bi-people",
               sub: [
@@ -165,7 +165,7 @@ const GenerateMenus = (type) => {
             },
             {
               sectionTitle: "Drivers",
-              route: "/drivers",
+              route: "/admin/drivers",
               keenthemesIcon: "bi bi-person-badge",
               bootstrapIcon: "bi bi-person-badge",
               sub: [

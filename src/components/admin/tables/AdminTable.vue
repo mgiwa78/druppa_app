@@ -176,6 +176,7 @@ import formatDate from "@/core/helpers/formatDate";
 
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
+import { useAuthStore } from "@/stores/auth";
 
 interface AdminProfile {
   username: string;
@@ -253,6 +254,8 @@ export default defineComponent({
       title: "",
       permissions: [],
     });
+    const AuthStore = useAuthStore();
+    const { user, token, refreshProfile } = AuthStore;
 
     const itemsInTable = ref<number>(5);
     const totalProfiles = ref<Array<number>>([0]);
@@ -326,7 +329,9 @@ export default defineComponent({
 
     const fetchAllAdminProfiles = async (page) => {
       const profiles = await axios
-        .get(API_URL + "admin" + `?page=${page}`)
+        .get(API_URL + "admin" + `?page=${page}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
         .then((response) => response.data)
         .catch((error) => {
           Swal.fire({

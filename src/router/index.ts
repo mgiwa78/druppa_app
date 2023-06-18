@@ -91,15 +91,6 @@ const routes: Array<RouteRecordRaw> = [
         ],
       },
       {
-        path: "/customers",
-        name: "Customers",
-        component: () => import("@/components/admin/CustomerListings.vue"),
-        meta: {
-          pageTitle: "Customers",
-          breadcrumbs: ["Customers"],
-        },
-      },
-      {
         path: "/deliveries",
         name: "Deliveries",
         meta: {
@@ -120,12 +111,40 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: "/admin",
-        name: "Admin",
-        component: () => import("@/components/admin/tables/AdminTable.vue"),
+        name: "admin",
         meta: {
           pageTitle: "Admin",
-          breadcrumbs: ["Admin", "Users"],
+          breadcrumbs: ["Admin"],
         },
+        children: [
+          {
+            path: "/customers",
+            name: "Customers",
+            component: () => import("@/views/admin/CustomerListings.vue"),
+            meta: {
+              pageTitle: "Customers",
+              breadcrumbs: ["Admin", "Customers"],
+            },
+          },
+          {
+            path: "/admin",
+            name: "Admin",
+            component: () => import("@/views/admin/AdminListings.vue"),
+            meta: {
+              pageTitle: "Admin",
+              breadcrumbs: ["Admin", "Administranive Users"],
+            },
+          },
+          {
+            path: "/drivers",
+            name: "Drivers",
+            component: () => import("@/views/admin/DriverListings.vue"),
+            meta: {
+              pageTitle: "Admin",
+              breadcrumbs: ["Admin", "Administranive Users"],
+            },
+          },
+        ],
       },
     ],
   },

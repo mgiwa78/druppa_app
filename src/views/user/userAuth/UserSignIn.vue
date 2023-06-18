@@ -222,12 +222,10 @@ export default defineComponent({
           type: values.userType,
         })
         .then((response) => {
-          console.log(response);
-          setAuth(response.data.user, response.data.user.token);
+          setAuth(response.data.user, response.data.token);
           router.push({ name: "dashboard" });
         })
         .catch((error) => {
-          console.log(error.response.data.message);
           if (error.response.data.message === "Invalid login credentials") {
             Swal.fire({
               text: "Invalid Email or Password",

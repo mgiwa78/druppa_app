@@ -11,12 +11,12 @@
       <!--begin::Modal content-->
       <div class="modal-content">
         <!--begin::Modal header-->
-        <div class="modal-header" id="kt_modal_add_admin_header">
+        <div class="modal-header" id="kt_modal_add_customer_header">
           <!--begin::Modal title-->
           <h2 class="fw-bold">Create Customer</h2>
 
           <div
-            id="kt_modal_add_admin_close"
+            id="kt_modal_add_customer_close"
             data-bs-dismiss="modal"
             class="btn btn-icon btn-sm btn-active-icon-primary"
           >
@@ -402,6 +402,7 @@ import __CONSTANTS__ from "@/constants";
 import axios from "axios";
 import statesInNigeria from "@/core/data/nigeriaStates";
 import citiesInNigeria from "@/core/data/citiesInNigeria";
+import { useAuthStore } from "@/stores/auth";
 
 interface FormData {
   firstName: string;
@@ -418,9 +419,12 @@ interface FormData {
 }
 
 export default defineComponent({
-  name: "add-admin-modal",
+  name: "add-customer-modal",
   components: { ErrorMessage, Field, VForm },
   setup() {
+    const AuthStore = useAuthStore();
+    const { user, token, refreshProfile } = AuthStore;
+
     const submitButtonRef = ref<null | HTMLButtonElement>(null);
 
     const backdropRef = ref<null | HTMLDivElement>(null);
@@ -478,7 +482,9 @@ export default defineComponent({
       formData.append("phone_number", newCustomerData.value.phone_number);
 
       await axios
-        .post(API_URL + "customers", formData)
+        .post(API_URL + "customers", formData, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
         .then(() => {
           hideModal(addCustomerModalRef.value);
           Swal.fire({
