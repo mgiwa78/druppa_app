@@ -9,7 +9,14 @@
         <div class="d-flex flex-center flex-column">
           <!--begin::Avatar-->
           <div class="symbol symbol-100px symbol-circle mb-7">
-            <img :src="getAssetPath('media/avatars/300-1.jpg')" alt="image" />
+            <img
+              :src="
+                user.profile
+                  ? `${ASSETS_URL + user.profile}`
+                  : getAssetPath('media/avatars/blank.png')
+              "
+              alt="image"
+            />
           </div>
           <!--end::Avatar-->
 
@@ -18,12 +25,12 @@
             href="#"
             class="fs-3 text-gray-800 text-hover-primary fw-bold mb-1"
           >
-            Max Smith
+            {{ user.firstName + " " + user.lastName }}
           </a>
           <!--end::Name-->
 
           <!--begin::Position-->
-          <div class="fs-5 fw-semobold text-muted mb-6">Software Enginer</div>
+          <div class="fs-5 fw-semobold text-muted mb-6">{{ user.type }}</div>
           <!--end::Position-->
 
           <!--begin::Info-->
@@ -44,18 +51,21 @@
         <div id="kt_customer_view_details" class="collapse show">
           <div class="py-5 fs-6">
             <!--begin::Badge-->
-            <div class="badge badge-light-info d-inline">Active</div>
+            <div class="badge badge-light-info d-inline">
+              {{ isActive ? "Active" : "In-Active" }}
+            </div>
             <!--begin::Badge-->
             <!--begin::Details item-->
             <div class="fw-bold mt-5">Account ID</div>
-            <div class="text-gray-600">ID-45453423</div>
+            <div class="text-gray-600">{{ user.id }}</div>
             <!--begin::Details item-->
             <!--begin::Details item-->
             <div class="d-flex flex-stack">
               <div class="d-flex py-5">
                 <div class="d-flex flex-column">
                   <a href="#" class="fs-5 text-dark text-hover-primary fw-bold"
-                    >Update Profile to Active</a
+                    >Update Profile
+                    {{ user.isActive ? "from active" : "to active" }}</a
                   >
                 </div>
               </div>
@@ -68,9 +78,8 @@
                   <!--begin::Input-->
                   <input
                     class="form-check-input"
-                    name="google"
                     type="checkbox"
-                    value="1"
+                    v-model="driveisActive"
                     id="kt_modal_connected_accounts_google"
                   />
                   <!--end::Input-->
@@ -85,6 +94,17 @@
                 <!--end::Switch-->
               </div>
             </div>
+            <div class="d-flex justify-content-center">
+              <!--begin::Switch-->
+              <button
+                data-bs-toggle="modal"
+                data-bs-target="#kt_update_is_active_modal"
+                class="btn btn-icon w-100 btn-warning btn-md me-1"
+              >
+                Update Status
+              </button>
+              <!--end::Switch-->
+            </div>
           </div>
         </div>
         <!--end::Details content-->
@@ -95,17 +115,26 @@
 
     <!--begin::Connected Accounts-->
 
-    <!--end::Connected Accounts-->
+    <!--end::Connecsdted Accounts-->
   </div>
+  <UpdateProfileModal :newState="driveisActive"></UpdateProfileModal>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { getAssetPath } from "@/core/helpers/assets.ts";
+import { defineComponent, ref } from "vue";
+import { getAssetPath } from "@/core/helpers/assets";
+import __CONSTANTS__ from "@/constants";
+import { useAuthStore } from "@/stores/auth";
+import UpdateProfileModal from "@/components/driver/form/UpdateProfileModal.vue";
+
 export default defineComponent({
   name: "driver-dashboard",
-  components: {},
+  components: { UpdateProfileModal },
   setup() {
+    const AuthStore = useAuthStore();
+    const { API_URL, ASSETS_URL } = __CONSTANTS__;
+    const { user, isActive } = AuthStore;
+    const driveisActive = ref<Boolean | null>(isActive);
     type Metric = {
       icon: string;
       title: string;
@@ -118,7 +147,7 @@ export default defineComponent({
       metrics: Array<Metric>;
     };
 
-    return { getAssetPath };
+    return { getAssetPath, user, isActive, driveisActive, API_URL, ASSETS_URL };
   },
 });
 </script>

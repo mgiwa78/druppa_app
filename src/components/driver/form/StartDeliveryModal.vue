@@ -51,7 +51,13 @@
 
               <!--begin::Col-->
               <div class="col-lg-8">
-                <span class="fw-bold fs-6 text-dark">David Johnson</span>
+                <span class="fw-bold fs-6 text-dark"
+                  >{{
+                    OrderData?.customer.firstName +
+                    " " +
+                    OrderData?.customer.lastName
+                  }}Johnson</span
+                >
               </div>
               <!--end::Col-->
             </div>
@@ -64,9 +70,9 @@
 
               <!--begin::Col-->
               <div class="col-lg-8">
-                <span class="fw-bold fs-6 text-dark"
-                  >123 Main Street, Wuse 2, Abuja, Nigeria</span
-                >
+                <span class="fw-bold fs-6 text-dark">{{
+                  OrderData?.pick_up
+                }}</span>
               </div>
               <!--end::Col-->
             </div>
@@ -79,9 +85,9 @@
 
               <!--begin::Col-->
               <div class="col-lg-8">
-                <span class="fw-bold fs-6 text-dark"
-                  >456 Park Avenue, Garki, Abuja, Nigeria</span
-                >
+                <span class="fw-bold fs-6 text-dark">{{
+                  OrderData?.drop_off
+                }}</span>
               </div>
               <!--end::Col-->
             </div>
@@ -92,9 +98,9 @@
 
               <!--begin::Col-->
               <div class="col-lg-8">
-                <span class="fw-bold fs-6 text-dark"
-                  >May 15, 2023, Before 12:00 PM</span
-                >
+                <span class="fw-bold fs-6 text-dark">{{
+                  formatDate(OrderData?.created_at!)
+                }}</span>
               </div>
               <!--end::Col-->
             </div>
@@ -153,7 +159,11 @@ import { ErrorMessage, Field, Form as VForm } from "vee-validate";
 import * as Yup from "yup";
 import __CONSTANTS__ from "@/constants";
 import axios from "axios";
+import formatDate from "@/core/helpers/formatDate";
+
 import Multiselect from "@vueform/multiselect";
+import type { OrderType } from "@/core/types/Orders";
+import type { PropType } from "vue";
 
 interface FormData {
   firstName: string;
@@ -165,8 +175,13 @@ interface FormData {
 }
 
 export default defineComponent({
-  name: "add-admin-modal",
-  components: { ErrorMessage, Field, VForm, Multiselect },
+  name: "start-delivery-modal",
+  props: {
+    OrderData: {
+      type: Object as PropType<OrderType>,
+    },
+  },
+  components: {},
   setup() {
     const submitButtonRef = ref<null | HTMLButtonElement>(null);
 
@@ -325,6 +340,7 @@ export default defineComponent({
       getAssetPath,
       permissionsSelect,
       Multiselect,
+      formatDate,
     };
   },
 });

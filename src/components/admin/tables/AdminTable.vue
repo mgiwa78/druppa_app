@@ -309,7 +309,7 @@ export default defineComponent({
       () => currentPage.value,
       async (newValue) => {
         const data = await fetchPageData(newValue);
-        console.log(data);
+
         dataToDisplay.value = data.data;
       }
     );
@@ -397,127 +397,9 @@ export default defineComponent({
       total.value = profiles.total;
       currentPage.value = profiles.currentPage;
     });
-    const list = [
-      {
-        agent: {
-          image: getAssetPath("media/svg/avatars/001-boy.svg"),
-          name: "Brad Simmons",
-          skills: "HTML, JS, ReactJS",
-        },
-        earnings: {
-          value: "$8,000,000",
-          remarks: "Pending",
-        },
-        comission: {
-          value: "$5,400",
-          remarks: "Paid",
-        },
-        company: {
-          name: "Intertico",
-          fields: "Web, UI/UX Design",
-        },
-        rating: {
-          value: 5,
-          remarks: "Best Rated",
-        },
-      },
-      {
-        agent: {
-          image: getAssetPath("media/svg/avatars/047-girl-25.svg"),
-          name: "Lebron Wayde",
-          skills: "PHP, Laravel, VueJS",
-        },
-        earnings: {
-          value: "$8,750,000",
-          remarks: "Paid",
-        },
-        comission: {
-          value: "$7,400",
-          remarks: "Paid",
-        },
-        company: {
-          name: "Agoda",
-          fields: "Houses & Hotels",
-        },
-        rating: {
-          value: 4,
-          remarks: "Above Avarage",
-        },
-      },
-      {
-        agent: {
-          image: getAssetPath("media/svg/avatars/006-girl-3.svg"),
-          name: "Brad Simmons",
-          skills: "HTML, JS, ReactJS",
-        },
-        earnings: {
-          value: "$8,000,000",
-          remarks: "In Proccess",
-        },
-        comission: {
-          value: "$2,500",
-          remarks: "Rejected",
-        },
-        company: {
-          name: "RoadGee",
-          fields: "Paid",
-        },
-        rating: {
-          value: 5,
-          remarks: "Best Rated",
-        },
-      },
-      {
-        agent: {
-          image: getAssetPath("media/svg/avatars/014-girl-7.svg"),
-          name: "Natali Trump",
-          skills: "HTML, JS, ReactJS",
-        },
-        earnings: {
-          value: "$700,000",
-          remarks: "Pending",
-        },
-        comission: {
-          value: "$7,760",
-          remarks: "Paid",
-        },
-        company: {
-          name: "The Hill",
-          fields: "Insurance",
-        },
-        rating: {
-          value: 3,
-          remarks: "Avarage",
-        },
-      },
-      {
-        agent: {
-          image: getAssetPath("media/svg/avatars/020-girl-11.svg"),
-          name: "	Jessie Clarcson",
-          skills: "HTML, JS, ReactJS",
-        },
-        earnings: {
-          value: "$1,320,000",
-          remarks: "Pending",
-        },
-        comission: {
-          value: "$6,250",
-          remarks: "Paid",
-        },
-        company: {
-          name: "Intertico",
-          fields: "Web, UI/UX Design",
-        },
-        rating: {
-          value: 5,
-          remarks: "Best Rated",
-        },
-      },
-    ];
 
     return {
       search,
-      list,
       getAssetPath,
       pageChange,
       currentPage,

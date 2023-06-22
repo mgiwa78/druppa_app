@@ -24,7 +24,7 @@ interface User {
 }
 
 interface AuthUser {
-  admin_user: User;
+  user: User;
 }
 const useAuthStore = defineStore("auth", () => {
   const errors = ref({});
@@ -42,13 +42,9 @@ const useAuthStore = defineStore("auth", () => {
     token.value = authToken;
   }
 
-  const refreshProfile = async (
-    id: number | string | undefined,
-    type: string
-  ) => {
-    const url = type === "Admin" ? `admin/${id}` : `customer/${id}`;
+  const refreshProfile = async () => {
     const auth = await axios
-      .get(API_URL + `${url}`, {
+      .get(API_URL + `profile`, {
         headers: {
           Authorization: `Bearer ${token.value}`,
         },
@@ -56,20 +52,29 @@ const useAuthStore = defineStore("auth", () => {
       .then((response) => {
         return response.data;
       });
+
+    console.log(auth.user);
     authUser.value = auth;
 
     isAuthenticated.value = true;
-    userPersist.value = JSON.stringify(authUser.value?.admin_user);
+    userPersist.value = JSON.stringify(authUser.value);
   };
 
   watch(authUser, () => {
     userPersist.value = JSON.stringify(
-      authUser.value ? authUser.value.admin_user : null
+      authUser.value ? authUser.value.user : null
     );
   });
 
   const user = computed(() =>
     userPersist.value ? JSON.parse(userPersist.value) : null
+  );
+  const isActive = computed(() =>
+    userPersist.value
+      ? JSON.parse(userPersist.value).isActive === 1
+        ? true
+        : false
+      : null
   );
 
   const isAuthenticated = ref(user.value ? true : null);
@@ -131,6 +136,7 @@ const useAuthStore = defineStore("auth", () => {
     forgotPassword,
     // verifyAuth,
     setAuth,
+    isActive,
     refreshProfile,
   };
 });

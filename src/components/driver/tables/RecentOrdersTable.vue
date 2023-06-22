@@ -4,31 +4,36 @@
     <!--begin::Header-->
     <div class="card-header border-0 pt-5">
       <h3 class="card-title align-items-start flex-column">
-        <span class="card-label fw-bold fs-3 mb-1">Recent Orders</span>
+        <span class="card-label fw-bold fs-3 mb-1">Pending Orders</span>
 
-        <span class="text-muted mt-1 fw-semobold fs-7">Over 500 orders</span>
-      </h3>
-      <div class="card-toolbar">
-        <!--begin::Menu-->
-        <button
-          type="button"
-          class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary"
-          data-kt-menu-trigger="click"
-          data-kt-menu-placement="bottom-end"
-          data-kt-menu-flip="top-end"
+        <span class="text-muted mt-1 fw-semobold fs-7"
+          >{{ dataToDisplay?.length }} Orders</span
         >
-          <KTIcon icon-name="category" icon-class="fs-2" />
-        </button>
-        <Dropdown2></Dropdown2>
-        <!--end::Menu-->
-      </div>
+      </h3>
     </div>
     <!--end::Header-->
 
     <!--begin::Body-->
     <div class="card-body py-3">
       <!--begin::Table container-->
-      <div class="table-responsive">
+      <div
+        v-if="dataToDisplay?.length === 0"
+        class="d-flex align-items-center justify-content-center w-100 py-5"
+      >
+        <h4>No Pending Orders</h4>
+      </div>
+      <div
+        v-if="!dataToDisplay"
+        class="d-flex align-items-center justify-content-center w-100 py-5"
+      >
+        <div
+          class="spinner-border spinner-border-sm align-middle ms-2 w-25px h-25px"
+        ></div>
+      </div>
+      <div
+        v-if="dataToDisplay?.length && dataToDisplay"
+        class="table-responsive"
+      >
         <!--begin::Table-->
         <table
           class="table table-row-bordered table-row-gray-100 align-middle gs-0 gy-3"
@@ -37,11 +42,12 @@
           <thead>
             <tr class="fw-bold text-muted">
               <th class="min-w-150px">Order Id</th>
-              <th class="min-w-140px">Order Placed</th>
-              <th class="min-w-120px">Pickup</th>
+              <th class="min-w-120px">Order Placed</th>
+              <th class="min-w-140px">Pickup</th>
               <th class="min-w-120px">Dropoff</th>
-              <th class="min-w-120px">Distance</th>
+              <th class="min-w-120px">Shipment Type</th>
               <th class="min-w-120px">Status</th>
+
               <th class="min-w-100px text-end">Actions</th>
             </tr>
           </thead>
@@ -49,233 +55,298 @@
 
           <!--begin::Table body-->
           <tbody>
-            <template v-for="(item, index) in list" :key="index">
+            <template v-for="order in dataToDisplay" :key="order.id">
               <tr>
                 <td>
-                  <span
+                  <a
                     href="#"
                     class="text-dark fw-bold text-hover-primary fs-6"
-                    >{{ item.orderid }}</span
+                    >{{ order.id }}</a
                   >
                 </td>
-
-                <td>
-                  <span
-                    href="#"
-                    class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                    >{{ item.company.name }}</span
-                  >
-                  <span class="text-muted fw-semobold text-muted d-block fs-7"
-                    >Code: {{ item.country.code }}</span
-                  >
-                </td>
-
-                <td>
-                  <span
-                    href="#"
-                    class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                    >{{ item.date.value }}</span
-                  >
-                  <span class="text-muted fw-semobold text-muted d-block fs-7"
-                    >Code: {{ item.date.remarks }}</span
-                  >
-                </td>
-
-                <td>
-                  <span
-                    href="#"
-                    class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                    >{{ item.company.name }}</span
-                  >
-                  <span
-                    class="text-muted fw-semobold text-muted d-block fs-7"
-                    >{{ item.company.fields }}</span
-                  >
-                </td>
-
                 <td class="text-dark fw-bold text-hover-primary fs-6">
-                  {{ item.total }}
+                  {{ formatDate(order.created_at) }}
+                </td>
+                <td>
+                  <a
+                    href="#"
+                    class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
+                    >{{ order.pick_up }}</a
+                  >
+                </td>
+
+                <td>
+                  <a
+                    href="#"
+                    class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
+                    >{{ order.drop_off }}</a
+                  >
+                </td>
+
+                <td>
+                  <a
+                    href="#"
+                    class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
+                    >{{ order.shipment_type }}</a
+                  >
+                  <!-- <span
+                    class="text-muted fw-semobold text-muted d-block fs-7"
+                    >{{ order.city }}</span
+                  > -->
                 </td>
 
                 <td>
                   <span
-                    :class="`badge-light-${item.status.color}`"
+                    :class="`badge-light-${statusFilter[order.status]}`"
                     class="badge"
-                    >{{ item.status.label }}</span
+                    >{{ order.status }}</span
                   >
                 </td>
 
                 <td class="text-end">
-                  <a
+                  <button
                     data-bs-toggle="modal"
                     data-bs-target="#kt_start_delivery_modal"
-                    v-if="item.status.label === 'Pending'"
-                    href="#"
                     class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
+                    @click.prevent="updateVieworder(order)"
                   >
                     <KTIcon icon-name="switch" icon-class="fs-3" />
-                  </a>
+                  </button>
+
+                  <!-- <button
+                    class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
+                  >
+                    <KTIcon icon-name="pencil" icon-class="fs-3" />
+                  </button> -->
                 </td>
               </tr>
             </template>
           </tbody>
+
           <!--end::Table body-->
         </table>
+        <div class="px-10">
+          <TableFooter
+            @page-change="pageChange"
+            :current-page="currentPage"
+            v-model:itemsPerPage="itemsPerPage"
+            :count="totalItems"
+            :items-per-page-dropdown-enabled="itemsPerPageDropdownEnabled"
+          />
+        </div>
         <!--end::Table-->
       </div>
       <!--end::Table container-->
     </div>
     <!--begin::Body-->
   </div>
-  <StartDeliveryModal></StartDeliveryModal>
-
   <!--end::Tables Widget 13-->
+  <StartDeliveryModal :OrderData="CustomerVieworderData"></StartDeliveryModal>
 </template>
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, onMounted, ref, watch } from "vue";
 import Dropdown2 from "@/components/dropdown/Dropdown2.vue";
+import TableFooter from "@/components/kt-datatable/table-partials/TableFooter.vue";
+import __CONSTANTS__ from "@/constants";
+import axios from "axios";
+import { useAuthStore } from "@/stores/auth";
+import Swal from "sweetalert2";
+import formatDate from "@/core/helpers/formatDate";
+import type { OrderType } from "@/core/types/Orders";
+import { OrderEmpty } from "@/core/types/Orders";
+
 import StartDeliveryModal from "@/components/driver/form/StartDeliveryModal.vue";
+
+import router from "@/router";
 
 export default defineComponent({
   name: "kt-widget-12",
+
   components: {
-    Dropdown2,
+    TableFooter,
     StartDeliveryModal,
   },
   props: {
     widgetClasses: String,
   },
-  setup() {
-    const checkedRows = ref<Array<number>>([]);
-    const list = [
-      {
-        orderid: "56037-XDER",
-        country: {
-          name: "Brasil",
-          code: "PH",
-        },
-        date: {
-          value: "05/28/2020",
-          remarks: "Paid",
-        },
-        progress: {
-          value: "50",
-          color: "primary",
-        },
-        company: {
-          name: "Intertico",
-          fields: "Web, UI/UX Design",
-        },
-        status: {
-          label: "In Progress",
-          color: "primary",
-        },
-        total: "35Km",
-      },
-      {
-        orderid: "05822-FXSP",
-        country: {
-          name: "Belarus",
-          code: "BY",
-        },
-        date: {
-          value: "04/18/2021",
-          remarks: "Paid",
-        },
-        progress: {
-          value: "50",
-          color: "primary",
-        },
-        company: {
-          name: "Agoda",
-          fields: "Houses & Hotels",
-        },
-        status: {
-          label: "Pending",
-          color: "warning",
-        },
-        total: "48Km",
-      },
-      {
-        orderid: "4472-QREX",
-        country: {
-          name: "Phillipines",
-          code: "BH",
-        },
-        date: {
-          value: "07/23/2019",
-          remarks: "Paid",
-        },
-        progress: {
-          value: "50",
-          color: "primary",
-        },
-        company: {
-          name: "RoadGee",
-          fields: "Transportation",
-        },
-        status: {
-          label: "In Progress",
-          color: "primary",
-        },
-        total: "83Km",
-      },
-      {
-        orderid: "00347-BCLQ",
-        country: {
-          name: "Argentina",
-          code: "BR",
-        },
-        date: {
-          value: "12/21/2021",
-          remarks: "Paid",
-        },
-        progress: {
-          value: "50",
-          color: "primary",
-        },
-        company: {
-          name: "The Hill",
-          fields: "Insurance",
-        },
-        status: {
-          label: "In Progress",
-          color: "primary",
-        },
-        total: "48Km",
-      },
-      {
-        orderid: "59486-XDER",
-        country: {
-          name: "Agoda",
-          code: "BT",
-        },
-        date: {
-          value: "05/28/2020",
-          remarks: "Paid",
-        },
-        progress: {
-          value: "50",
-          color: "primary",
-        },
-        company: {
-          name: "Phillipines",
-          fields: "Transportation",
-        },
-        status: {
-          label: "In Progress",
-          color: "primary",
-        },
-        total: "84Km",
-      },
-    ];
+  emits: [
+    "page-change",
+    "on-sort",
+    "on-items-select",
+    "on-items-per-page-change",
+  ],
+  setup(props, { emit }) {
+    const { API_URL, ASSETS_URL } = __CONSTANTS__;
+
+    const DeliveriesPaginationData = ref<any>({});
+
+    const editOrderData = ref<OrderType>(OrderEmpty);
+    const CustomerVieworderData = ref<OrderType>(OrderEmpty);
+
+    const dataToDisplay = ref<Array<OrderType> | null>(null);
+    const itemsPerPage = ref<number>(4);
+    const totalOrders = ref<Array<number>>([0]);
+    const total = ref<number>(0);
+
+    const AuthStore = useAuthStore();
+    const { user, token, logout } = AuthStore;
+
+    const itemsPerPageDropdownEnabled = ref<boolean>(true);
+    const currentPage = ref<number>(1);
+
+    const statusFilter = {
+      Pending: "warning",
+      "In Progress": "primary",
+      Delivered: "success",
+    };
+
+    watch(
+      () => itemsPerPage.value,
+      (val) => {
+        currentPage.value = 1;
+        emit("on-items-per-page-change", val);
+      }
+    );
+
+    const totalItems = computed(() => {
+      if (totalOrders.value) {
+        if (totalOrders.value.length <= itemsPerPage.value) {
+          return total.value;
+        } else {
+          return totalOrders.value.length;
+        }
+      }
+      return 0;
+    });
+
+    const updateEditorder = async (order: OrderType) => {
+      editOrderData.value = order;
+    };
+    const updateVieworder = async (order: OrderType) => {
+      console.log(order);
+      CustomerVieworderData.value = order;
+    };
+
+    watch(
+      () => currentPage.value,
+      async (newValue) => {
+        const data = await fetchPageData(newValue);
+        dataToDisplay.value = data.data;
+      }
+    );
+    watch(
+      () => itemsPerPage.value,
+      async (newValue) => {
+        const data = await fetchPageData(newValue);
+        dataToDisplay.value = data.data;
+      }
+    );
+
+    const pageChange = (page: number) => {
+      currentPage.value = page;
+      emit("page-change", page);
+    };
+
+    const fetchCustomerOrders = async (page) => {
+      const size = 5;
+      const Orders = await axios
+        .get(
+          API_URL +
+            "getPendingOrders" +
+            `/${itemsPerPage.value}` +
+            `?page=${page}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
+        .then((response) => response.data)
+        .catch((error) => {
+          dataToDisplay.value = null;
+          if (error.response.data.message === "Unauthenticated.") {
+            Swal.fire({
+              text: error.response.data.message,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Ok!",
+              heightAuto: false,
+              customClass: {
+                confirmButton: "btn fw-semobold btn-light-danger",
+              },
+            }).then(() => logout());
+          } else if (error.response.data.message) {
+            Swal.fire({
+              text: error.response.data.message,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Error Fetching Data!",
+              heightAuto: false,
+              customClass: {
+                confirmButton: "btn fw-semobold btn-light-danger",
+              },
+            });
+          } else {
+            Swal.fire({
+              text: error.message,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Error Fetching Data!",
+              heightAuto: false,
+              customClass: {
+                confirmButton: "btn fw-semobold btn-light-danger",
+              },
+            });
+          }
+        });
+      return Orders.data;
+    };
+
+    const fetchPageData = async (page: number) => {
+      if (typeof page === "number") {
+        return await fetchCustomerOrders(page);
+      } else {
+        return await fetchCustomerOrders(1);
+      }
+    };
+
+    // const searchingFunc = (obj: any, value: string): boolean => {
+    //   for (let key in obj) {
+    //     if (!Number.isInteger(obj[key]) && !(typeof obj[key] === "object")) {
+    //       if (obj[key].indexOf(value) != -1) {
+    //         return true;
+    //       }
+    //     }
+    //   }
+    //   return false;
+    // };
+
+    onMounted(async () => {
+      const deliveries = await fetchPageData(1);
+      console.log(deliveries);
+      DeliveriesPaginationData.value = deliveries;
+
+      dataToDisplay.value = deliveries.data;
+      total.value = deliveries.total;
+      currentPage.value = deliveries.current_page;
+    });
 
     return {
-      list,
-      checkedRows,
       getAssetPath,
+      pageChange,
+      currentPage,
+      itemsPerPage,
+      totalOrders,
+      totalItems,
+      dataToDisplay,
+      itemsPerPageDropdownEnabled,
+      ASSETS_URL,
+      editOrderData,
+      updateEditorder,
+      CustomerVieworderData,
+      updateVieworder,
+      formatDate,
+      statusFilter,
     };
   },
 });
