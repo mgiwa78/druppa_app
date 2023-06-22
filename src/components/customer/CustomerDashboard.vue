@@ -8,7 +8,7 @@
         ></CustomerNotifications>
       </div>
       <div class="col-xl-8">
-        <CustomerShipmentsStats className="h-md-100" />
+        <CustomerDeliveryStats className="h-md-100" />
       </div>
     </div>
   </div>
@@ -19,11 +19,11 @@ import { defineComponent } from "vue";
 import StatisticsWidget5 from "@/components/widgets/statsistics/Widget5.vue";
 import MixedWidget14 from "@/components/widgets/mixed/Widget14.vue";
 import CustomerNotifications from "./widgets/CustomerNotifications.vue";
-import CustomerShipmentsStats from "./widgets/CustomerShipmentsStats.vue";
+import CustomerDeliveryStats from "@/components/customer/tables/CustomerDeliveryStats.vue";
 
 export default defineComponent({
   name: "customer-dashboard",
-  components: { CustomerNotifications, CustomerShipmentsStats },
+  components: { CustomerNotifications, CustomerDeliveryStats },
   setup() {
     type Metric = {
       icon: string;

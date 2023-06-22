@@ -8,7 +8,7 @@
           icon-name="cheque"
           color="dark"
           icon-color="white"
-          title="20"
+          :title="`${counts.customersCount}`"
           description="Customers"
         ></StatisticsWidget5>
       </div>
@@ -18,7 +18,7 @@
           icon-name="cheque"
           color="primary"
           icon-color="white"
-          title="5"
+          :title="`${counts.adminCount}`"
           description="Admins"
         ></StatisticsWidget5>
       </div>
@@ -28,7 +28,7 @@
           icon-name="cheque"
           color="danger"
           icon-color="white"
-          title="30"
+          :title="`${counts.driversCount}`"
           description="Drivers"
         ></StatisticsWidget5>
       </div>
@@ -57,14 +57,30 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import StatisticsWidget5 from "@/components/widgets/statsistics/Widget5.vue";
 import MixedWidget14 from "@/components/widgets/mixed/Widget14.vue";
+import Swal from "sweetalert2";
+import __CONSTANTS__ from "@/constants";
+import axios from "axios";
+import { useAuthStore } from "@/stores/auth";
+import { useStaticsStore } from "@/stores/statics";
 
 export default defineComponent({
   name: "admin-dashboard",
   components: { StatisticsWidget5, MixedWidget14 },
   setup() {
+    const { API_URL, ASSETS_URL } = __CONSTANTS__;
+    const AuthStore = useAuthStore();
+    const StaticsStore = useStaticsStore();
+
+    const customersCount = ref<Number>(0);
+    const driversCount = ref<Number>(0);
+    const adminCount = ref<Number>(0);
+
+    const { user, token, refreshProfile } = AuthStore;
+    const { counts, UpdateCounts } = StaticsStore;
+
     type Metric = {
       icon: string;
       title: string;
@@ -127,7 +143,16 @@ export default defineComponent({
         ],
       },
     ] as Array<Metrics>;
-    return { summary };
+
+    onMounted(async () => {
+      if (counts.isSet) {
+        return;
+      } else {
+        UpdateCounts();
+      }
+    });
+
+    return { summary, customersCount, adminCount, driversCount, counts };
   },
 });
 </script>

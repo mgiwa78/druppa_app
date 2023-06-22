@@ -176,7 +176,6 @@
 import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent, onMounted, ref } from "vue";
 import { ErrorMessage, Field, Form as VForm } from "vee-validate";
-import useUserStore from "@/stores/user";
 import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
 import Swal from "sweetalert2/dist/sweetalert2.js";
@@ -196,13 +195,11 @@ export default defineComponent({
   setup() {
     const { API_URL } = __CONSTANTS__;
 
-    const userStore = useUserStore();
     const authStore = useAuthStore();
 
     const { setAuth } = authStore;
     const { isAuthenticated } = storeToRefs(authStore);
 
-    const { loggedIn } = storeToRefs(userStore);
     const router = useRouter();
 
     const submitButton = ref<HTMLButtonElement | null>(null);
@@ -306,7 +303,6 @@ export default defineComponent({
     return {
       onSubmitLogin,
       login,
-      loggedIn,
       submitButton,
       getAssetPath,
     };

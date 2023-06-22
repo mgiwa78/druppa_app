@@ -1,20 +1,20 @@
 export interface CustomerType {
-  id?: 37;
-  email?: string;
-  firstName?: string;
-  lastName?: string;
-  type?: string;
-  title?: string;
-  gender?: string;
-  phone_number?: string;
-  address?: string;
-  profile?: string;
-  city?: string;
-  state?: string;
-  created_at?: string;
-  updated_at?: string;
-  email_verified_at?: null;
-  verify_token?: null;
+  id: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+  type: string;
+  title: string;
+  gender: string;
+  phone_number: string;
+  address: string;
+  profile: string;
+  city: string;
+  state: string;
+  created_at: string;
+  updated_at: string;
+  email_verified_at: null;
+  verify_token: null;
 }
 
 export const CustomerEmpty = {
