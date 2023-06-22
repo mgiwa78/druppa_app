@@ -20,7 +20,7 @@
     <div class="mb-10 fv-row">
       <!--begin::Label-->
       <label class="d-flex align-items-center form-label mb-3">
-        Specify Team Size
+        Specify Shipment Weight
         <i
           class="fas fa-exclamation-circle ms-2 fs-7"
           v-tooltip
@@ -37,15 +37,15 @@
           <Field
             type="radio"
             class="btn-check"
-            id="accountTeamSize1"
-            name="accountTeamSize"
+            id="shipmentWeight1"
+            name="shipmentWeight"
             value="1-1"
           />
           <label
             class="btn btn-outline btn-outline-dashed btn-outline-default w-100 p-4"
-            for="accountTeamSize1"
+            for="shipmentWeight1"
           >
-            <span class="fw-bold fs-3">1-1</span>
+            <span class="fw-bold fs-3">1-3 Kg</span>
           </label>
           <!--end::Option-->
         </div>
@@ -57,15 +57,15 @@
           <Field
             type="radio"
             class="btn-check"
-            name="accountTeamSize"
-            id="accountTeamSize2"
+            name="shipmentWeight"
+            id="shipmentWeight2"
             value="2-10"
           />
           <label
             class="btn btn-outline btn-outline-dashed btn-outline-default w-100 p-4"
-            for="accountTeamSize2"
+            for="shipmentWeight2"
           >
-            <span class="fw-bold fs-3">2-10</span>
+            <span class="fw-bold fs-3">4-10 Kg</span>
           </label>
           <!--end::Option-->
         </div>
@@ -77,15 +77,15 @@
           <Field
             type="radio"
             class="btn-check"
-            name="accountTeamSize"
-            id="accountTeamSize3"
+            name="shipmentWeight"
+            id="shipmentWeight3"
             value="10-50"
           />
           <label
             class="btn btn-outline btn-outline-dashed btn-outline-default w-100 p-4"
-            for="accountTeamSize3"
+            for="shipmentWeight3"
           >
-            <span class="fw-bold fs-3">10-50</span>
+            <span class="fw-bold fs-3">10-50 kg</span>
           </label>
           <!--end::Option-->
         </div>
@@ -97,14 +97,14 @@
           <Field
             type="radio"
             class="btn-check"
-            name="accountTeamSize"
-            id="accountTeamSize4"
+            name="shipmentWeight"
+            id="shipmentWeight4"
             checked
             value="50+"
           />
           <label
             class="btn btn-outline btn-outline-dashed btn-outline-default w-100 p-4"
-            for="accountTeamSize4"
+            for="shipmentWeight4"
           >
             <span class="fw-bold fs-3">50+</span>
           </label>
@@ -116,166 +116,9 @@
 
       <!--begin::Hint-->
       <div class="form-text">
-        Customers will see this shortened version of your statement descriptor
+        Pick the weight range the best fits your shipment
       </div>
       <!--end::Hint-->
-    </div>
-    <!--end::Input group-->
-
-    <!--begin::Input group-->
-    <div class="mb-10 fv-row">
-      <!--begin::Label-->
-      <label class="form-label mb-3">Team Account Name</label>
-      <!--end::Label-->
-
-      <!--begin::Input-->
-      <Field
-        type="text"
-        class="form-control form-control-lg form-control-solid"
-        name="accountName"
-      />
-      <ErrorMessage
-        name="accountName"
-        class="fv-plugins-message-container invalid-feedback"
-      ></ErrorMessage>
-      <!--end::Input-->
-    </div>
-    <!--end::Input group-->
-
-    <!--begin::Input group-->
-    <div class="mb-0 fv-row">
-      <!--begin::Label-->
-      <label class="d-flex align-items-center form-label mb-5">
-        Select Account Plan
-        <i
-          class="fas fa-exclamation-circle ms-2 fs-7"
-          v-tooltip
-          title="Monthly billing will be based on your account plan"
-        ></i>
-      </label>
-      <!--end::Label-->
-
-      <!--begin::Options-->
-      <div class="mb-0">
-        <!--begin:Option-->
-        <label class="d-flex flex-stack mb-5 cursor-pointer">
-          <!--begin:Label-->
-          <span class="d-flex align-items-center me-2">
-            <!--begin::Icon-->
-            <span class="symbol symbol-50px me-6">
-              <span class="symbol-label">
-                <KTIcon icon-name="bank" icon-class="fs-1 text-gray-600" />
-              </span>
-            </span>
-            <!--end::Icon-->
-
-            <!--begin::Description-->
-            <span class="d-flex flex-column">
-              <span class="fw-bold text-gray-800 text-hover-primary fs-5"
-                >Company Account</span
-              >
-              <span class="fs-6 fw-semobold text-gray-400"
-                >Use images to enhance your post flow</span
-              >
-            </span>
-            <!--end:Description-->
-          </span>
-          <!--end:Label-->
-
-          <!--begin:Input-->
-          <span class="form-check form-check-custom form-check-solid">
-            <Field
-              class="form-check-input"
-              type="radio"
-              name="accountPlan"
-              value="1"
-            />
-          </span>
-          <!--end:Input-->
-        </label>
-        <!--end::Option-->
-
-        <!--begin:Option-->
-        <label class="d-flex flex-stack mb-5 cursor-pointer">
-          <!--begin:Label-->
-          <span class="d-flex align-items-center me-2">
-            <!--begin::Icon-->
-            <span class="symbol symbol-50px me-6">
-              <span class="symbol-label">
-                <KTIcon icon-name="chart" icon-class="fs-1 text-gray-600" />
-              </span>
-            </span>
-            <!--end::Icon-->
-
-            <!--begin::Description-->
-            <span class="d-flex flex-column">
-              <span class="fw-bold text-gray-800 text-hover-primary fs-5"
-                >Developer Account</span
-              >
-              <span class="fs-6 fw-semobold text-gray-400"
-                >Use images to your post time</span
-              >
-            </span>
-            <!--end:Description-->
-          </span>
-          <!--end:Label-->
-
-          <!--begin:Input-->
-          <span class="form-check form-check-custom form-check-solid">
-            <Field
-              class="form-check-input"
-              type="radio"
-              checked
-              name="accountPlan"
-              value="2"
-            />
-          </span>
-          <!--end:Input-->
-        </label>
-        <!--end::Option-->
-
-        <!--begin:Option-->
-        <label class="d-flex flex-stack mb-0 cursor-pointer">
-          <!--begin:Label-->
-          <span class="d-flex align-items-center me-2">
-            <!--begin::Icon-->
-            <span class="symbol symbol-50px me-6">
-              <span class="symbol-label">
-                <KTIcon
-                  icon-name="chart-pie-4"
-                  icon-class="fs-1 text-gray-600"
-                />
-              </span>
-            </span>
-            <!--end::Icon-->
-
-            <!--begin::Description-->
-            <span class="d-flex flex-column">
-              <span class="fw-bold text-gray-800 text-hover-primary fs-5"
-                >Testing Account</span
-              >
-              <span class="fs-6 fw-semobold text-gray-400"
-                >Use images to enhance time travel rivers</span
-              >
-            </span>
-            <!--end:Description-->
-          </span>
-          <!--end:Label-->
-
-          <!--begin:Input-->
-          <span class="form-check form-check-custom form-check-solid">
-            <Field
-              class="form-check-input"
-              type="radio"
-              name="accountPlan"
-              value="3"
-            />
-          </span>
-          <!--end:Input-->
-        </label>
-        <!--end::Option-->
-      </div>
-      <!--end::Options-->
     </div>
     <!--end::Input group-->
   </div>
@@ -285,13 +128,12 @@
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
-import { ErrorMessage, Field } from "vee-validate";
+import { Field } from "vee-validate";
 
 export default defineComponent({
   name: "step-2",
   components: {
     Field,
-    ErrorMessage,
   },
   setup() {
     return {

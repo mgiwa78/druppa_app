@@ -28,7 +28,7 @@
                 <h3 class="stepper-title">Shipment Type</h3>
 
                 <div class="stepper-desc fw-semobold">
-                  Enter SHipment details
+                  Enter Shipment details
                 </div>
               </div>
               <!--end::Label-->
@@ -92,29 +92,7 @@
           <!--end::Step 3-->
 
           <!--begin::Step 4-->
-          <div class="stepper-item" data-kt-stepper-element="nav">
-            <div class="stepper-wrapper">
-              <!--begin::Icon-->
-              <div class="stepper-icon w-40px h-40px">
-                <i class="stepper-check fas fa-check"></i>
-                <span class="stepper-number">4</span>
-              </div>
-              <!--end::Icon-->
 
-              <!--begin::Label-->
-              <div class="stepper-label">
-                <h3 class="stepper-title">Billing Details</h3>
-                <div class="stepper-desc fw-semobold">
-                  Set Your Payment Methods
-                </div>
-              </div>
-              <!--end::Label-->
-            </div>
-
-            <!--begin::Line-->
-            <div class="stepper-line h-40px"></div>
-            <!--end::Line-->
-          </div>
           <!--end::Step 4-->
 
           <!--begin::Step 5-->
@@ -123,7 +101,7 @@
               <!--begin::Icon-->
               <div class="stepper-icon w-40px h-40px">
                 <i class="stepper-check fas fa-check"></i>
-                <span class="stepper-number">5</span>
+                <span class="stepper-number">4</span>
               </div>
               <!--end::Icon-->
 
@@ -154,7 +132,7 @@
       >
         <!--begin::Step 1-->
         <div class="current" data-kt-stepper-element="content">
-          <Step1></Step1>
+          <Step1 :shipmentType="formData.shipmentType"></Step1>
         </div>
         <!--end::Step 1-->
 
@@ -166,14 +144,18 @@
 
         <!--begin::Step 3-->
         <div data-kt-stepper-element="content">
-          <Step3></Step3>
+          <Step3
+            @update:pick-up-address="handleAddressUpdate"
+            v-model:PickUpAddress="formData.pickUp"
+            v-model:DropOffAddress="formData.dropOff"
+          ></Step3>
         </div>
         <!--end::Step 3-->
 
         <!--begin::Step 4-->
-        <div data-kt-stepper-element="content">
+        <!-- <div data-kt-stepper-element="content">
           <Step4></Step4>
-        </div>
+        </div> -->
         <!--end::Step 4-->
 
         <!--begin::Step 5-->
@@ -200,7 +182,7 @@
 
           <!--begin::Wrapper-->
           <div>
-            <button
+            <!-- <button
               type="button"
               class="btn btn-lg btn-primary me-3"
               data-kt-stepper-action="submit"
@@ -217,8 +199,21 @@
                   class="spinner-border spinner-border-sm align-middle ms-2"
                 ></span>
               </span>
-            </button>
-
+            </button> -->
+            <paystack
+              v-if="currentStepIndex === 2"
+              buttonClass="button-class btn btn-success"
+              buttonText="Pay via Paystack"
+              type="button"
+              :publicKey="PAYSTACK_PUBLIC_KEY"
+              :email="email"
+              :amount="amount"
+              :reference="reference"
+              :onSuccess="onSuccessfulPayment"
+              :onCanel="onCancelledPayment"
+            >
+              Make Payment
+            </paystack>
             <button v-else type="submit" class="btn btn-lg btn-primary">
               Continue
               <KTIcon icon-name="arrow-right" icon-class="fs-4 ms-2 me-0" />
@@ -247,35 +242,39 @@ import { StepperComponent } from "@/assets/ts/components";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import * as Yup from "yup";
 import { useForm } from "vee-validate";
+import __CONSTANTS__ from "@/constants";
+import paystack from "vue3-paystack";
 
 interface IStep1 {
-  accountType: string;
+  shipmentType: string;
 }
 
 interface IStep2 {
-  accountTeamSize: string;
-  accountName: string;
-  accountPlan: string;
+  shipmentWeight: string;
+}
+interface PickUp {
+  address: string;
+  city: string;
+  state: string;
+  LGA: string;
+}
+interface DropOff {
+  address: string;
+  city: string;
+  state: string;
+  LGA: string;
 }
 
 interface IStep3 {
-  businessName: string;
-  businessDescriptor: string;
-  businessType: string;
-  businessDescription: string;
-  businessEmail: string;
+  pickUp: PickUp;
+  dropOff: DropOff;
 }
 
 interface IStep4 {
-  nameOnCard: string;
-  cardNumber: string;
-  cardExpiryMonth: string;
-  cardExpiryYear: string;
-  cardCvv: string;
-  saveCard: string;
+  success: boolean;
 }
 
-interface CreateAccount extends IStep1, IStep2, IStep3, IStep4 {}
+interface MakeShipmentOrder extends IStep1, IStep2, IStep3 {}
 
 export default defineComponent({
   name: "kt-vertical-wizard",
@@ -283,44 +282,85 @@ export default defineComponent({
     Step1,
     Step2,
     Step3,
-    Step4,
     Step5,
+    paystack,
   },
   setup() {
     const _stepperObj = ref<StepperComponent | null>(null);
     const verticalWizardRef = ref<HTMLElement | null>(null);
     const currentStepIndex = ref(0);
 
-    const formData = ref<CreateAccount>({
-      accountType: "personal",
-      accountTeamSize: "50+",
-      accountName: "",
-      accountPlan: "1",
-      businessName: "Keenthemes Inc.",
-      businessDescriptor: "KEENTHEMES",
-      businessType: "1",
-      businessDescription: "",
-      businessEmail: "corp@support.com",
-      nameOnCard: "Max Doe",
-      cardNumber: "4111 1111 1111 1111",
-      cardExpiryMonth: "1",
-      cardExpiryYear: "2",
-      cardCvv: "123",
-      saveCard: "1",
+    const PickUpAddress = {
+      address: "sdfdsfsdffdsfs",
+      city: "",
+      state: "",
+      LGA: "",
+    };
+    const DropOffAddress = {
+      address: "",
+      city: "",
+      state: "",
+      LGA: "",
+    };
+
+    const formData = ref<MakeShipmentOrder>({
+      shipmentType: "personal",
+      shipmentWeight: "50+",
+      pickUp: PickUpAddress,
+      dropOff: DropOffAddress,
+    });
+    const amount = 20000000;
+    const success = ref<boolean>(false);
+
+    const email = "mail@mail.com";
+
+    const handleAddressUpdate = (add: string) => {
+      console.log(add);
+    };
+    const reference = computed(() => {
+      let text = "";
+      let possible =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+      for (let i = 0; i < 10; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+      return text;
     });
 
+    const { PAYSTACK_PUBLIC_KEY } = __CONSTANTS__;
+
+    const onSuccessfulPayment = () => {
+      window.alert("Payment recieved");
+      currentStepIndex.value++;
+
+      _stepperObj.value?.goNext();
+    };
+
+    const onCancelledPayment = () => {
+      Swal.fire({
+        text: `Payment Canceled`,
+        icon: "error",
+        buttonsStyling: false,
+        confirmButtonText: "Try again!",
+        heightAuto: false,
+        customClass: {
+          confirmButton: "btn fw-semobold btn-light-danger",
+        },
+      });
+    };
     onMounted(() => {
       _stepperObj.value = StepperComponent.createInsance(
         verticalWizardRef.value as HTMLElement
       );
     });
 
-    const createAccountSchema = [
+    const selectShipmentTypeSchema = [
       Yup.object({
-        accountType: Yup.string().required().label("Account Type"),
+        shipmentType: Yup.string().required().label("Shipment Type"),
       }),
       Yup.object({
-        accountName: Yup.string().required().label("Account Name"),
+        shipmentWeight: Yup.string().required().label("Shipment Weight"),
       }),
       Yup.object({
         businessName: Yup.string().required().label("Business Name"),
@@ -330,19 +370,11 @@ export default defineComponent({
         businessType: Yup.string().required().label("Corporation Type"),
         businessEmail: Yup.string().required().label("Contact Email"),
       }),
-      Yup.object({
-        nameOnCard: Yup.string().required().label("Name On Card"),
-        cardNumber: Yup.string().required().label("Card Number"),
-        cardExpiryMonth: Yup.string().required().label("Expiration Month"),
-        cardExpiryYear: Yup.string().required().label("Expiration Year"),
-        cardCvv: Yup.string().required().label("CVV"),
-      }),
     ];
 
     const currentSchema = computed(() => {
-      return createAccountSchema[currentStepIndex.value];
+      return selectShipmentTypeSchema[currentStepIndex.value];
     });
-
     const { resetForm, handleSubmit } = useForm<
       IStep1 | IStep2 | IStep3 | IStep4
     >({
@@ -368,13 +400,25 @@ export default defineComponent({
         ...formData.value,
         ...values,
       };
+      // if (_stepperObj.value.passedStepIndex === 3 && !values.success) {
+      //   Swal.fire({
+      //     text: `Make Payment First`,
+      //     icon: "error",
+      //     buttonsStyling: false,
+      //     confirmButtonText: "Try again!",
+      //     heightAuto: false,
+      //     customClass: {
+      //       confirmButton: "btn fw-semobold btn-light-danger",
+      //     },
+      //   });
+      //   return;
+      // }
 
       currentStepIndex.value++;
-
+      console.log(currentStepIndex.value);
       if (!_stepperObj.value) {
         return;
       }
-
       _stepperObj.value.goNext();
     });
 
@@ -411,6 +455,17 @@ export default defineComponent({
       totalSteps,
       currentStepIndex,
       getAssetPath,
+      onSuccessfulPayment,
+      onCancelledPayment,
+      amount,
+      success,
+      email,
+      reference,
+      PAYSTACK_PUBLIC_KEY,
+      formData,
+      PickUpAddress,
+      DropOffAddress,
+      handleAddressUpdate,
     };
   },
 });

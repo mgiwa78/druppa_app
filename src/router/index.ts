@@ -144,6 +144,24 @@ const routes: Array<RouteRecordRaw> = [
               breadcrumbs: ["Admin", "Administranive Users"],
             },
           },
+          {
+            path: "/delivery",
+            name: "Deliveries",
+            component: () => import("@/views/admin/DeliveryRecords.vue"),
+            meta: {
+              pageTitle: "Admin",
+              breadcrumbs: ["Admin", "Deliveries"],
+            },
+          },
+          {
+            path: "/inventory",
+            name: "Inventory",
+            component: () => import("@/views/admin/InventoryRecords.vue"),
+            meta: {
+              pageTitle: "Admin",
+              breadcrumbs: ["Admin", "Inventory"],
+            },
+          },
         ],
       },
     ],

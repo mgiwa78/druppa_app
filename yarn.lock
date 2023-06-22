@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@babel/parser@^7.16.4":
+"@babel/parser@^7.16.4", "@babel/parser@^7.18.4":
   version "7.20.13"
   resolved "https://registry.npmjs.org/@babel/parser/-/parser-7.20.13.tgz"
   integrity sha512-gFDLKMfpiXCsjt4za2JA9oTMn70CeseCehb11kRZgvd7+F67Hih3OHOK24cRrWECJ/ljfPGac6ygXAs/C8kIvw==
@@ -303,10 +303,10 @@
   resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.14.191.tgz"
   integrity sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==
 
-"@types/node@*", "@types/node@^16.11.68", "@types/node@>= 14":
-  version "16.18.11"
-  resolved "https://registry.npmjs.org/@types/node/-/node-16.18.11.tgz"
-  integrity sha512-3oJbGBUWuS6ahSnEq1eN2XrCyf4YsWI8OyCvo7c64zQJNplk3mO84t53o8lfTk+2ji59g5ycfc6qQ3fdHliHuA==
+"@types/node@*", "@types/node@^16.18.36", "@types/node@>= 14":
+  version "16.18.36"
+  resolved "https://registry.npmjs.org/@types/node/-/node-16.18.36.tgz"
+  integrity sha512-8egDX8dE50XyXWH6C6PRCNkTP106DuUrvdrednFouDSmCi7IOvrqr0frznfZaHifHH/3aq/7a7v9N4wdXMqhBQ==
 
 "@types/object-path@^0.11.0":
   version "0.11.1"
@@ -505,6 +505,15 @@
     estree-walker "^2.0.2"
     magic-string "^0.25.7"
     postcss "^8.1.10"
+    source-map "^0.6.1"
+
+"@vue/compiler-sfc@2.7.14":
+  version "2.7.14"
+  resolved "https://registry.npmjs.org/@vue/compiler-sfc/-/compiler-sfc-2.7.14.tgz"
+  integrity sha512-aNmNHyLPsw+sVvlQFQ2/8sjNuLtK54TC6cuKnVzAY93ks4ZBrvwQSnkkIh7bsbNhum5hJBS00wSDipQ937f5DA==
+  dependencies:
+    "@babel/parser" "^7.18.4"
+    postcss "^8.4.14"
     source-map "^0.6.1"
 
 "@vue/compiler-ssr@3.2.45":
@@ -1093,6 +1102,11 @@ csstype@^2.6.8:
   version "2.6.21"
   resolved "https://registry.npmjs.org/csstype/-/csstype-2.6.21.tgz"
   integrity sha512-Z1PhmomIfypOpoMjRQB70jfvy/wxT50qW08YXO5lMIJkrdq4yOTR+AW7FqutScmB9NkLwxo+jU+kZLbofZZq/w==
+
+csstype@^3.1.0:
+  version "3.1.2"
+  resolved "https://registry.npmjs.org/csstype/-/csstype-3.1.2.tgz"
+  integrity sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==
 
 dayjs@^1.11.3:
   version "1.11.7"
@@ -2430,7 +2444,7 @@ postcss-selector-parser@^6.0.9:
     cssesc "^3.0.0"
     util-deprecate "^1.0.2"
 
-postcss@^8.1.10, postcss@^8.4.18:
+postcss@^8.1.10, postcss@^8.4.14, postcss@^8.4.18:
   version "8.4.21"
   resolved "https://registry.npmjs.org/postcss/-/postcss-8.4.21.tgz"
   integrity sha512-tP7u/Sn/dVxK2NnruI4H9BG+x+Wxz6oeZ1cJ8P6G/PZY0IKk4k/63TDsQf2kQq3+qoJeLm2kIBUNlZe3zgb4Zg==
@@ -3112,6 +3126,13 @@ vue-multiselect@^2.1.7:
   resolved "https://registry.npmjs.org/vue-multiselect/-/vue-multiselect-2.1.7.tgz"
   integrity sha512-KIegcN+Ntwg3cbkY/jhw2s/+XJUM0Lpi/LcKFYCS8PrZHcWBl2iKCVze7ZCnRj3w8H7/lUJ9v7rj9KQiNxApBw==
 
+vue-paystack@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.npmjs.org/vue-paystack/-/vue-paystack-2.0.4.tgz"
+  integrity sha512-EwIvuWpQ5MuvKjqv3AZ0NqHdFHZrUGynUn6aCAi1pj62mazBCVUZk/I0ISnPKVIM39weUUUIDUEXIKhJcezT7w==
+  dependencies:
+    vue "^2.6.7"
+
 vue-router@^4.1.5:
   version "4.1.6"
   resolved "https://registry.npmjs.org/vue-router/-/vue-router-4.1.6.tgz"
@@ -3135,7 +3156,7 @@ vue-tsc@^1.0.8:
     "@volar/vue-language-core" "1.0.24"
     "@volar/vue-typescript" "1.0.24"
 
-"vue@^2.0.0 || >=3.0.0", "vue@^2.6 || ^3.0.0", "vue@^2.6.14 || ^3.2.0", vue@^3, vue@^3.0.0, "vue@^3.0.0 || ^2.0.0", "vue@^3.0.0-0 || ^2.6.0", vue@^3.0.11, vue@^3.2.0, vue@^3.2.25, vue@^3.2.41, "vue@> 3.0.0", vue@3.2.45:
+"vue@^2.0.0 || >=3.0.0", "vue@^2.6 || ^3.0.0", "vue@^2.6.14 || ^3.2.0", vue@^3, vue@^3.0.0, "vue@^3.0.0 || ^2.0.0", "vue@^3.0.0-0 || ^2.6.0", vue@^3.0.11, vue@^3.0.5, vue@^3.2.0, vue@^3.2.25, vue@^3.2.41, "vue@> 3.0.0", vue@3.2.45:
   version "3.2.45"
   resolved "https://registry.npmjs.org/vue/-/vue-3.2.45.tgz"
   integrity sha512-9Nx/Mg2b2xWlXykmCwiTUCWHbWIj53bnkizBxKai1g61f2Xit700A1ljowpTIM11e3uipOeiPcSqnmBg6gyiaA==
@@ -3146,10 +3167,23 @@ vue-tsc@^1.0.8:
     "@vue/server-renderer" "3.2.45"
     "@vue/shared" "3.2.45"
 
+vue@^2.6.7:
+  version "2.7.14"
+  resolved "https://registry.npmjs.org/vue/-/vue-2.7.14.tgz"
+  integrity sha512-b2qkFyOM0kwqWFuQmgd4o+uHGU7T+2z3T+WQp8UBjADfEv2n4FEMffzBmCKNP0IGzOEEfYjvtcC62xaSKeQDrQ==
+  dependencies:
+    "@vue/compiler-sfc" "2.7.14"
+    csstype "^3.1.0"
+
 vue3-apexcharts@^1.4.1:
   version "1.4.1"
   resolved "https://registry.npmjs.org/vue3-apexcharts/-/vue3-apexcharts-1.4.1.tgz"
   integrity sha512-96qP8JDqB9vwU7bkG5nVU+E0UGQn7yYQVqUUCLQMYWDuQyu2vE77H/UFZ1yI+hwzlSTBKT9BqnNG8JsFegB3eg==
+
+vue3-paystack@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.npmjs.org/vue3-paystack/-/vue3-paystack-0.0.5.tgz"
+  integrity sha512-S+gobeLWQlRZ+xowuVrO7un/3CDQ7Bhrdvao4Mf/0YVDSRYDOJ93gf75qFEKt/6IgBKNBXKAz1DEHC6NcB8Slw==
 
 watchpack@^2.4.0:
   version "2.4.0"

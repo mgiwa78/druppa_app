@@ -4,10 +4,12 @@
   "compilerOptions": {
     "ignoreDeprecations": "5.0",
     "noImplicitAny": false,
+    "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "types": ["node"]
   },
   "references": [
     {

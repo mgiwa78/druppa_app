@@ -33,13 +33,15 @@
           <Field
             type="radio"
             class="btn-check"
-            name="accountType"
-            value="personal"
-            id="kt_create_account_form_account_type_personal"
+            name="shipmentType"
+            value="standardShipments"
+            :modelValue="shipmentType"
+            @input="$emit('update:modelValue', $event.target.value)"
+            id="kt_select_shipment_type_standard"
           />
           <label
             class="btn btn-outline btn-outline-dashed btn-outline-default p-7 d-flex align-items-center mb-10"
-            for="kt_create_account_form_account_type_personal"
+            for="kt_select_shipment_type_standard"
           >
             <KTIcon icon-name="address-book" icon-class="fs-3x me-5" />
 
@@ -65,13 +67,13 @@
           <Field
             type="radio"
             class="btn-check"
-            name="accountType"
-            value="corporate"
-            id="kt_create_account_form_account_type_corporate"
+            name="shipmentType"
+            value="fragileShipments"
+            id="kt_select_shipment_type_fragile"
           />
           <label
             class="btn btn-outline btn-outline-dashed btn-outline-default p-7 d-flex align-items-center"
-            for="kt_create_account_form_account_type_corporate"
+            for="kt_select_shipment_type_fragile"
           >
             <KTIcon icon-name="briefcase" icon-class="fs-3x me-5" />
 
@@ -98,13 +100,13 @@
           <Field
             type="radio"
             class="btn-check"
-            name="accountType"
-            value="personal"
-            id="kt_create_account_form_account_type_personal"
+            name="shipmentType"
+            value="dropshipShipments"
+            id="kt_select_shipment_type_dropship"
           />
           <label
             class="btn btn-outline btn-outline-dashed btn-outline-default p-7 d-flex align-items-center mb-10"
-            for="kt_create_account_form_account_type_personal"
+            for="kt_select_shipment_type_dropship"
           >
             <KTIcon icon-name="address-book" icon-class="fs-3x me-5" />
 
@@ -130,13 +132,13 @@
           <Field
             type="radio"
             class="btn-check"
-            name="accountType"
-            value="corporate"
-            id="kt_create_account_form_account_type_corporate"
+            name="shipmentType"
+            value="oversizedShipments"
+            id="kt_select_shipment_type_oversized"
           />
           <label
             class="btn btn-outline btn-outline-dashed btn-outline-default p-7 d-flex align-items-center"
-            for="kt_create_account_form_account_type_corporate"
+            for="kt_select_shipment_type_oversized"
           >
             <KTIcon
               icon-name="bi bi-chevron-double-right"
@@ -166,13 +168,13 @@
           <Field
             type="radio"
             class="btn-check"
-            name="accountType"
-            value="personal"
-            id="kt_create_account_form_account_type_personal"
+            name="shipmentType"
+            value="perishableShipments"
+            id="kt_select_shipment_type_perishable"
           />
           <label
             class="btn btn-outline btn-outline-dashed btn-outline-default p-7 d-flex align-items-center mb-10"
-            for="kt_create_account_form_account_type_personal"
+            for="kt_select_shipment_type_perishable"
           >
             <KTIcon icon-name="address-book" icon-class="fs-3x me-5" />
 
@@ -198,13 +200,13 @@
           <Field
             type="radio"
             class="btn-check"
-            name="accountType"
-            value="corporate"
-            id="kt_create_account_form_account_type_corporate"
+            name="shipmentType"
+            value="expressShipments"
+            id="kt_select_shipment_type_express"
           />
           <label
             class="btn btn-outline btn-outline-dashed btn-outline-default p-7 d-flex align-items-center"
-            for="kt_create_account_form_account_type_corporate"
+            for="kt_select_shipment_type_express"
           >
             <KTIcon
               icon-name="bi bi-chevron-double-right"
@@ -228,7 +230,7 @@
         <!--end::Col-->
 
         <ErrorMessage
-          name="accountType"
+          name="shipmentType"
           class="fv-plugins-message-container invalid-feedback"
         ></ErrorMessage>
       </div>
@@ -250,7 +252,9 @@ export default defineComponent({
     Field,
     ErrorMessage,
   },
-  setup() {
+  emits: ["update:modelValue"],
+  props: { shipmentType: String },
+  setup(props, { emit }) {
     return {
       getAssetPath,
     };

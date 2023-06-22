@@ -41,14 +41,24 @@
         <div class="card-body py-3">
           <!--begin::Table container-->
           <div
-            v-if="!dataToDisplay.length"
+            v-if="dataToDisplay === null"
+            class="d-flex align-items-center justify-content-center w-100 py-5"
+          >
+            <h4>No Records</h4>
+          </div>
+          <div
+            v-if="!dataToDisplay?.length && dataToDisplay"
             class="d-flex align-items-center justify-content-center w-100 py-5"
           >
             <div
               class="spinner-border spinner-border-sm align-middle ms-2 w-25px h-25px"
             ></div>
           </div>
-          <div v-else class="table-responsive">
+
+          <div
+            v-if="dataToDisplay?.length && dataToDisplay"
+            class="table-responsive"
+          >
             <!--begin::Table-->
 
             <table class="table align-middle gs-0 gy-4">
@@ -118,7 +128,6 @@
 
                     <td class="text-center">
                       <button
-                        href="#"
                         data-bs-toggle="modal"
                         data-bs-target="#kt_modal_view_admin"
                         class="btn btn-bg-light btn-color-muted btn-active-color-primary btn-sm px-4 me-2"
@@ -128,7 +137,6 @@
                       </button>
 
                       <button
-                        href="#"
                         data-bs-toggle="modal"
                         data-bs-target="#kt_modal_edit_admin"
                         class="btn btn-bg-light btn-color-muted btn-active-color-primary btn-sm px-4"
@@ -140,14 +148,13 @@
                   </tr>
                 </template>
               </tbody>
-
               <!--end::Table body-->
             </table>
             <div class="px-10">
               <TableFooter
                 @page-change="pageChange"
                 :current-page="currentPage"
-                v-model:itemsPerPage="itemsInTable"
+                v-model:itemsPerPage="itemsPerPage"
                 :count="totalItems"
                 :items-per-page-dropdown-enabled="itemsPerPageDropdownEnabled"
               />
@@ -217,7 +224,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const AdminPaginationData = ref<any>({});
 
-    const dataToDisplay = ref<Array<AdminProfile>>([]);
+    const dataToDisplay = ref<Array<AdminProfile> | null>([]);
     const editProfileData = ref<AdminProfile>({
       username: "",
       email: "",
@@ -255,10 +262,10 @@ export default defineComponent({
       permissions: [],
     });
     const AuthStore = useAuthStore();
-    const { user, token, refreshProfile } = AuthStore;
+    const { token } = AuthStore;
 
-    const itemsInTable = ref<number>(5);
-    const totalProfiles = ref<Array<number>>([0]);
+    const itemsPerPage = ref<number>(5);
+    const totalDeliveries = ref<Array<number>>([0]);
     const total = ref<number>(0);
     const itemsPerPageDropdownEnabled = ref<boolean>(true);
 
@@ -267,7 +274,7 @@ export default defineComponent({
     const currentPage = ref<number>(1);
 
     watch(
-      () => itemsInTable.value,
+      () => itemsPerPage.value,
       (val) => {
         currentPage.value = 1;
         emit("on-items-per-page-change", val);
@@ -288,11 +295,11 @@ export default defineComponent({
     // };
 
     const totalItems = computed(() => {
-      if (totalProfiles.value) {
-        if (totalProfiles.value.length <= itemsInTable.value) {
+      if (totalDeliveries.value) {
+        if (totalDeliveries.value.length <= itemsPerPage.value) {
           return total.value;
         } else {
-          return totalProfiles.value.length;
+          return totalDeliveries.value.length;
         }
       }
       return 0;
@@ -321,7 +328,6 @@ export default defineComponent({
         dataToDisplay.value = data.data;
       }
     );
-
     const pageChange = (page: number) => {
       currentPage.value = page;
       emit("page-change", page);
@@ -334,17 +340,32 @@ export default defineComponent({
         })
         .then((response) => response.data)
         .catch((error) => {
-          Swal.fire({
-            text: error.message,
-            icon: "error",
-            buttonsStyling: false,
-            confirmButtonText: "Error Fetching Data!",
-            heightAuto: false,
-            customClass: {
-              confirmButton: "btn fw-semobold btn-light-danger",
-            },
-          });
+          dataToDisplay.value = null;
+          if (error.response.data.message) {
+            Swal.fire({
+              text: error.response.data.message,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Error Fetching Data!",
+              heightAuto: false,
+              customClass: {
+                confirmButton: "btn fw-semobold btn-light-danger",
+              },
+            });
+          } else {
+            Swal.fire({
+              text: error.message,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Error Fetching Data!",
+              heightAuto: false,
+              customClass: {
+                confirmButton: "btn fw-semobold btn-light-danger",
+              },
+            });
+          }
         });
+      console.log(profiles);
       return profiles.data;
     };
 
@@ -500,8 +521,8 @@ export default defineComponent({
       getAssetPath,
       pageChange,
       currentPage,
-      itemsInTable,
-      totalProfiles,
+      itemsPerPage,
+      totalDeliveries,
       totalItems,
       dataToDisplay,
       itemsPerPageDropdownEnabled,

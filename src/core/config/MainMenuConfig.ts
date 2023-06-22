@@ -178,26 +178,26 @@ const GenerateMenus = (type) => {
 
             {
               sectionTitle: "Deliveries",
-              route: "/myprofile",
+              route: "/delivery",
               keenthemesIcon: "bi bi-box-seam",
               bootstrapIcon: "bi bi-box-seam",
               sub: [
                 {
-                  heading: "View All",
-                  route: "/profile/view",
+                  heading: "Deliveries",
+                  route: "/delivery",
                 },
               ],
             },
 
             {
               sectionTitle: "Inventory",
-              route: "/myprofile",
-              keenthemesIcon: "bi bi-box-seam",
-              bootstrapIcon: "bi bi-box-seam",
+              route: "/inventory",
+              keenthemesIcon: "bi bi-building",
+              bootstrapIcon: "bi bi-building",
               sub: [
                 {
-                  heading: "View All",
-                  route: "/profile/view",
+                  heading: "Inventory",
+                  route: "/inventory",
                 },
               ],
             },

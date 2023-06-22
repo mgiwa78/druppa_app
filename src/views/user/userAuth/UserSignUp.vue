@@ -49,39 +49,176 @@
       <!--begin::Input group-->
       <div class="row fv-row mb-7">
         <!--begin::Col-->
-        <div class="col-xl-6">
+        <div class="col-xl-12">
           <label class="form-label fw-bold text-dark fs-6">First Name</label>
           <Field
             class="form-control form-control-lg form-control-solid"
             type="text"
+            v-model="newCustomerData.firstName"
             placeholder=""
-            name="first_name"
+            name="firstName"
             autocomplete="off"
           />
           <div class="fv-plugins-message-container">
             <div class="fv-help-block">
-              <ErrorMessage name="first_name" />
+              <ErrorMessage name="firstName" />
             </div>
           </div>
         </div>
         <!--end::Col-->
 
         <!--begin::Col-->
-        <div class="col-xl-6">
+        <div class="col-xl-12">
           <label class="form-label fw-bold text-dark fs-6">Last Name</label>
           <Field
             class="form-control form-control-lg form-control-solid"
             type="text"
             placeholder=""
-            name="last_name"
+            v-model="newCustomerData.lastName"
+            name="lastName"
             autocomplete="off"
           />
           <div class="fv-plugins-message-container">
             <div class="fv-help-block">
-              <ErrorMessage name="last_name" />
+              <ErrorMessage name="lastName" />
             </div>
           </div>
         </div>
+        <div class="mb-5 mt-2 row">
+          <!--begin::Label-->
+          <div class="col-6">
+            <label class="fw-bold required fs-5 fw-semobold mb-2">Title</label>
+            <!--end::Label-->
+
+            <!--begin::Input-->
+            <Field
+              v-model="newCustomerData.title"
+              name="title"
+              class="form-select form-control form-control-lg form-control-solid"
+              as="select"
+            >
+              <option value="">Select a Title...</option>
+              <option value="Mr">Mr</option>
+              <option value="Mrs">Mrs</option>
+              <option value="Ms">Ms</option>
+              <option value="Dr">Dr</option>
+            </Field>
+            <div class="fv-plugins-message-container">
+              <div class="fv-help-block">
+                <ErrorMessage name="title" />
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <label class="fw-bold required fs-5 fw-semobold mb-2">Gender</label>
+            <!--end::Label-->
+
+            <!--begin::Input-->
+            <Field
+              v-model="newCustomerData.gender"
+              name="gender"
+              class="form-select form-control form-control-lg form-control-solid"
+              as="select"
+            >
+              <option value="">Select a Gender...</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </Field>
+            <div class="fv-plugins-message-container">
+              <div class="fv-help-block">
+                <ErrorMessage name="gender" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-12">
+          <label class="fw-bold required fs-5 fw-semobold mb-2">Address</label>
+          <Field
+            v-slot="{ field }"
+            v-model="newCustomerData.address"
+            name="address"
+            rules="required"
+          >
+            <textarea
+              type="text"
+              v-bind="field"
+              class="form-control form-control-solid"
+              placeholder="Address"
+              name="address"
+              required
+              v-model="newCustomerData.address"
+            />
+            <div class="fv-plugins-message-container">
+              <div class="fv-help-block">
+                <ErrorMessage name="address" />
+              </div>
+            </div>
+          </Field>
+        </div>
+        <div class="col-xl-12">
+          <label class="fw-bold required fs-5 fw-semobold mb-2">State</label>
+          <!--end::Label-->
+
+          <!--begin::Input-->
+          <Field
+            v-model="newCustomerData.state"
+            name="state"
+            class="form-select form-control form-control-lg form-control-solid"
+            as="select"
+          >
+            <option value="">Select a State...</option>
+            <option
+              v-for="state in statesInNigeria"
+              :key="state.code"
+              :value="state.name"
+            >
+              {{ state.name }}
+            </option>
+          </Field>
+          <div class="fv-plugins-message-container">
+            <div class="fv-help-block">
+              <ErrorMessage name="state" />
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-12">
+          <label class="form-label fw-bold text-dark fs-6">City</label>
+          <!--end::Label-->
+
+          <!--begin::Input-->
+          <Field
+            v-model="newCustomerData.city"
+            name="city"
+            class="form-select form-control form-control-lg form-control-solid"
+            as="select"
+            ><option v-if="newCustomerData.state" selected value="">
+              Select a State
+            </option>
+            <template v-if="newCustomerData.state">
+              <template v-if="citiesInNigeria[newCustomerData.state]">
+                <option
+                  v-for="city in citiesInNigeria[newCustomerData.state]"
+                  :key="city.code"
+                  :value="city.city"
+                >
+                  {{ city.city }}
+                </option>
+              </template>
+              <option v-else :value="newCustomerData.state">
+                {{ newCustomerData.state }}
+              </option>
+            </template>
+            <option v-else selected value="">Select a State First</option>
+          </Field>
+          <div class="fv-plugins-message-container">
+            <div class="fv-help-block">
+              <ErrorMessage name="city" />
+            </div>
+          </div>
+        </div>
+
+        <!--end::Input-->
+
         <!--end::Col-->
       </div>
       <!--end::Input group-->
@@ -94,11 +231,28 @@
           type="email"
           placeholder=""
           name="email"
+          v-model="newCustomerData.email"
           autocomplete="off"
         />
         <div class="fv-plugins-message-container">
           <div class="fv-help-block">
             <ErrorMessage name="email" />
+          </div>
+        </div>
+      </div>
+      <div class="fv-row mb-7">
+        <label class="form-label fw-bold text-dark fs-6">Phone number</label>
+        <Field
+          class="form-control form-control-lg form-control-solid"
+          type="phone_number"
+          placeholder=""
+          name="phone_number"
+          v-model="newCustomerData.phone_number"
+          autocomplete="off"
+        />
+        <div class="fv-plugins-message-container">
+          <div class="fv-help-block">
+            <ErrorMessage name="phone_number" />
           </div>
         </div>
       </div>
@@ -115,6 +269,7 @@
           <!--begin::Input wrapper-->
           <div class="position-relative mb-3">
             <Field
+              v-model="newCustomerData.password"
               class="form-control form-control-lg form-control-solid"
               type="password"
               placeholder=""
@@ -228,6 +383,23 @@ import { useRouter } from "vue-router";
 import { PasswordMeterComponent } from "@/assets/ts/components";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import axios from "axios";
+import statesInNigeria from "@/core/data/nigeriaStates";
+import citiesInNigeria from "@/core/data/citiesInNigeria";
+import __CONSTANTS__ from "@/constants";
+
+interface FormData {
+  firstName: string;
+  lastName: string;
+  userName: string;
+  email: string;
+  phone_number: string;
+  state: string;
+  address: string;
+  city: string;
+  password: string;
+  gender: string;
+  title: string;
+}
 
 export default defineComponent({
   name: "user-sign-up",
@@ -236,16 +408,41 @@ export default defineComponent({
     VForm,
     ErrorMessage,
   },
+
   setup() {
+    const { API_URL, ASSETS_URL } = __CONSTANTS__;
+
     const store = useAuthStore();
     const router = useRouter();
+    const newCustomerData = ref<FormData>({
+      firstName: "",
+      lastName: "",
+      email: "",
+      address: "",
+      state: "",
+      userName: "",
+      gender: "",
+      city: "",
+      password: "",
+      title: "",
+      phone_number: "",
+    });
 
     const submitButton = ref<HTMLButtonElement | null>(null);
 
     const registration = Yup.object().shape({
-      first_name: Yup.string().required().label("Name"),
-      last_name: Yup.string().required().label("Surname"),
-      email: Yup.string().min(4).required().email().label("Email"),
+      firstName: Yup.string().required().label("First Name"),
+      lastName: Yup.string().required().label("Last Name"),
+      email: Yup.string().required().email().label("Email"),
+      gender: Yup.string().required().label("Gender"),
+      phone_number: Yup.string()
+        .min(11)
+        .max(11)
+        .required()
+        .label("Phone number"),
+      state: Yup.string().required().label("State"),
+      city: Yup.string().required().label("City"),
+      address: Yup.string().required().label("Address"),
       password: Yup.string().required().label("Password"),
       password_confirmation: Yup.string()
         .required()
@@ -259,30 +456,63 @@ export default defineComponent({
       });
     });
 
-    const signUpUserIn = async (values) => {
-      await axios
-        .post("http://localhost/druppa-api/index.php/signup", {
-          email: values.email,
-          password: values.password,
-          first_name: values.first_name,
-          last_name: values.last_name,
-        })
+    const signUpUser = async () => {
+      const formData = new FormData();
+
+      formData.append("firstName", newCustomerData.value.firstName);
+      formData.append("lastName", newCustomerData.value.lastName);
+      formData.append("email", newCustomerData.value.email);
+      formData.append("password", newCustomerData.value.password);
+      formData.append("gender", newCustomerData.value.gender);
+      formData.append("state", newCustomerData.value.state);
+      formData.append("title", newCustomerData.value.title);
+      formData.append("phone_number", newCustomerData.value.phone_number);
+      formData.append("address", newCustomerData.value.address);
+      formData.append("city", newCustomerData.value.city);
+      formData.append("type", "Customer");
+
+      axios
+        .post(API_URL + "register", formData)
         .then((response) => {
-          console.log(response);
-          // setAuth(response.data.userCredentials, response.data.jwt);
-          router.push({ name: "dashboard" });
-        })
-        .catch((error) => {
           Swal.fire({
-            text: error.message as string,
-            icon: "error",
+            text: "You Account has been created, Sign in Now!",
+            icon: "success",
             buttonsStyling: false,
-            confirmButtonText: "Try again!",
+            confirmButtonText: "Ok!",
             heightAuto: false,
             customClass: {
-              confirmButton: "btn fw-semobold btn-light-danger",
+              confirmButton: "btn fw-semobold btn-light-primary",
             },
+          }).then(() => {
+            router.push({ name: "sign-in" });
           });
+          // router.push({ name: "dashboard" });
+        })
+        .catch((error) => {
+          console.log(error);
+          if (error.response.data.message) {
+            Swal.fire({
+              text: error.response.data.message,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Try again!",
+              heightAuto: false,
+              customClass: {
+                confirmButton: "btn fw-semobold btn-light-danger",
+              },
+            });
+          } else {
+            Swal.fire({
+              text: error.message as string,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Try again!",
+              heightAuto: false,
+              customClass: {
+                confirmButton: "btn fw-semobold btn-light-danger",
+              },
+            });
+          }
         });
     };
     const onSubmitRegister = async (values: any) => {
@@ -298,7 +528,7 @@ export default defineComponent({
       submitButton.value?.setAttribute("data-kt-indicator", "on");
 
       // Send login request
-      await signUpUserIn(values);
+      await signUpUser();
       // const error = Object.values(store.errors);
 
       submitButton.value?.removeAttribute("data-kt-indicator");
@@ -311,6 +541,9 @@ export default defineComponent({
       onSubmitRegister,
       submitButton,
       getAssetPath,
+      statesInNigeria,
+      citiesInNigeria,
+      newCustomerData,
     };
   },
 });
