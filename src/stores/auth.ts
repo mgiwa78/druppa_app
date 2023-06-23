@@ -21,6 +21,13 @@ interface User {
   created_at?: string;
   email?: string;
   email_verified_at?: boolean;
+
+  licenseNumber?: string;
+  licenseExpiration?: string;
+  vehicleMake?: string;
+  vehicleModel?: string;
+  licensePlate?: string;
+  insurance?: string;
 }
 
 interface AuthUser {

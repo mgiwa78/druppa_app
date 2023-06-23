@@ -43,9 +43,9 @@ interface Counts {
 }
 const useStaticsStore = defineStore("statics", () => {
   const counts = ref<Counts>({
-    adminCount: null,
-    customersCount: null,
-    driversCount: null,
+    adminCount: 0,
+    customersCount: 0,
+    driversCount: 0,
     isSet: false,
   });
 

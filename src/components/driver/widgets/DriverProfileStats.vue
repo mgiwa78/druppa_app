@@ -134,7 +134,7 @@ export default defineComponent({
     const AuthStore = useAuthStore();
     const { API_URL, ASSETS_URL } = __CONSTANTS__;
     const { user, isActive } = AuthStore;
-    const driveisActive = ref<Boolean | null>(isActive);
+    const driveisActive = ref<any>(isActive);
     type Metric = {
       icon: string;
       title: string;

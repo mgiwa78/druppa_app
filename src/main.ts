@@ -16,12 +16,12 @@ import { initApexCharts } from "@/core/plugins/apexcharts";
 import { initInlineSvg } from "@/core/plugins/inline-svg";
 import { initVeeValidate } from "@/core/plugins/vee-validate";
 import { initKtIcon } from "@/core/plugins/keenthemes";
-
 import "@/core/plugins/prismjs";
 
 const app = createApp(App);
 
 app.use(createPinia());
+
 app.use(router);
 app.use(ElementPlus);
 

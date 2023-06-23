@@ -19,10 +19,18 @@
     <!--begin::Input group-->
     <div>
       <h3 class="mb-5">Enter Pickup Address</h3>
+
       <div class="fv-row mb-10">
         <label class="fw-bold required fs-5 fw-semobold mb-2">State</label>
         <!--end::Label-->
-
+        <GoogleMap
+          api-key="AIzaSyCq7DHPQ3pSR7uuS4u7-I3m5DGpJFbdqYU"
+          style="width: 100%; height: 500px"
+          :center="center"
+          :zoom="15"
+        >
+          <Pin :options="markerOptions" />
+        </GoogleMap>
         <!--begin::Input-->
         <Field
           name="state"
@@ -306,12 +314,15 @@ import { ErrorMessage, Field } from "vee-validate";
 import statesInNigeria from "@/core/data/nigeriaStates";
 import citiesInNigeria from "@/core/data/citiesInNigeria";
 import LGAInNigeria from "@/core/data/LGAInNigeria";
+import { GoogleMap, Marker as Pin } from "vue3-google-map";
 
 export default defineComponent({
   name: "step-3",
   components: {
     Field,
     ErrorMessage,
+    GoogleMap,
+    Pin,
   },
   props: {
     PickUpAddress: {
@@ -334,6 +345,13 @@ export default defineComponent({
   emits: ["update:PickUpAddress", "update:DropOffAddress", "textAreaUpdate"],
 
   setup(props, { emit }) {
+    const center = { lat: 40.689247, lng: -74.044502 };
+    const markerOptions = {
+      position: center,
+      label: "L",
+      title: "LADY LIBERTY",
+    };
+
     console.log(props.PickUpAddress);
     const handlePickUpAddressUpdate = (event) => {
       const { name, value } = event.target;
@@ -352,6 +370,8 @@ export default defineComponent({
       LGAInNigeria,
       handlePickUpAddressUpdate,
       handleDropOffAddressUpdate,
+      center,
+      markerOptions,
     };
   },
 });

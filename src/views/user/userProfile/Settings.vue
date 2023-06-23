@@ -340,6 +340,8 @@
                       class="form-control form-control-lg form-control-solid fw-semobold fs-6"
                       name="confirmemailpassword"
                       id="confirmemailpassword"
+                      aria-autocomplete="false"
+                      v-model="State.userData.confirmPassword"
                     />
                     <div class="fv-plugins-message-container">
                       <div class="fv-help-block">
@@ -430,6 +432,7 @@
                       class="form-control form-control-lg form-control-solid fw-semobold fs-6"
                       name="currentpassword"
                       id="currentpassword"
+                      v-model="State.userData.oldPassword"
                     />
                     <div class="fv-plugins-message-container">
                       <div class="fv-help-block">
@@ -449,6 +452,7 @@
                       type="password"
                       class="form-control form-control-lg form-control-solid fw-semobold fs-6"
                       name="newpassword"
+                      v-model="State.userData.newPassword"
                       id="newpassword"
                     />
                     <div class="fv-plugins-message-container">
@@ -470,6 +474,7 @@
                       class="form-control form-control-lg form-control-solid fw-semobold fs-6"
                       name="confirmpassword"
                       id="confirmpassword"
+                      v-model="State.userData.ConfirmNewPassword"
                     />
                     <div class="fv-plugins-message-container">
                       <div class="fv-help-block">
@@ -542,6 +547,7 @@ import { useAuthStore } from "@/stores/auth";
 import axios from "axios";
 import __CONSTANTS__ from "@/constants";
 import type { User } from "@/stores/auth";
+import type { DriverType } from "@/core/types/Driver";
 
 export default defineComponent({
   name: "account-settings",
@@ -552,13 +558,14 @@ export default defineComponent({
   },
   setup() {
     const AuthStore = useAuthStore();
-    const { user, refreshProfile } = AuthStore;
+    const { user, token, refreshProfile } = AuthStore;
     const { API_URL } = __CONSTANTS__;
 
     const submitButton1 = ref<HTMLButtonElement | null>(null);
     const submitButton2 = ref<HTMLElement | null>(null);
     const submitButton3 = ref<HTMLElement | null>(null);
     const submitButton4 = ref<HTMLElement | null>(null);
+
     const submitButton5 = ref<HTMLElement | null>(null);
     const updateEmailButton = ref<HTMLElement | null>(null);
     const updatePasswordButton = ref<HTMLElement | null>(null);
@@ -600,25 +607,34 @@ export default defineComponent({
       const formData = new FormData();
       formData.append("id", `${State.userData.id}`);
 
-      formData.append("firstName", State.userData.lastName!);
-      formData.append("lastName", State.userData.firstName!);
-      formData.append("username", State.userData.username!);
+      formData.append("firstName", State.userData.firstName!);
+      formData.append("lastName", State.userData.lastName!);
       formData.append("gender", State.userData.gender!);
       formData.append("phone_number", `${State.userData.phone_number}`);
-      formData.append("address", State.userData.address!);
+
       formData.append("state", State.userData.state!);
+      formData.append("address", State.userData.address!);
+      formData.append("email", State.userData.email!);
+      formData.append("city", State.userData.city!);
+      formData.append("type", State.userData.type!);
+
+      if (State.userData.type === "Driver") {
+        formData.append("licenseNumber", State.userData?.licenseNumber);
+        formData.append("licenseExpiration", State.userData.licenseExpiration);
+        formData.append("vehicleMake", State.userData.vehicleMake);
+        formData.append("vehicleModel", State.userData.vehicleModel);
+        formData.append("licensePlate", State.userData.licensePlate);
+        formData.append("insurance", State.userData.insurance);
+      }
 
       if (State.newProfile) {
-        console.log(State.newProfile[0]);
         formData.append("profile", State.newProfile[0]);
       }
-      const url =
-        State.userData.type === "Admin"
-          ? `admin/` + State.userData.id
-          : "customer/" + State.userData.id;
 
       await axios
-        .put(API_URL + url, formData, { method: "put" })
+        .post(API_URL + "profile", formData, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
         .then(() => {})
         .catch((error) => {
           return Swal.fire({
@@ -637,22 +653,32 @@ export default defineComponent({
       userDataSet: false,
       newProfile: null as FileList | null,
       userData: {
+        confirmPassword: "",
+        ConfirmNewPassword: "",
+        newPassword: "",
         id: 0,
         profile: "",
-        lastName: " ",
-        firstName: " ",
-        type: "",
-        phone_number: 0,
-        address: "",
+        username: "",
         password: "",
+        lastName: "",
+        firstName: "",
+        type: "",
+        phone_number: "",
+        address: "",
         gender: "",
         state: "",
         created_at: "",
         email: "",
         email_verified_at: false,
-      } as User,
+
+        licenseNumber: "",
+        licenseExpiration: "",
+        vehicleMake: "",
+        vehicleModel: "",
+        licensePlate: "",
+        insurance: "",
+      } as any,
       setUserData(res: User) {
-        console.log(res);
         this.userData = { ...res };
       },
       onChangeFileUpload({
@@ -676,12 +702,10 @@ export default defineComponent({
         await updateProfile();
 
         if (State.userData.type) {
-          await refreshProfile(State.userData.id, State.userData.type).then(
-            () => {
-              submitButton1.value?.removeAttribute("data-kt-indicator");
-              submitButton1.value!.disabled = false;
-            }
-          );
+          await refreshProfile().then(() => {
+            submitButton1.value?.removeAttribute("data-kt-indicator");
+            submitButton1.value!.disabled = false;
+          });
         }
       } catch (error) {
         console.log(error);
@@ -689,25 +713,18 @@ export default defineComponent({
       submitButton1.value?.removeAttribute("data-kt-indicator");
     };
 
-    const updateEmail = () => {
-      if (updateEmailButton.value) {
-        updateEmailButton.value.setAttribute("data-kt-indicator", "on");
-        updateEmailButton.value?.removeAttribute("data-kt-indicator");
+    const updateEmail = async () => {
+      const formData = new FormData();
+      formData.append("email", State.userData.email);
+      formData.append("password", State.userData.confirmPassword);
 
-        emailFormDisplay.value = false;
-      }
-    };
-
-    const updatePassword = () => {
-      if (updatePasswordButton.value) {
-        // Activate indicator
-        updatePasswordButton.value.setAttribute("data-kt-indicator", "on");
-
-        setTimeout(() => {
-          updatePasswordButton.value?.removeAttribute("data-kt-indicator");
-
+      await axios
+        .post(API_URL + "profile/emailUpdate", formData, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then(() => {
           Swal.fire({
-            text: "Password is successfully changed!",
+            text: "Email Updated successfully changed!",
             icon: "success",
             confirmButtonText: "Ok",
             buttonsStyling: false,
@@ -715,11 +732,102 @@ export default defineComponent({
             customClass: {
               confirmButton: "btn btn-light-primary",
             },
-          }).then(() => {
-            passwordFormDisplay.value = false;
-          });
-        }, 2000);
+          }).then(() => refreshProfile());
+        })
+        .catch((error) => {
+          console.log(error);
+          if (error.response.data.message) {
+            return Swal.fire({
+              text: error.response.data.message,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Try again!",
+              heightAuto: false,
+              customClass: {
+                confirmButton: "btn fw-semobold btn-light-danger",
+              },
+            });
+          } else {
+            return Swal.fire({
+              text: error.message,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Try again!",
+              heightAuto: false,
+              customClass: {
+                confirmButton: "btn fw-semobold btn-light-danger",
+              },
+            });
+          }
+        });
+      if (updateEmailButton.value) {
+        // updateEmailButton.value.setAttribute("data-kt-indicator", "on");
+        updateEmailButton.value?.removeAttribute("data-kt-indicator");
+
+        emailFormDisplay.value = false;
       }
+    };
+
+    const updatePassword = async () => {
+      if (updatePasswordButton.value) {
+        // Activate indicator
+        updatePasswordButton.value.setAttribute("data-kt-indicator", "on");
+      }
+      const formData = new FormData();
+      formData.append("email", State.userData.email);
+      formData.append("password", State.userData.oldPassword);
+      formData.append("newPassword", State.userData.newPassword);
+
+      await axios
+        .post(API_URL + "profile/passwordUpdate", formData, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then(() => {
+          Swal.fire({
+            text: "Password Updated successfully changed!",
+            icon: "success",
+            confirmButtonText: "Ok",
+            buttonsStyling: false,
+            heightAuto: false,
+            customClass: {
+              confirmButton: "btn btn-light-primary",
+            },
+          }).then(() => refreshProfile());
+        })
+        .catch((error) => {
+          console.log(error);
+          if (error.response.data.message) {
+            return Swal.fire({
+              text: error.response.data.message,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Try again!",
+              heightAuto: false,
+              customClass: {
+                confirmButton: "btn fw-semobold btn-light-danger",
+              },
+            });
+          } else {
+            return Swal.fire({
+              text: error.message,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Try again!",
+              heightAuto: false,
+              customClass: {
+                confirmButton: "btn fw-semobold btn-light-danger",
+              },
+            });
+          }
+        })
+        .finally(() => {
+          if (updatePasswordButton.value) {
+            // updatePassword.value.setAttribute("data-kt-indicator", "on");
+            updatePasswordButton.value?.removeAttribute("data-kt-indicator");
+
+            refreshProfile();
+          }
+        });
     };
 
     const removeImage = () => {

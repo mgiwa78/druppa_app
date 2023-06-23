@@ -19,6 +19,22 @@ export interface DriverType {
   licensePlate: string;
   insurance: string;
 }
+interface User {
+  id?: number;
+  profile?: string;
+  username?: string;
+  password?: string;
+  lastName: string;
+  firstName: string;
+  type?: string;
+  phone_number?: string;
+  address?: string;
+  gender?: string;
+  state?: string;
+  created_at?: string;
+  email?: string;
+  email_verified_at?: boolean;
+}
 
 export const DriverEmpty = {
   id: 0,
