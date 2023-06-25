@@ -37,13 +37,14 @@
           <!--begin::Input group-->
           <div class="row mb-6">
             <!--begin::Label-->
-            <label class="col-lg-4 col-form-label fw-semobold fs-6"
-              >Avatar</label
-            >
-            <!--end::Label-->
 
-            <!--begin::Col-->
-            <div class="col-lg-8">
+            <div class="col-lg-8 fv-row">
+              <label class="col-lg-6 col-form-label required fw-semobold fs-6"
+                >Avatar</label
+              >
+              <!--end::Label-->
+
+              <!--begin::Col-->
               <!--begin::Image input-->
               <div
                 class="image-input image-input-outline"
@@ -81,8 +82,26 @@
               <!--begin::Hint-->
               <div class="form-text">Allowed file types: png, jpg, jpeg.</div>
               <!--end::Hint-->
+              <!--end::Col-->
             </div>
-            <!--end::Col-->
+            <div class="col-lg-4 fv-row">
+              <label class="col-lg-3 col-form-label fw-semobold fs-6"
+                >Title</label
+              >
+              <Field
+                name="title"
+                class="form-select form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                as="select"
+                :disabled="State.userData.allowEdit === 0 ? true : false"
+                v-model="State.userData.title"
+              >
+                <option value="">Select a Title...</option>
+                <option value="Mr">Mr</option>
+                <option value="Mrs">Mrs</option>
+                <option value="Ms">Ms</option>
+                <option value="Dr">Dr</option>
+              </Field>
+            </div>
           </div>
           <!--end::Input group-->
 
@@ -98,31 +117,35 @@
             <div class="col-lg-8">
               <!--begin::Row-->
               <!--begin::Col-->
-              <div class="col-lg-6 fv-row">
-                <Field
-                  type="text"
-                  name="fname"
-                  class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                  placeholder="First name"
-                  v-model="State.userData.firstName"
-                />
-                <div class="fv-plugins-message-container">
-                  <div class="fv-help-block">
-                    <ErrorMessage name="fname" />
+              <div class="row">
+                <div class="col-lg-6 fv-row">
+                  <Field
+                    type="text"
+                    :disabled="State.userData.allowEdit === 0 ? true : false"
+                    name="fname"
+                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                    placeholder="First name"
+                    v-model="State.userData.firstName"
+                  />
+                  <div class="fv-plugins-message-container">
+                    <div class="fv-help-block">
+                      <ErrorMessage name="fname" />
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="col-lg-6 fv-row">
-                <Field
-                  type="text"
-                  name="lname"
-                  class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                  placeholder="Last name"
-                  v-model="State.userData.lastName"
-                />
-                <div class="fv-plugins-message-container">
-                  <div class="fv-help-block">
-                    <ErrorMessage name="lname" />
+                <div class="col-lg-6 fv-row">
+                  <Field
+                    type="text"
+                    :disabled="State.userData.allowEdit === 0 ? true : false"
+                    name="lname"
+                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                    placeholder="Last name"
+                    v-model="State.userData.lastName"
+                  />
+                  <div class="fv-plugins-message-container">
+                    <div class="fv-help-block">
+                      <ErrorMessage name="lname" />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -138,6 +161,7 @@
           <!--end::Input group-->
 
           <!--begin::Input group-->
+
           <div class="row mb-6">
             <!--begin::Label-->
             <label class="col-lg-4 col-form-label fw-semobold fs-6">
@@ -155,6 +179,7 @@
             <div class="col-lg-8 fv-row">
               <Field
                 type="tel"
+                :disabled="State.userData.allowEdit === 0 ? true : false"
                 name="phone"
                 class="form-control form-control-lg form-control-solid"
                 placeholder="No Phone Number"
@@ -186,6 +211,7 @@
             <div class="col-lg-8 fv-row">
               <Field
                 type="text"
+                :disabled="State.userData.allowEdit === 0 ? true : false"
                 name="address"
                 class="form-control form-control-lg form-control-solid"
                 placeholder="Set Your delivery address"
@@ -217,6 +243,7 @@
             <div class="col-lg-8 fv-row">
               <Field
                 type="text"
+                :disabled="State.userData.allowEdit === 0 ? true : false"
                 name="state"
                 class="form-control form-control-lg form-control-solid"
                 placeholder="Set Your delivery state"
@@ -244,6 +271,278 @@
             type="submit"
             id="kt_account_profile_details_submit"
             ref="submitButton1"
+            class="btn btn-primary"
+          >
+            <span class="indicator-label"> Update </span>
+
+            <span class="indicator-progress">
+              Please wait...
+              <span
+                class="spinner-border spinner-border-sm align-middle ms-2"
+              ></span>
+            </span>
+          </button>
+        </div>
+        <!--end::Actions-->
+      </VForm>
+      <!--end::Form-->
+    </div>
+    <!--end::Content-->
+  </div>
+  <div v-if="State.userData.type === 'Driver'" class="card mb-5 mb-xl-10">
+    <!--begin::Card header-->
+    <div
+      class="card-header border-0 cursor-pointer"
+      role="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#kt_account_profile_details"
+      aria-expanded="true"
+      aria-controls="kt_account_profile_details"
+    >
+      <!--begin::Card title-->
+      <div class="card-title m-0">
+        <h3 class="fw-bold m-0">Driver Details</h3>
+      </div>
+      <!--end::Card title-->
+    </div>
+    <!--begin::Card header-->
+
+    <!--begin::Content-->
+    <div
+      v-if="State.userData"
+      id="kt_account_profile_details"
+      class="collapse show"
+    >
+      <!--begin::Form-->
+      <VForm
+        id="kt_account_driver_details_form"
+        class="form"
+        novalidate
+        @submit="saveChanges6()"
+        :validation-schema="userDriverValidator"
+      >
+        <!--begin::Card body-->
+        <div class="card-body border-top p-9">
+          <!--begin::Input group-->
+
+          <!--end::Input group-->
+
+          <!--begin::Input group-->
+          <div class="row mb-6">
+            <!--begin::Label-->
+            <label class="col-lg-4 col-form-label required fw-semobold fs-6"
+              >License Number</label
+            >
+            <!--end::Label-->
+            <!-- form -->
+            <!--begin::Col-->
+            <div class="col-lg-8">
+              <!--begin::Row-->
+              <!--begin::Col-->
+              <div class="col-lg-6 fv-row">
+                <Field
+                  type="text"
+                  name="licenseNumber"
+                  class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                  :disabled="State.userData.allowEdit === 0 ? true : false"
+                  placeholder="License Number"
+                  v-model="State.userData.licenseNumber"
+                />
+                <div class="fv-plugins-message-container">
+                  <div class="fv-help-block">
+                    <ErrorMessage name="licenseNumber" />
+                  </div>
+                </div>
+              </div>
+
+              <!--end::Col-->
+
+              <!--begin::Col-->
+
+              <!--end::Col-->
+              <!--end::Row-->
+            </div>
+            <!--end::Col-->
+          </div>
+          <div class="row mb-6">
+            <!--begin::Label-->
+            <label class="col-lg-4 col-form-label required fw-semobold fs-6"
+              >License Expiration</label
+            >
+            <!--end::Label-->
+            <!-- form -->
+            <!--begin::Col-->
+            <div class="col-lg-8">
+              <!--begin::Row-->
+              <!--begin::Col-->
+              <div class="col-lg-6 fv-row">
+                <Field
+                  type="text"
+                  :disabled="State.userData.allowEdit === 0 ? true : false"
+                  name="licenseExpiration"
+                  class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                  placeholder="License Expiration"
+                  v-model="State.userData.licenseExpiration"
+                />
+                <div class="fv-plugins-message-container">
+                  <div class="fv-help-block">
+                    <ErrorMessage name="licenseExpiration" />
+                  </div>
+                </div>
+              </div>
+
+              <!--end::Col-->
+
+              <!--begin::Col-->
+
+              <!--end::Col-->
+              <!--end::Row-->
+            </div>
+            <!--end::Col-->
+          </div>
+          <!--end::Input group-->
+
+          <!--begin::Input group-->
+          <div class="row mb-6">
+            <!--begin::Label-->
+            <label class="col-lg-4 col-form-label fw-semobold fs-6">
+              <span class="required">Vehicle Make</span>
+
+              <i
+                class="fas fa-exclamation-circle ms-1 fs-7"
+                data-bs-toggle="tooltip"
+                title="Must be a valid vehicle make"
+              ></i>
+            </label>
+            <!--end::Label-->
+
+            <!--begin::Col-->
+            <div class="col-lg-8 fv-row">
+              <Field
+                :disabled="State.userData.allowEdit === 0 ? true : false"
+                type="text"
+                name="vehicleMake"
+                class="form-control form-control-lg form-control-solid"
+                placeholder="Vehicle Make"
+                v-model="State.userData.vehicleMake"
+              />
+              <div class="fv-plugins-message-container">
+                <div class="fv-help-block">
+                  <ErrorMessage name="vehicleMake" />
+                </div>
+              </div>
+            </div>
+            <!--end::Col-->
+          </div>
+
+          <div class="row mb-6">
+            <!--begin::Label-->
+            <label class="col-lg-4 col-form-label fw-semobold fs-6">
+              <span class="required">Vehicle Model</span>
+
+              <i
+                class="fas fa-exclamation-circle ms-1 fs-7"
+                data-bs-toggle="tooltip"
+                title="Must be the correct vehicle model"
+              ></i>
+            </label>
+            <!--end::Label-->
+
+            <!--begin::Col-->
+            <div class="col-lg-8 fv-row">
+              <Field
+                type="text"
+                :disabled="State.userData.allowEdit === 0 ? true : false"
+                name="vehicleModel"
+                class="form-control form-control-lg form-control-solid"
+                placeholder="Vehicle Model"
+                v-model="State.userData.vehicleModel"
+              />
+              <div class="fv-plugins-message-container">
+                <div class="fv-help-block">
+                  <ErrorMessage name="type" />
+                </div>
+              </div>
+            </div>
+            <!--end::Col-->
+          </div>
+
+          <div class="row mb-6">
+            <!--begin::Label-->
+            <label class="col-lg-4 col-form-label fw-semobold fs-6">
+              <span class="required">License Plate</span>
+
+              <i
+                class="fas fa-exclamation-circle ms-1 fs-7"
+                data-bs-toggle="tooltip"
+                title="Your correct and registered vehicle number"
+              ></i>
+            </label>
+            <!--end::Label-->
+
+            <!--begin::Col-->
+            <div class="col-lg-8 fv-row">
+              <Field
+                type="text"
+                :disabled="State.userData.allowEdit === 0 ? true : false"
+                name="licensePlate"
+                class="form-control form-control-lg form-control-solid"
+                placeholder="License Plate"
+                v-model="State.userData.licensePlate"
+              />
+              <div class="fv-plugins-message-container">
+                <div class="fv-help-block">
+                  <ErrorMessage name="licensePlate" />
+                </div>
+              </div>
+            </div>
+            <!--end::Col-->
+          </div>
+          <div class="row mb-6">
+            <!--begin::Label-->
+            <label class="col-lg-4 col-form-label fw-semobold fs-6">
+              <span class="required">Insurance</span>
+
+              <i
+                class="fas fa-exclamation-circle ms-1 fs-7"
+                data-bs-toggle="tooltip"
+                title="Your insurance ID"
+              ></i>
+            </label>
+            <!--end::Label-->
+
+            <!--begin::Col-->
+            <div class="col-lg-8 fv-row">
+              <Field
+                type="text"
+                :disabled="State.userData.allowEdit === 0 ? true : false"
+                name="insurance"
+                class="form-control form-control-lg form-control-solid"
+                placeholder="Insurance"
+                v-model="State.userData.insurance"
+              />
+              <div class="fv-plugins-message-container">
+                <div class="fv-help-block">
+                  <ErrorMessage name="insurance" />
+                </div>
+              </div>
+            </div>
+            <!--end::Col-->
+          </div>
+        </div>
+
+        <div class="card-footer d-flex justify-content-end py-6 px-9">
+          <button
+            type="reset"
+            class="btn btn-light btn-active-light-primary me-2"
+          >
+            Discard
+          </button>
+
+          <button
+            type="submit"
+            id="kt_account_driver_details_submit"
+            ref="submitButton6"
             class="btn btn-primary"
           >
             <span class="indicator-label"> Update </span>
@@ -317,6 +616,7 @@
                       type="email"
                       class="form-control form-control-lg form-control-solid fw-semobold fs-6"
                       id="emailaddress"
+                      :disabled="State.userData.allowEdit === 0 ? true : false"
                       placeholder="Email Address"
                       name="emailaddress"
                       v-model="State.userData.email"
@@ -339,6 +639,7 @@
                       type="password"
                       class="form-control form-control-lg form-control-solid fw-semobold fs-6"
                       name="confirmemailpassword"
+                      :disabled="State.userData.allowEdit === 0 ? true : false"
                       id="confirmemailpassword"
                       aria-autocomplete="false"
                       v-model="State.userData.confirmPassword"
@@ -431,6 +732,7 @@
                       type="password"
                       class="form-control form-control-lg form-control-solid fw-semobold fs-6"
                       name="currentpassword"
+                      :disabled="State.userData.allowEdit === 0 ? true : false"
                       id="currentpassword"
                       v-model="State.userData.oldPassword"
                     />
@@ -453,6 +755,7 @@
                       class="form-control form-control-lg form-control-solid fw-semobold fs-6"
                       name="newpassword"
                       v-model="State.userData.newPassword"
+                      :disabled="State.userData.allowEdit === 0 ? true : false"
                       id="newpassword"
                     />
                     <div class="fv-plugins-message-container">
@@ -473,6 +776,7 @@
                       type="password"
                       class="form-control form-control-lg form-control-solid fw-semobold fs-6"
                       name="confirmpassword"
+                      :disabled="State.userData.allowEdit === 0 ? true : false"
                       id="confirmpassword"
                       v-model="State.userData.ConfirmNewPassword"
                     />
@@ -565,6 +869,7 @@ export default defineComponent({
     const submitButton2 = ref<HTMLElement | null>(null);
     const submitButton3 = ref<HTMLElement | null>(null);
     const submitButton4 = ref<HTMLElement | null>(null);
+    const submitButton6 = ref<HTMLButtonElement | null>(null);
 
     const submitButton5 = ref<HTMLElement | null>(null);
     const updateEmailButton = ref<HTMLElement | null>(null);
@@ -579,6 +884,15 @@ export default defineComponent({
       phone: Yup.string().label("Contact phone").nullable(),
       state: Yup.string().label("State").nullable(),
       address: Yup.string().label("Address").nullable(),
+    });
+
+    const userDriverValidator = Yup.object().shape({
+      licenseNumber: Yup.string().required().label("License Number"),
+      licenseExpiration: Yup.string().required().label("License Expiration"),
+      vehicleMake: Yup.string().label("Vehicle Make"),
+      vehicleModel: Yup.string().label("Vehicle Model"),
+      licensePlate: Yup.string().label("License Plate"),
+      insurance: Yup.string().label("Insurance"),
     });
 
     const changeEmail = Yup.object().shape({
@@ -597,12 +911,6 @@ export default defineComponent({
     });
 
     const updateProfile = async () => {
-      if (submitButton1.value) {
-        // eslint-disable-next-line
-        submitButton1.value!.disabled = true;
-        // Activate indicator
-        submitButton1.value.setAttribute("data-kt-indicator", "on");
-      }
       if (!user) return;
       const formData = new FormData();
       formData.append("id", `${State.userData.id}`);
@@ -616,6 +924,7 @@ export default defineComponent({
       formData.append("address", State.userData.address!);
       formData.append("email", State.userData.email!);
       formData.append("city", State.userData.city!);
+      formData.append("title", State.userData.title!);
       formData.append("type", State.userData.type!);
 
       if (State.userData.type === "Driver") {
@@ -635,7 +944,18 @@ export default defineComponent({
         .post(API_URL + "profile", formData, {
           headers: { Authorization: `Bearer ${token}` },
         })
-        .then(() => {})
+        .then(() => {
+          Swal.fire({
+            text: "Profile Updated successfully!",
+            icon: "success",
+            confirmButtonText: "Ok",
+            buttonsStyling: false,
+            heightAuto: false,
+            customClass: {
+              confirmButton: "btn btn-light-primary",
+            },
+          });
+        })
         .catch((error) => {
           return Swal.fire({
             text: error.message,
@@ -669,6 +989,7 @@ export default defineComponent({
         state: "",
         created_at: "",
         email: "",
+        allowEdit: true,
         email_verified_at: false,
 
         licenseNumber: "",
@@ -698,22 +1019,82 @@ export default defineComponent({
     });
 
     const saveChanges1 = async () => {
+      if (submitButton1.value) {
+        // eslint-disable-next-line
+        submitButton1.value!.disabled = true;
+        // Activate indicator
+        submitButton1.value.setAttribute("data-kt-indicator", "on");
+      }
+      if (State.userData.allowEdit === 0) {
+        return Swal.fire({
+          text: "Profile modification not allowed",
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Ok",
+          heightAuto: false,
+          customClass: {
+            confirmButton: "btn fw-semobold btn-light-danger",
+          },
+        });
+      }
       try {
         await updateProfile();
 
-        if (State.userData.type) {
-          await refreshProfile().then(() => {
-            submitButton1.value?.removeAttribute("data-kt-indicator");
-            submitButton1.value!.disabled = false;
-          });
-        }
+        await refreshProfile().then(() => {
+          submitButton1.value?.removeAttribute("data-kt-indicator");
+          submitButton1.value!.disabled = false;
+        });
       } catch (error) {
         console.log(error);
       }
       submitButton1.value?.removeAttribute("data-kt-indicator");
     };
 
+    const saveChanges6 = async () => {
+      if (submitButton6.value) {
+        // eslint-disable-next-line
+        submitButton6.value!.disabled = true;
+        // Activate indicator
+        submitButton6.value.setAttribute("data-kt-indicator", "on");
+      }
+      if (State.userData.allowEdit === 0) {
+        return Swal.fire({
+          text: "Profile modification not allowed",
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Ok",
+          heightAuto: false,
+          customClass: {
+            confirmButton: "btn fw-semobold btn-light-danger",
+          },
+        });
+      }
+      try {
+        await updateProfile();
+
+        await refreshProfile().then(() => {
+          submitButton6.value?.removeAttribute("data-kt-indicator");
+          submitButton6.value!.disabled = false;
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      submitButton6.value?.removeAttribute("data-kt-indicator");
+    };
+
     const updateEmail = async () => {
+      if (State.userData.allowEdit === 0) {
+        return Swal.fire({
+          text: "Profile modification not allowed",
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Ok",
+          heightAuto: false,
+          customClass: {
+            confirmButton: "btn fw-semobold btn-light-danger",
+          },
+        });
+      }
       const formData = new FormData();
       formData.append("email", State.userData.email);
       formData.append("password", State.userData.confirmPassword);
@@ -769,6 +1150,18 @@ export default defineComponent({
     };
 
     const updatePassword = async () => {
+      if (State.userData.allowEdit === 0) {
+        return Swal.fire({
+          text: "Profile modification not allowed",
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Ok",
+          heightAuto: false,
+          customClass: {
+            confirmButton: "btn fw-semobold btn-light-danger",
+          },
+        });
+      }
       if (updatePasswordButton.value) {
         // Activate indicator
         updatePasswordButton.value.setAttribute("data-kt-indicator", "on");
@@ -843,7 +1236,7 @@ export default defineComponent({
       submitButton4,
       submitButton5,
       saveChanges1,
-
+      submitButton6,
       State,
       emailFormDisplay,
       passwordFormDisplay,
@@ -856,6 +1249,8 @@ export default defineComponent({
       updateEmail,
       updatePassword,
       getAssetPath,
+      saveChanges6,
+      userDriverValidator,
     };
   },
 });

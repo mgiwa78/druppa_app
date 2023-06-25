@@ -1,16 +1,16 @@
 <template>
   <div class="col-12">
-    <DriverRecords widget-classes="mb-5 mb-xl-8"></DriverRecords>
+    <DriverDeliveryTable widget-classes="mb-5 mb-xl-8"></DriverDeliveryTable>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import DriverRecords from "@/components/driver/tables/DriverRecords.vue";
+import DriverDeliveryTable from "@/components/driver/tables/DriverDeliveryTable.vue";
 
 export default defineComponent({
   name: "driver_records",
-  components: { DriverRecords },
+  components: { DriverDeliveryTable },
   props: {},
   setup() {
     return {};

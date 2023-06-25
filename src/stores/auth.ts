@@ -76,6 +76,7 @@ const useAuthStore = defineStore("auth", () => {
   const user = computed(() =>
     userPersist.value ? JSON.parse(userPersist.value) : null
   );
+
   const isActive = computed(() =>
     userPersist.value
       ? JSON.parse(userPersist.value).isActive === 1

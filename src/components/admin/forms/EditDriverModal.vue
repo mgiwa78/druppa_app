@@ -327,9 +327,7 @@
                     <template v-if="editDriverData.state">
                       <template v-if="citiesInNigeria[editDriverData.state]">
                         <option
-                          v-for="city in citiesInNigeria[
-                            editDriverData.state
-                          ]"
+                          v-for="city in citiesInNigeria[editDriverData.state]"
                           :key="city.code"
                           :value="city.city"
                         >
@@ -344,6 +342,41 @@
                       Select a State First
                     </option>
                   </Field>
+                  <div class="fv-plugins-message-container">
+                    <div class="fv-help-block">
+                      <ErrorMessage name="city" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <label
+                    class="fw-bold font-weight-bolder required fs-5 fw-semobold mb-2"
+                    >Allow Editing</label
+                  >
+                  <!--end::Label-->
+
+                  <!--begin::Input-->
+
+                  <label
+                    class="form-check form-switch form-switch-sm form-check-custom form-check-solid"
+                  >
+                    <!--begin::Input-->
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      v-model="editDriverData.allowEdit"
+                      id="kt_modal_allowEdit"
+                      name="allowEdit"
+                    />
+                    <!--end::Input-->
+
+                    <!--begin::Label-->
+                    <span
+                      class="form-check-label fw-semobold text-muted"
+                      for="kt_modal_connected_accounts_google"
+                    ></span>
+                    <!--end::Label-->
+                  </label>
                   <div class="fv-plugins-message-container">
                     <div class="fv-help-block">
                       <ErrorMessage name="city" />
@@ -387,7 +420,7 @@
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, ref, type PropType } from "vue";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import { ErrorMessage, Field, Form as VForm } from "vee-validate";
 import * as Yup from "yup";
@@ -398,30 +431,19 @@ import { hideModal } from "@/core/helpers/dom";
 import statesInNigeria from "@/core/data/nigeriaStates";
 import citiesInNigeria from "@/core/data/citiesInNigeria";
 
+import ErrorHandler from "@/core/helpers/errorHandler";
+import type { DriverType } from "@/core/types/Driver";
+import { DriverEmpty } from "@/core/types/Driver";
+
 export default defineComponent({
   name: "edit-admin-modal",
   props: {
     ProfileData: {
-      type: Object as () => {
-        username: string;
-        email: string;
-        id: number;
-        firstName: string;
-        lastName: string;
-        phone_number: string;
-        title: string;
-        state: string;
-        city: string;
-        address: string;
-        gender: string;
-        profile?: string;
-        last_login: string;
-      },
+      type: Object as PropType<DriverType>,
     },
   },
   components: { ErrorMessage, Field, VForm },
   setup(props) {
- 
     const { API_URL } = __CONSTANTS__;
 
     const editSubmitButtonRef = ref<null | HTMLButtonElement>(null);
@@ -430,7 +452,7 @@ export default defineComponent({
     const editDriverModalRef = ref<null | HTMLElement>(null);
 
     const AuthStore = useAuthStore();
-    const { user , token} = AuthStore;
+    const { user, token } = AuthStore;
 
     const validationSchema = Yup.object().shape({
       firstName: Yup.string().required().label("First Name"),
@@ -453,8 +475,12 @@ export default defineComponent({
 
       const EditformData = new FormData();
 
-      EditformData.append("firstName", editDriverData.value.lastName);
-      EditformData.append("lastName", editDriverData.value.firstName);
+      EditformData.append("firstName", editDriverData.value.firstName);
+      EditformData.append(
+        "allowEdit",
+        `${editDriverData.value.allowEdit ? 1 : 0}`
+      );
+      EditformData.append("lastName", editDriverData.value.lastName);
       EditformData.append("phone_number", editDriverData.value.phone_number);
       EditformData.append("city", editDriverData.value.city);
       EditformData.append("address", editDriverData.value.address);
@@ -463,14 +489,11 @@ export default defineComponent({
       EditformData.append("gender", editDriverData.value.gender);
       EditformData.append("title", editDriverData.value.title);
       EditformData.append("email", editDriverData.value.email);
-      EditformData.append("_method", "put");
 
       await axios
-        .post(
-          API_URL + `drivers/${editDriverData.value.id}`,
-          EditformData,
-          { method: "put", headers: { Authorization: `Bearer ${token}` } }
-        )
+        .post(API_URL + `drivers/${editDriverData.value.id}`, EditformData, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
         .then(() => {
           Swal.fire({
             text: "Profile has been Updated!",
@@ -484,34 +507,12 @@ export default defineComponent({
           }).then(() => hideModal(editDriverModalRef.value));
         })
         .catch((error) => {
-          if (error.response.data.message == "User does not exist") {
-            Swal.fire({
-              text: "Invalid Email or Password",
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Try again!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn fw-semobold btn-light-danger",
-              },
-            });
-          }
-          if (error.response.data.message) {
-            Swal.fire({
-              text: `${error.response.data.message}`,
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Try again!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn fw-semobold btn-light-danger",
-              },
-            });
-          }
+          ErrorHandler(error);
         })
         .finally(() => {
           editSubmitButtonRef.value?.removeAttribute("data-kt-indicator");
           editSubmitButtonRef.value!.disabled = false;
+          hideModal(editDriverModalRef.value);
         });
     };
 
@@ -520,11 +521,10 @@ export default defineComponent({
         console.log(props.ProfileData);
         return {
           firstName: props.ProfileData.firstName || "",
+          allowEdit: props.ProfileData.allowEdit === 1 ? true : false,
           lastName: props.ProfileData.lastName || "",
           email: props.ProfileData.email || "",
-          username: props.ProfileData.username || "",
           profile: props.ProfileData.profile || "",
-          last_login: props.ProfileData.last_login || "",
           phone_number: props.ProfileData.phone_number || "0",
           id: props.ProfileData.id || "",
           title: props.ProfileData.title || "",
@@ -558,9 +558,6 @@ export default defineComponent({
         return;
       }
       await updateProfile();
-
-      editSubmitButtonRef.value.disabled = true;
-      editSubmitButtonRef.value.setAttribute("data-kt-indicator", "on");
     };
 
     return {

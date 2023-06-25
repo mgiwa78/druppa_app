@@ -4,10 +4,10 @@
     <!--begin::Header-->
     <div class="card-header border-0 pt-5">
       <h3 class="card-title align-items-start flex-column">
-        <span class="card-label fw-bold fs-3 mb-1">Deliveries</span>
+        <span class="card-label fw-bold fs-3 mb-1">Invoices</span>
 
         <span class="text-muted mt-1 fw-semobold fs-7"
-          >{{ totalItems }} Deliveries</span
+          >{{ dataToDisplay?.length }} Invoices</span
         >
       </h3>
     </div>
@@ -20,7 +20,7 @@
         v-if="dataToDisplay?.length === 0"
         class="d-flex align-items-center justify-content-center w-100 py-5"
       >
-        <h4>No Deliveries</h4>
+        <h4>No Invoices</h4>
       </div>
       <div
         v-if="!dataToDisplay"
@@ -41,13 +41,12 @@
           <!--begin::Table head-->
           <thead>
             <tr class="fw-bold text-muted">
-              <th class="min-w-150px">Order Id</th>
-              <th class="min-w-120px">Driver</th>
-              <th class="min-w-140px">Origin</th>
-              <th class="min-w-120px">Destination</th>
-              <th class="min-w-120px">State</th>
-
-              <th class="min-w-120px">Status</th>
+              <th class="min-w-150px">Reciept Id</th>
+              <th class="min-w-120px">Date Issued</th>
+              <th class="min-w-140px">Issued To</th>
+              <th class="min-w-120px">Payment Ref</th>
+              <th class="min-w-120px">Cost</th>
+              <th class="min-w-120px">Service Rendered</th>
 
               <th class="min-w-100px text-end">Actions</th>
             </tr>
@@ -56,29 +55,27 @@
 
           <!--begin::Table body-->
           <tbody>
-            <template v-for="delivery in dataToDisplay" :key="delivery.id">
+            <template v-for="invoice in dataToDisplay" :key="invoice.id">
               <tr>
                 <td>
                   <a
                     href="#"
                     class="text-dark fw-bold text-hover-primary fs-6"
-                    >{{ delivery.tracking_number }}</a
+                    >{{ invoice.payment_id }}</a
                   >
                 </td>
                 <td class="text-dark fw-bold text-hover-primary fs-6">
-                  {{
-                    delivery.driver.firstName + " " + delivery.driver.lastName
-                  }}
+                  {{ formatDate(invoice.created_at) }}
                 </td>
                 <td>
                   <a
                     href="#"
                     class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                    >{{ delivery.origin }}</a
-                  >
-                  <span
-                    class="text-muted fw-semobold text-muted d-block fs-7"
-                    >{{ formatDate(delivery.pickup_date) }}</span
+                    >{{
+                      invoice.customer.lastName +
+                      " " +
+                      invoice.customer.firstName
+                    }}</a
                   >
                 </td>
 
@@ -86,11 +83,14 @@
                   <a
                     href="#"
                     class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                    >{{ delivery.destination }}</a
+                    >{{ invoice.paystack_refrence_id }}</a
                   >
-                  <span
-                    class="text-muted fw-semobold text-muted d-block fs-7"
-                    >{{ formatDate(delivery.delivery_date) }}</span
+                </td>
+                <td>
+                  <a
+                    href="#"
+                    class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
+                    >{{ invoice.total_payment }}</a
                   >
                 </td>
 
@@ -98,28 +98,28 @@
                   <a
                     href="#"
                     class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                    >{{ delivery.state }}</a
+                    >{{ invoice.service_rendered }}</a
                   >
-                  <span
+                  <!-- <span
                     class="text-muted fw-semobold text-muted d-block fs-7"
-                    >{{ delivery.city }}</span
-                  >
+                    >{{ invoice.city }}</span
+                  > -->
                 </td>
 
-                <td>
+                <!-- <td>
                   <span
-                    :class="`badge-light-${delivery.status}`"
+                    :class="`badge-light-${statusFilter[invoice.status]}`"
                     class="badge"
-                    >{{ delivery.status }}</span
+                    >{{ invoice.status }}</span
                   >
-                </td>
+                </td> -->
 
                 <td class="text-end">
                   <button
                     data-bs-toggle="modal"
-                    data-bs-target="#kt_modal_view_delivery"
+                    data-bs-target="#kt_start_delivery_modal"
                     class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
-                    @click.prevent="updateViewDelivery(delivery)"
+                    @click.prevent=""
                   >
                     <KTIcon icon-name="switch" icon-class="fs-3" />
                   </button>
@@ -152,9 +152,7 @@
     <!--begin::Body-->
   </div>
   <!--end::Tables Widget 13-->
-  <ViewCustomerDeliveryModal
-    :CustomerDeliveryData="CustomerViewDeliveryData"
-  ></ViewCustomerDeliveryModal>
+  <!-- <StartDeliveryModal :OrderData="CustomerVieworderData"></StartDeliveryModal> -->
 </template>
 
 <script lang="ts">
@@ -167,16 +165,21 @@ import axios from "axios";
 import { useAuthStore } from "@/stores/auth";
 import Swal from "sweetalert2";
 import formatDate from "@/core/helpers/formatDate";
-import type { DeliveryType } from "@/core/types/Deliveries";
-import { DeliveryEmpty } from "@/core/types/Deliveries";
-import ViewCustomerDeliveryModal from "@/components/customer/forms/ViewCustomerDeliveryModal.vue";
+
+import type { InvoiceType } from "@/core/types/Invoice";
+import { InvoiceEmpty } from "@/core/types/Invoice";
+
+// import StartDeliveryModal from "@/components/driver/form/StartDeliveryModal.vue";
+
+import router from "@/router";
 import ErrorHandler from "@/core/helpers/errorHandler";
 
 export default defineComponent({
-  name: "kt-widget-12",
+  name: "invoice-table",
+
   components: {
     TableFooter,
-    ViewCustomerDeliveryModal,
+    // StartDeliveryModal,
   },
   props: {
     widgetClasses: String,
@@ -192,21 +195,25 @@ export default defineComponent({
 
     const DeliveriesPaginationData = ref<any>({});
 
-    const editDeliveryData = ref<DeliveryType>(DeliveryEmpty);
-    const CustomerViewDeliveryData = ref<DeliveryType>(DeliveryEmpty);
+    const editOrderData = ref<InvoiceType>(InvoiceEmpty);
+    const CustomerVieworderData = ref<InvoiceType>(InvoiceEmpty);
 
-    const dataToDisplay = ref<Array<DeliveryType> | null>(null);
-    const itemsPerPage = ref<number>(10);
-    const totalDeliveries = ref<Array<number>>([0]);
+    const dataToDisplay = ref<Array<InvoiceType> | null>(null);
+    const itemsPerPage = ref<number>(4);
+    const totalOrders = ref<Array<number>>([0]);
     const total = ref<number>(0);
 
     const AuthStore = useAuthStore();
-    const { user, token } = AuthStore;
+    const { user, token, logout } = AuthStore;
 
     const itemsPerPageDropdownEnabled = ref<boolean>(true);
     const currentPage = ref<number>(1);
 
-    const checkedRows = ref<Array<number>>([]);
+    const statusFilter = {
+      Pending: "warning",
+      "In Progress": "primary",
+      Delivered: "success",
+    };
 
     watch(
       () => itemsPerPage.value,
@@ -215,31 +222,38 @@ export default defineComponent({
         emit("on-items-per-page-change", val);
       }
     );
+
     const totalItems = computed(() => {
-      if (totalDeliveries.value) {
-        if (totalDeliveries.value.length <= itemsPerPage.value) {
+      if (totalOrders.value) {
+        if (totalOrders.value.length <= itemsPerPage.value) {
           return total.value;
         } else {
-          return totalDeliveries.value.length;
+          return totalOrders.value.length;
         }
       }
       return 0;
     });
 
-    const updateEditDelivery = async (delivery: DeliveryType) => {
-      editDeliveryData.value = delivery;
+    const updateEditorder = async (order: InvoiceType) => {
+      editOrderData.value = order;
     };
-    const updateViewDelivery = async (delivery: DeliveryType) => {
-      console.log(delivery);
-      CustomerViewDeliveryData.value = delivery;
+    const updateVieworder = async (order: InvoiceType) => {
+      console.log(order);
+      CustomerVieworderData.value = order;
     };
 
     watch(
       () => currentPage.value,
       async (newValue) => {
         const data = await fetchPageData(newValue);
-        console.log(data);
-        dataToDisplay.value = data;
+        dataToDisplay.value = data.data;
+      }
+    );
+    watch(
+      () => itemsPerPage.value,
+      async (newValue) => {
+        const data = await fetchPageData(newValue);
+        dataToDisplay.value = data.data;
       }
     );
 
@@ -248,24 +262,31 @@ export default defineComponent({
       emit("page-change", page);
     };
 
-    const fetchCustomerOrders = async (page) => {
-      const Deliverys = await axios
-        .get(API_URL + "deliveries/customer/" + `${user.id}?page=${page}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+    const fetchCustomerInvoice = async (page) => {
+      const Invoices = await axios
+        .get(
+          API_URL +
+            "invoice/customer" +
+            `/${itemsPerPage.value}` +
+            `?page=${page}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
         .then((response) => response.data)
         .catch((error) => {
           dataToDisplay.value = null;
           ErrorHandler(error);
         });
-      return Deliverys.data;
+      console.log(Invoices);
+      return Invoices.data;
     };
 
     const fetchPageData = async (page: number) => {
       if (typeof page === "number") {
-        return await fetchCustomerOrders(page);
+        return await fetchCustomerInvoice(page);
       } else {
-        return await fetchCustomerOrders(1);
+        return await fetchCustomerInvoice(1);
       }
     };
 
@@ -282,6 +303,7 @@ export default defineComponent({
 
     onMounted(async () => {
       const deliveries = await fetchPageData(1);
+      console.log(deliveries);
       DeliveriesPaginationData.value = deliveries;
 
       dataToDisplay.value = deliveries.data;
@@ -290,21 +312,21 @@ export default defineComponent({
     });
 
     return {
-      checkedRows,
       getAssetPath,
       pageChange,
       currentPage,
       itemsPerPage,
-      totalDeliveries,
+      totalOrders,
       totalItems,
       dataToDisplay,
       itemsPerPageDropdownEnabled,
       ASSETS_URL,
-      editDeliveryData,
-      updateEditDelivery,
-      CustomerViewDeliveryData,
-      updateViewDelivery,
+      editOrderData,
+      updateEditorder,
+      CustomerVieworderData,
+      updateVieworder,
       formatDate,
+      statusFilter,
     };
   },
 });

@@ -112,6 +112,14 @@
                   </div>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-6">
+                  <div class="fw-bold mt-5">Allow Edit</div>
+                  <div class="text-gray-600">
+                    {{ viewDriverData.allowEdit ? "Yes" : "No" }}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -122,17 +130,12 @@
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, ref, type PropType } from "vue";
 import __CONSTANTS__ from "@/constants";
 
-interface FormData {
-  firstName: string;
-  lastName: string;
-  userName: string;
-  email: string;
-  password: string;
-  permissions: Array<string>;
-}
+import ErrorHandler from "@/core/helpers/errorHandler";
+import type { DriverType } from "@/core/types/Driver";
+import { DriverEmpty } from "@/core/types/Driver";
 
 export default defineComponent({
   name: "add-driver-modal",
@@ -141,23 +144,7 @@ export default defineComponent({
   },
   props: {
     ProfileData: {
-      type: Object as () => {
-        username: string;
-        email: string;
-        id: number;
-        firstName: string;
-        lastName: string;
-        profile: string;
-        city: string;
-        last_login: string;
-        address: string;
-        phone_number: string;
-        gender: string;
-        state: string;
-        type: string;
-        created_at: string;
-        title: string;
-      },
+      type: Object as PropType<DriverType>,
     },
   },
   setup(props) {
@@ -170,14 +157,13 @@ export default defineComponent({
           firstName: props.ProfileData.firstName || "",
           lastName: props.ProfileData.lastName || "",
           email: props.ProfileData.email || "",
-          username: props.ProfileData.username || "",
           created_at: props.ProfileData.created_at || "",
           title: props.ProfileData.title || "",
           city: props.ProfileData.city || "",
           profile: props.ProfileData.profile || "",
+          allowEdit: props.ProfileData.allowEdit === 1 ? true : false,
           gender: props.ProfileData.gender || "",
           type: props.ProfileData.type || "",
-          last_login: props.ProfileData.last_login || "",
           state: props.ProfileData.state || "",
           phone_number: props.ProfileData.phone_number || "",
           address: props.ProfileData.address || "",

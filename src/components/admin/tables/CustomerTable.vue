@@ -299,7 +299,8 @@ export default defineComponent({
             },
           });
         });
-      return profiles.customer_users;
+      console.log(profiles);
+      return profiles.data;
     };
 
     onMounted(async () => {

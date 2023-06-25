@@ -64,7 +64,7 @@
                     class="form-control form-control-solid"
                     placeholder="Last Name"
                     name="lastName"
-                    v-model="newCustomerData.lastName"
+                    v-model="newDriverData.lastName"
                   />
                   <div class="fv-plugins-message-container">
                     <div class="fv-help-block">
@@ -84,7 +84,7 @@
                     class="form-control form-control-solid"
                     placeholder="First Name"
                     name="firstName"
-                    v-model="newCustomerData.firstName"
+                    v-model="newDriverData.firstName"
                   />
                   <div class="fv-plugins-message-container">
                     <div class="fv-help-block">
@@ -109,7 +109,7 @@
                     name="title"
                     class="form-select"
                     as="select"
-                    v-model="newCustomerData.title"
+                    v-model="newDriverData.title"
                   >
                     <option value="">Select a Title...</option>
                     <option value="Mr">Mr</option>
@@ -135,7 +135,7 @@
                     class="form-select"
                     :class="errors.country ? 'is-invalid' : ''"
                     as="select"
-                    v-model="newCustomerData.gender"
+                    v-model="newDriverData.gender"
                   >
                     <option value="">Select a Gender...</option>
                     <option value="male">Male</option>
@@ -164,7 +164,7 @@
                     class="form-control form-control-solid"
                     placeholder="Email"
                     name="email"
-                    v-model="newCustomerData.email"
+                    v-model="newDriverData.email"
                   />
                   <div class="fv-plugins-message-container">
                     <div class="fv-help-block">
@@ -185,7 +185,7 @@
                     class="form-control form-control-solid"
                     placeholder="Password"
                     name="password"
-                    v-model="newCustomerData.password"
+                    v-model="newDriverData.password"
                   />
                   <div class="fv-plugins-message-container">
                     <div class="fv-help-block">
@@ -209,7 +209,7 @@
                     class="form-control form-control-solid"
                     placeholder="Phone Number"
                     name="phone_number"
-                    v-model="newCustomerData.phone_number"
+                    v-model="newDriverData.phone_number"
                   />
                   <div class="fv-plugins-message-container">
                     <div class="fv-help-block">
@@ -217,26 +217,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-6">
-                  <label class="fw-bold required fs-5 fw-semobold mb-2"
-                    >Username</label
-                  >
-                  <!--end::Label-->
 
-                  <!--begin::Input-->
-                  <Field
-                    type="text"
-                    class="form-control form-control-solid"
-                    placeholder="Username"
-                    name="userName"
-                    v-model="newCustomerData.userName"
-                  />
-                  <div class="fv-plugins-message-container">
-                    <div class="fv-help-block">
-                      <ErrorMessage name="userName" />
-                    </div>
-                  </div>
-                </div>
                 <!--end::Input-->
               </div>
               <div class="mb-5 row">
@@ -252,7 +233,7 @@
                     name="state"
                     class="form-select"
                     as="select"
-                    v-model="newCustomerData.state"
+                    v-model="newDriverData.state"
                   >
                     <option value="">Select a State...</option>
                     <option
@@ -281,22 +262,22 @@
                     name="city"
                     class="form-select"
                     as="select"
-                    v-model="newCustomerData.city"
-                    ><option v-if="newCustomerData.state" selected value="">
+                    v-model="newDriverData.city"
+                    ><option v-if="newDriverData.state" selected value="">
                       Select a State
                     </option>
-                    <template v-if="newCustomerData.state">
-                      <template v-if="citiesInNigeria[newCustomerData.state]">
+                    <template v-if="newDriverData.state">
+                      <template v-if="citiesInNigeria[newDriverData.state]">
                         <option
-                          v-for="city in citiesInNigeria[newCustomerData.state]"
+                          v-for="city in citiesInNigeria[newDriverData.state]"
                           :key="city.code"
                           :value="city.city"
                         >
                           {{ city.city }}
                         </option>
                       </template>
-                      <option v-else :value="newCustomerData.state">
-                        {{ newCustomerData.state }}
+                      <option v-else :value="newDriverData.state">
+                        {{ newDriverData.state }}
                       </option>
                     </template>
                     <option v-else selected value="">
@@ -327,7 +308,7 @@
                     class="form-control form-control-solid"
                     placeholder="Address"
                     name="address"
-                    v-model="newCustomerData.address"
+                    v-model="newDriverData.address"
                   />
                   <div class="fv-plugins-message-container">
                     <div class="fv-help-block">
@@ -393,7 +374,7 @@
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref, type PropType } from "vue";
 import { hideModal } from "@/core/helpers/dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import { ErrorMessage, Field, Form as VForm } from "vee-validate";
@@ -404,23 +385,17 @@ import statesInNigeria from "@/core/data/nigeriaStates";
 import citiesInNigeria from "@/core/data/citiesInNigeria";
 import { useAuthStore } from "@/stores/auth";
 
-interface FormData {
-  firstName: string;
-  lastName: string;
-  userName: string;
-  email: string;
-  phone_number: string;
-  state: string;
-  address: string;
-  city: string;
-  password: string;
-  gender: string;
-  title: string;
-}
+import type { DriverType } from "@/core/types/Driver";
+import { DriverEmpty } from "@/core/types/Driver";
 
 export default defineComponent({
   name: "add-admin-modal",
   components: { ErrorMessage, Field, VForm },
+  props: {
+    DriverData: {
+      type: Object as PropType<DriverType>,
+    },
+  },
   setup() {
     const AuthStore = useAuthStore();
     const { user, token, refreshProfile } = AuthStore;
@@ -435,25 +410,13 @@ export default defineComponent({
     const { API_URL, badInternetAlert, errorAlert, successAlert } =
       __CONSTANTS__;
 
-    const newCustomerData = ref<FormData>({
-      firstName: "",
-      lastName: "",
-      email: "",
-      address: "",
-      state: "",
-      userName: "",
-      gender: "",
-      city: "",
-      password: "",
-      title: "",
-      phone_number: "",
-    });
+    const newDriverData = ref<DriverType>(DriverEmpty);
 
     const validationSchema = Yup.object().shape({
       firstName: Yup.string().required().label("First Name"),
       lastName: Yup.string().required().label("Last Name"),
       email: Yup.string().required().label("Email"),
-      userName: Yup.string().required().label("UserName"),
+      password: Yup.string().required().label("password"),
       gender: Yup.string().required().label("gender"),
       phone_number: Yup.string().required().label("Phone Number"),
       city: Yup.string().required().label("City"),
@@ -469,17 +432,16 @@ export default defineComponent({
 
       const formData = new FormData();
 
-      formData.append("firstName", newCustomerData.value.firstName);
-      formData.append("lastName", newCustomerData.value.lastName);
-      formData.append("email", newCustomerData.value.email);
-      formData.append("username", newCustomerData.value.userName);
-      formData.append("password", newCustomerData.value.password);
-      formData.append("address", newCustomerData.value.address);
-      formData.append("city", newCustomerData.value.city);
-      formData.append("state", newCustomerData.value.state);
-      formData.append("title", newCustomerData.value.title);
-      formData.append("gender", newCustomerData.value.gender);
-      formData.append("phone_number", newCustomerData.value.phone_number);
+      formData.append("firstName", newDriverData.value.firstName);
+      formData.append("lastName", newDriverData.value.lastName);
+      formData.append("email", newDriverData.value.email);
+      formData.append("password", newDriverData.value.password);
+      formData.append("address", newDriverData.value.address);
+      formData.append("city", newDriverData.value.city);
+      formData.append("state", newDriverData.value.state);
+      formData.append("title", newDriverData.value.title);
+      formData.append("gender", newDriverData.value.gender);
+      formData.append("phone_number", newDriverData.value.phone_number);
 
       await axios
         .post(API_URL + "drivers", formData, {
@@ -546,7 +508,7 @@ export default defineComponent({
     };
 
     return {
-      newCustomerData,
+      newDriverData,
       validationSchema,
       submit,
       submitButtonRef,

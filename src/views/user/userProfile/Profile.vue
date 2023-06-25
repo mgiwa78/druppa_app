@@ -22,16 +22,15 @@
 
         <div class="flex-grow-1">
           <div
-            class="d-flex justify-content-between align-items-start flex-wrap mb-2"
+            class="d-flex justify-content-between align-items-start flex-wrap"
           >
             <div class="d-flex flex-column">
-              <div class="d-flex align-items-center mb-2">
-                <a
-                  href="#"
+              <div class="d-flex align-items-center">
+                <span
                   class="text-gray-800 text-hover-primary fs-2 fw-bold me-1"
                   >{{
                     State.userData.firstName + " " + State.userData.lastName
-                  }}</a
+                  }}</span
                 >
 
                 <span
@@ -40,20 +39,8 @@
                 >
               </div>
 
-              <div class="d-flex flex-wrap fw-semobold fs-6 mb-4 pe-2">
-                <a
-                  href="#"
-                  class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2"
-                >
-                  <KTIcon icon-name="profile-circle" icon-class="fs-4 me-1" />
-                  {{
-                    State.userData.gender
-                      ? State.userData.gender
-                      : "Gender not set"
-                  }}
-                </a>
-                <a
-                  href="#"
+              <div class="d-flex flex-wrap fw-semobold fs-6">
+                <span
                   class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2"
                 >
                   <KTIcon icon-name="geolocation" icon-class="fs-4 me-1" />
@@ -62,14 +49,37 @@
                       ? State.userData.address
                       : "Set your delivey address"
                   }}
-                </a>
-                <a
-                  href="#"
+                </span>
+                <span
                   class="d-flex align-items-center text-gray-400 text-hover-primary mb-2"
                 >
                   <KTIcon icon-name="sms" icon-class="fs-4 me-1" />
                   {{ State.userData.email ? user.email : "No email" }}
-                </a>
+                </span>
+              </div>
+              <div class="d-flex flex-wrap fw-semobold">
+                <span
+                  class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2"
+                >
+                  <KTIcon icon-name="profile-circle" icon-class="fs-4 me-1" />
+                  {{
+                    State.userData.gender
+                      ? State.userData.gender
+                      : "Gender not set"
+                  }}
+                </span>
+              </div>
+              <div class="d-flex flex-wrap fw-semobold fs-6 mb-4 pe-2">
+                <span
+                  class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2"
+                >
+                  <KTIcon icon-name="phone" icon-class="fs-4 me-1" />
+                  {{
+                    State.userData.phone_number
+                      ? State.userData.phone_number
+                      : "Phone number not set"
+                  }}
+                </span>
               </div>
             </div>
           </div>

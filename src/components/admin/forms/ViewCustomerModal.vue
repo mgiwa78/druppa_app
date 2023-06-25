@@ -122,17 +122,9 @@
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, ref, type PropType } from "vue";
 import __CONSTANTS__ from "@/constants";
-
-interface FormData {
-  firstName: string;
-  lastName: string;
-  userName: string;
-  email: string;
-  password: string;
-  permissions: Array<string>;
-}
+import type { CustomerType } from "@/core/types/Customer";
 
 export default defineComponent({
   name: "add-customer-modal",
@@ -141,23 +133,7 @@ export default defineComponent({
   },
   props: {
     ProfileData: {
-      type: Object as () => {
-        username: string;
-        email: string;
-        id: number;
-        firstName: string;
-        lastName: string;
-        profile: string;
-        city: string;
-        last_login: string;
-        address: string;
-        phone_number: string;
-        gender: string;
-        state: string;
-        type: string;
-        created_at: string;
-        title: string;
-      },
+      type: Object as PropType<CustomerType>,
     },
   },
   setup(props) {
@@ -170,14 +146,12 @@ export default defineComponent({
           firstName: props.ProfileData.firstName || "",
           lastName: props.ProfileData.lastName || "",
           email: props.ProfileData.email || "",
-          username: props.ProfileData.username || "",
           created_at: props.ProfileData.created_at || "",
           title: props.ProfileData.title || "",
           city: props.ProfileData.city || "",
           profile: props.ProfileData.profile || "",
           gender: props.ProfileData.gender || "",
           type: props.ProfileData.type || "",
-          last_login: props.ProfileData.last_login || "",
           state: props.ProfileData.state || "",
           phone_number: props.ProfileData.phone_number || "",
           address: props.ProfileData.address || "",
@@ -188,7 +162,6 @@ export default defineComponent({
         firstName: "",
         lastName: "",
         email: "",
-        username: "",
         profile: "",
         type: "",
         gender: "",
@@ -196,7 +169,6 @@ export default defineComponent({
         address: "",
         state: "",
         title: "",
-        last_login: "",
         phone_number: 1,
         id: 0,
       };

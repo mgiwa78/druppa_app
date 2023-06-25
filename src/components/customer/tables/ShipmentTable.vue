@@ -80,18 +80,15 @@
                 </td>
 
                 <td>
-                  <a
-                    href="#"
-                    class="text-dark fw-bold text-hover-primary fs-6"
-                    >{{ item.orderid }}</a
-                  >
+                  <span class="text-dark fw-bold text-hover-primary fs-6">{{
+                    item.orderid
+                  }}</span>
                 </td>
 
                 <td>
-                  <a
-                    href="#"
+                  <span
                     class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                    >{{ item.company.name }}</a
+                    >{{ item.company.name }}</span
                   >
                   <span class="text-muted fw-semobold text-muted d-block fs-7"
                     >Code: {{ item.country.code }}</span
@@ -99,10 +96,9 @@
                 </td>
 
                 <td>
-                  <a
-                    href="#"
+                  <span
                     class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                    >{{ item.date.value }}</a
+                    >{{ item.date.value }}</span
                   >
                   <span class="text-muted fw-semobold text-muted d-block fs-7"
                     >Code: {{ item.date.remarks }}</span
@@ -110,10 +106,9 @@
                 </td>
 
                 <td>
-                  <a
-                    href="#"
+                  <span
                     class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                    >{{ item.company.name }}</a
+                    >{{ item.company.name }}</span
                   >
                   <span
                     class="text-muted fw-semobold text-muted d-block fs-7"
@@ -134,26 +129,23 @@
                 </td>
 
                 <td class="text-end">
-                  <a
-                    href="#"
+                  <span
                     class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
                   >
                     <KTIcon icon-name="switch" icon-class="fs-3" />
-                  </a>
+                  </span>
 
-                  <a
-                    href="#"
+                  <span
                     class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
                   >
                     <KTIcon icon-name="pencil" icon-class="fs-3" />
-                  </a>
+                  </span>
 
-                  <a
-                    href="#"
+                  <span
                     class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"
                   >
                     <KTIcon icon-name="trash" icon-class="fs-3" />
-                  </a>
+                  </span>
                 </td>
               </tr>
             </template>

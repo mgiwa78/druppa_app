@@ -264,40 +264,7 @@ export default defineComponent({
         .then((response) => response.data)
         .catch((error) => {
           dataToDisplay.value = null;
-          if (error.response.data.message === "Unauthenticated.") {
-            Swal.fire({
-              text: error.response.data.message,
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Ok!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn fw-semobold btn-light-danger",
-              },
-            }).then(() => logout());
-          } else if (error.response.data.message) {
-            Swal.fire({
-              text: error.response.data.message,
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Error Fetching Data!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn fw-semobold btn-light-danger",
-              },
-            });
-          } else {
-            Swal.fire({
-              text: error.message,
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Error Fetching Data!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn fw-semobold btn-light-danger",
-              },
-            });
-          }
+          ErrorHandler(error);
         });
       return Orders.data;
     };

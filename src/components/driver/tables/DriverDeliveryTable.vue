@@ -17,13 +17,13 @@
     <div class="card-body py-3">
       <!--begin::Table container-->
       <div
-        v-if="dataToDisplay?.length === 0"
+        v-if="dataToDisplay === null"
         class="d-flex align-items-center justify-content-center w-100 py-5"
       >
-        <h4>No Deliveries</h4>
+        <h4>No Records</h4>
       </div>
       <div
-        v-if="!dataToDisplay"
+        v-if="!dataToDisplay?.length && dataToDisplay"
         class="d-flex align-items-center justify-content-center w-100 py-5"
       >
         <div
@@ -42,7 +42,7 @@
           <thead>
             <tr class="fw-bold text-muted">
               <th class="min-w-150px">Order Id</th>
-              <th class="min-w-120px">Driver</th>
+              <th class="min-w-120px">Customer</th>
               <th class="min-w-140px">Origin</th>
               <th class="min-w-120px">Destination</th>
               <th class="min-w-120px">State</th>
@@ -67,7 +67,9 @@
                 </td>
                 <td class="text-dark fw-bold text-hover-primary fs-6">
                   {{
-                    delivery.driver.firstName + " " + delivery.driver.lastName
+                    delivery.customer.firstName +
+                    " " +
+                    delivery.customer.lastName
                   }}
                 </td>
                 <td>
@@ -119,7 +121,7 @@
                     data-bs-toggle="modal"
                     data-bs-target="#kt_modal_view_delivery"
                     class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
-                    @click.prevent="updateViewDelivery(delivery)"
+                    @click.prevent="updateViewProfile(delivery)"
                   >
                     <KTIcon icon-name="switch" icon-class="fs-3" />
                   </button>
@@ -152,9 +154,7 @@
     <!--begin::Body-->
   </div>
   <!--end::Tables Widget 13-->
-  <ViewCustomerDeliveryModal
-    :CustomerDeliveryData="CustomerViewDeliveryData"
-  ></ViewCustomerDeliveryModal>
+  <ViewDeliveryModal :DeliveryData="viewDeliveryData"></ViewDeliveryModal>
 </template>
 
 <script lang="ts">
@@ -169,14 +169,13 @@ import Swal from "sweetalert2";
 import formatDate from "@/core/helpers/formatDate";
 import type { DeliveryType } from "@/core/types/Deliveries";
 import { DeliveryEmpty } from "@/core/types/Deliveries";
-import ViewCustomerDeliveryModal from "@/components/customer/forms/ViewCustomerDeliveryModal.vue";
-import ErrorHandler from "@/core/helpers/errorHandler";
+import ViewDeliveryModal from "@/components/admin/forms/ViewDeliveryModal.vue";
 
 export default defineComponent({
-  name: "kt-widget-12",
+  name: "driver-delivery-taable",
   components: {
     TableFooter,
-    ViewCustomerDeliveryModal,
+    ViewDeliveryModal,
   },
   props: {
     widgetClasses: String,
@@ -192,16 +191,16 @@ export default defineComponent({
 
     const DeliveriesPaginationData = ref<any>({});
 
-    const editDeliveryData = ref<DeliveryType>(DeliveryEmpty);
-    const CustomerViewDeliveryData = ref<DeliveryType>(DeliveryEmpty);
+    const editProfileData = ref<DeliveryType>(DeliveryEmpty);
+    const viewDeliveryData = ref<DeliveryType>(DeliveryEmpty);
 
-    const dataToDisplay = ref<Array<DeliveryType> | null>(null);
+    const dataToDisplay = ref<Array<DeliveryType> | null>([]);
     const itemsPerPage = ref<number>(10);
     const totalDeliveries = ref<Array<number>>([0]);
     const total = ref<number>(0);
 
     const AuthStore = useAuthStore();
-    const { user, token } = AuthStore;
+    const { user, token, refreshProfile } = AuthStore;
 
     const itemsPerPageDropdownEnabled = ref<boolean>(true);
     const currentPage = ref<number>(1);
@@ -226,20 +225,19 @@ export default defineComponent({
       return 0;
     });
 
-    const updateEditDelivery = async (delivery: DeliveryType) => {
-      editDeliveryData.value = delivery;
+    const updateEditProfile = async (delivery: DeliveryType) => {
+      editProfileData.value = delivery;
     };
-    const updateViewDelivery = async (delivery: DeliveryType) => {
-      console.log(delivery);
-      CustomerViewDeliveryData.value = delivery;
+    const updateViewProfile = async (delivery: DeliveryType) => {
+      viewDeliveryData.value = delivery;
     };
 
     watch(
       () => currentPage.value,
       async (newValue) => {
         const data = await fetchPageData(newValue);
-        console.log(data);
-        dataToDisplay.value = data;
+        dataToDisplay.value = data.data;
+        console.log(data.data);
       }
     );
 
@@ -248,24 +246,46 @@ export default defineComponent({
       emit("page-change", page);
     };
 
-    const fetchCustomerOrders = async (page) => {
-      const Deliverys = await axios
-        .get(API_URL + "deliveries/customer/" + `${user.id}?page=${page}`, {
+    const fetchAllDriverDeliveries = async (page) => {
+      const profiles = await axios
+        .get(API_URL + "fetchDriverDeliveries" + `?page=${page}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => response.data)
         .catch((error) => {
           dataToDisplay.value = null;
-          ErrorHandler(error);
+          if (error.response.data.message) {
+            Swal.fire({
+              text: error.response.data.message,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Error Fetching Data!",
+              heightAuto: false,
+              customClass: {
+                confirmButton: "btn fw-semobold btn-light-danger",
+              },
+            });
+          } else {
+            Swal.fire({
+              text: error.message,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Error Fetching Data!",
+              heightAuto: false,
+              customClass: {
+                confirmButton: "btn fw-semobold btn-light-danger",
+              },
+            });
+          }
         });
-      return Deliverys.data;
+      return profiles.data;
     };
 
     const fetchPageData = async (page: number) => {
       if (typeof page === "number") {
-        return await fetchCustomerOrders(page);
+        return await fetchAllDriverDeliveries(page);
       } else {
-        return await fetchCustomerOrders(1);
+        return await fetchAllDriverDeliveries(1);
       }
     };
 
@@ -300,10 +320,10 @@ export default defineComponent({
       dataToDisplay,
       itemsPerPageDropdownEnabled,
       ASSETS_URL,
-      editDeliveryData,
-      updateEditDelivery,
-      CustomerViewDeliveryData,
-      updateViewDelivery,
+      editProfileData,
+      updateEditProfile,
+      viewDeliveryData,
+      updateViewProfile,
       formatDate,
     };
   },

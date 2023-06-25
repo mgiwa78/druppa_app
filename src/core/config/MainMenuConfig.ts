@@ -49,6 +49,18 @@ const GenerateMenus = (type) => {
               ],
             },
             {
+              heading: "Invoice",
+              route: "/customer/invoice/view",
+              keenthemesIcon: "bi bi-receipt",
+              bootstrapIcon: "bi bi-receipt",
+            },
+            {
+              heading: "Invoice List",
+              route: "/customer/invoice/list",
+              keenthemesIcon: "bi bi-receipt",
+              bootstrapIcon: "bi bi-receipt",
+            },
+            {
               heading: "Feedback",
               route: "/customer/feedback ",
               keenthemesIcon: "bi bi-chat-left-text",
@@ -92,13 +104,13 @@ const GenerateMenus = (type) => {
           pages: [
             {
               sectionTitle: "Deliveries",
-              route: "/deliveries",
+              route: "/driver/deliveries",
               keenthemesIcon: "bi bi-truck",
               bootstrapIcon: "bi bi-truck",
               sub: [
                 {
                   heading: "My Records",
-                  route: "/deliveries/myRecords",
+                  route: "/driver/deliveries/record",
                 },
               ],
             },
@@ -210,7 +222,7 @@ const GenerateMenus = (type) => {
               sub: [
                 {
                   heading: "Delivery",
-                  route: "/profile/view",
+                  route: "/reports/delivery",
                 },
 
                 {

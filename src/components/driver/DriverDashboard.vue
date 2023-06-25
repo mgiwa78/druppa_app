@@ -8,7 +8,7 @@
           icon-name="basket"
           color="danger"
           icon-color="white"
-          title="Deliveries Completed"
+          :title="driverStats.total_deliveries"
           description="Approved and Verified"
         ></StatisticsWidget5>
       </div>
@@ -19,7 +19,7 @@
           icon-name="cheque"
           color="primary"
           icon-color="white"
-          title="Distance Covered"
+          :title="driverStats.total_distance + ' ' + 'km'"
           description="In Km Between delivery locations"
         ></StatisticsWidget5>
       </div>
@@ -30,7 +30,7 @@
           icon-name="chart-simple-3"
           color="success"
           icon-color="white"
-          title="Delevery Performace Rate"
+          :title="`${driverStats.performance * 100}`"
           description="By distance, pickup and dropoff time"
         ></StatisticsWidget5>
       </div>
@@ -47,28 +47,27 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import RecentOrdersTable from "@/components/driver/tables/RecentOrdersTable.vue";
 import DriverProfileStats from "@/components/driver/widgets/DriverProfileStats.vue";
 import StatisticsWidget5 from "@/components/widgets/statsistics/Widget5.vue";
+import { useStaticsStore } from "@/stores/statics";
 
 export default defineComponent({
   name: "driver-dashboard",
   components: { RecentOrdersTable, StatisticsWidget5, DriverProfileStats },
   setup() {
-    type Metric = {
-      icon: string;
-      title: string;
-      number: number;
-    };
+    const StaticsStore = useStaticsStore();
+    const { UpdateDriverStats, driverStats } = StaticsStore;
 
-    type Metrics = {
-      title: string;
-      colour: string;
-      metrics: Array<Metric>;
-    };
-
-    return {};
+    onMounted(async () => {
+      if (driverStats.isSet) {
+        return;
+      } else {
+        UpdateDriverStats();
+      }
+    });
+    return { driverStats };
   },
 });
 </script>

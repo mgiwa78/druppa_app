@@ -7,7 +7,9 @@ export interface DriverType {
   lastName: string;
   email: string;
   profile: null;
+  address: string;
   city: string;
+  password?: string;
   state: string;
   type: string;
   title: string;
@@ -18,22 +20,7 @@ export interface DriverType {
   vehicleModel: string;
   licensePlate: string;
   insurance: string;
-}
-interface User {
-  id?: number;
-  profile?: string;
-  username?: string;
-  password?: string;
-  lastName: string;
-  firstName: string;
-  type?: string;
-  phone_number?: string;
-  address?: string;
-  gender?: string;
-  state?: string;
-  created_at?: string;
-  email?: string;
-  email_verified_at?: boolean;
+  allowEdit: number;
 }
 
 export const DriverEmpty = {
@@ -48,7 +35,9 @@ export const DriverEmpty = {
   city: "",
   state: "",
   type: "",
+  address: "",
   title: "",
+  password: "",
   gender: "",
   licenseNumber: "",
   licenseExpiration: "",
@@ -56,4 +45,5 @@ export const DriverEmpty = {
   vehicleModel: "",
   licensePlate: "",
   insurance: "",
+  allowEdit: 1,
 };

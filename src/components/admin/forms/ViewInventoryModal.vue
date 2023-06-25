@@ -113,7 +113,7 @@
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, ref, type PropType } from "vue";
 import __CONSTANTS__ from "@/constants";
 import type { InventoryType } from "@/core/types/Inventory";
 import { InventoryEmpty } from "@/core/types/Inventory";
@@ -125,23 +125,7 @@ export default defineComponent({
   },
   props: {
     InventoryData: {
-      type: Object as () => {
-        customer_id: string;
-        id: string;
-        warehouse: {
-          id: number;
-          name: string;
-          location: string;
-          capacity: number;
-          created_at: string;
-          updated_at: string;
-        };
-        product_description: string;
-        tracking_number: number;
-        quantity: string;
-        created_at: string;
-        image: string;
-      },
+      type: Object as PropType<InventoryType>,
     },
   },
   setup(props) {
@@ -152,7 +136,7 @@ export default defineComponent({
 
       if (props.InventoryData && props.InventoryData.id) {
         return {
-          customer_id: props.InventoryData.customer_id || "",
+          customer: props.InventoryData.customer || "",
           warehouse: {
             id: props.InventoryData.warehouse.id || "",
             name: props.InventoryData.warehouse.name || "",

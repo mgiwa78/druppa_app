@@ -28,45 +28,86 @@ interface User {
   email?: string;
   email_verified_at?: boolean;
 }
-interface Count {
-  count: number;
-}
-console.log(token);
-interface AuthUser {
-  admin_user: User;
-}
-interface Counts {
-  adminCount: number | null;
-  customersCount: number | null;
-  driversCount: number | null;
+
+interface driverStats {
+  total_deliveries: string;
+  total_distance: string;
+  performance: number;
   isSet: boolean;
 }
+interface adminStats {
+  admin: string;
+  customer: string;
+  inActiveDrivers: string;
+  activeDrivers: string;
+  pendingCustomerOrders: string;
+  customerOrders: string;
+  transitCustomerOrders: string;
+  driver: string;
+  isSet: boolean;
+}
+
 const useStaticsStore = defineStore("statics", () => {
-  const counts = ref<Counts>({
-    adminCount: 0,
-    customersCount: 0,
-    driversCount: 0,
+  const driverStats = ref<driverStats>({
+    total_deliveries: "0",
+    total_distance: "0",
+    performance: 0,
+    isSet: false,
+  });
+  const adminStats = ref<adminStats>({
+    admin: "0",
+    driver: "0",
+    customer: "0",
+    inActiveDrivers: "0",
+    activeDrivers: "0",
+    pendingCustomerOrders: "0",
+    transitCustomerOrders: "0",
+    customerOrders: "0",
     isSet: false,
   });
 
-  const UpdateCounts = async () => {
-    const toFetch = ["customers", "admin", "drivers"];
-    try {
-      const customersData = await fetchCounts("customers");
-      const adminData = await fetchCounts("admin");
-      const driversData = await fetchCounts("drivers");
+  const UpdateAdminStats = async () => {
+    const adminStatics = await fetch("adminStatics");
 
-      counts.value.customersCount = customersData;
-      counts.value.adminCount = adminData;
-      counts.value.driversCount = driversData;
+    adminStats.value.customer = adminStatics.customer;
+    adminStats.value.admin = adminStatics.admin;
+    adminStats.value.driver = adminStatics.driver;
+    adminStats.value.inActiveDrivers = adminStatics.inActiveDrivers;
+    adminStats.value.activeDrivers = adminStatics.activeDrivers;
+    adminStats.value.customerOrders = adminStatics.customerOrders;
+    adminStats.value.pendingCustomerOrders = adminStatics.pendingCustomerOrders;
+    adminStats.value.transitCustomerOrders = adminStatics.transitCustomerOrders;
+
+    console.log(adminStatics);
+
+    if (
+      adminStats.value.customer &&
+      adminStats.value.admin &&
+      adminStats.value.driver &&
+      adminStats.value.inActiveDrivers &&
+      adminStats.value.activeDrivers &&
+      adminStats.value.customerOrders &&
+      adminStats.value.pendingCustomerOrders &&
+      adminStats.value.transitCustomerOrders
+    )
+      return (adminStats.value.isSet = true);
+  };
+
+  const UpdateDriverStats = async () => {
+    try {
+      const driverStatics = await fetch("driverStatics");
+      console.log(driverStatics);
+
+      driverStats.value.total_deliveries = driverStatics.total_deliveries;
+      driverStats.value.total_distance = driverStatics.total_distance;
+      driverStats.value.performance = driverStatics.performance;
       if (
-        counts.value.customersCount &&
-        counts.value.adminCount &&
-        counts.value.driversCount
+        driverStats.value.total_deliveries &&
+        driverStats.value.total_distance &&
+        driverStats.value.performance
       )
-        return (counts.value.isSet = true);
+        return (driverStats.value.isSet = true);
     } catch (error: any) {
-      console.log(token);
       if (error.response.data.message === "Unauthenticated.") {
         Swal.fire({
           text: "Unauthenticated",
@@ -117,6 +158,53 @@ const useStaticsStore = defineStore("statics", () => {
       });
     return alll;
   };
+
+  const fetch = async (route) => {
+    const RESPONSE: any = await axios
+      .get(API_URL + `${route}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => response.data)
+      .catch((error) => {
+        if (error.response.data.message === "Unauthenticated.") {
+          Swal.fire({
+            text: "Unauthenticated",
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Close",
+            heightAuto: false,
+            customClass: {
+              confirmButton: "btn fw-semobold btn-light-danger",
+            },
+          });
+          logout();
+          router.push({ name: "sign-in" });
+        } else if (error.response.data.message) {
+          return Swal.fire({
+            text: error.message,
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Error Fetching Data!",
+            heightAuto: false,
+            customClass: {
+              confirmButton: "btn fw-semobold btn-light-danger",
+            },
+          });
+        } else {
+          return Swal.fire({
+            text: error.message,
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Error Fetching Data!",
+            heightAuto: false,
+            customClass: {
+              confirmButton: "btn fw-semobold btn-light-danger",
+            },
+          });
+        }
+      });
+    return RESPONSE.data;
+  };
   // function verifyAuth() {
   //   if (JwtService.getToken()) {
   //     ApiService.setHeader();
@@ -134,8 +222,10 @@ const useStaticsStore = defineStore("statics", () => {
   // }
 
   return {
-    UpdateCounts,
-    counts,
+    UpdateAdminStats,
+    UpdateDriverStats,
+    driverStats,
+    adminStats,
   };
 });
 

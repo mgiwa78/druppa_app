@@ -8,7 +8,7 @@
           icon-name="cheque"
           color="dark"
           icon-color="white"
-          :title="`${counts.customersCount}`"
+          :title="`${adminStats.customer}`"
           description="Customers"
         ></StatisticsWidget5>
       </div>
@@ -18,7 +18,7 @@
           icon-name="cheque"
           color="primary"
           icon-color="white"
-          :title="`${counts.adminCount}`"
+          :title="`${adminStats.admin}`"
           description="Admins"
         ></StatisticsWidget5>
       </div>
@@ -28,7 +28,7 @@
           icon-name="cheque"
           color="danger"
           icon-color="white"
-          :title="`${counts.driversCount}`"
+          :title="`${adminStats.driver}`"
           description="Drivers"
         ></StatisticsWidget5>
       </div>
@@ -70,21 +70,10 @@ export default defineComponent({
   name: "admin-dashboard",
   components: { StatisticsWidget5, MixedWidget14 },
   setup() {
-    const { API_URL, ASSETS_URL } = __CONSTANTS__;
-    const AuthStore = useAuthStore();
-    const StaticsStore = useStaticsStore();
-
-    const customersCount = ref<Number>(0);
-    const driversCount = ref<Number>(0);
-    const adminCount = ref<Number>(0);
-
-    const { user, token, refreshProfile } = AuthStore;
-    const { counts, UpdateCounts } = StaticsStore;
-
     type Metric = {
       icon: string;
       title: string;
-      number: number;
+      number: string;
     };
 
     type Metrics = {
@@ -93,7 +82,16 @@ export default defineComponent({
       metrics: Array<Metric>;
     };
 
-    const summary = [
+    const AuthStore = useAuthStore();
+    const StaticsStore = useStaticsStore();
+
+    const { user, token, refreshProfile } = AuthStore;
+    const { adminStats, UpdateAdminStats } = StaticsStore;
+
+    const customersCount = ref<Number>(0);
+    const driversCount = ref<Number>(0);
+
+    const summary = ref<Array<Metrics>>([
       {
         title: "Drivers Summary",
         colour: "#cbd4f4",
@@ -101,12 +99,12 @@ export default defineComponent({
           {
             icon: "abstract-42",
             title: "Active Drivers",
-            number: 15,
+            number: adminStats.activeDrivers,
           },
           {
             icon: "abstract-45",
             title: "In-Active Drivers",
-            number: 32,
+            number: adminStats.inActiveDrivers,
           },
         ],
       },
@@ -116,13 +114,13 @@ export default defineComponent({
         metrics: [
           {
             icon: "abstract-42",
-            title: "Active Orders",
-            number: 15,
+            title: "Pending Orders",
+            number: adminStats.pendingCustomerOrders,
           },
           {
             icon: "abstract-45",
-            title: "In-Active Orders",
-            number: 32,
+            title: "Orders In-Transit",
+            number: adminStats.transitCustomerOrders,
           },
         ],
       },
@@ -133,26 +131,30 @@ export default defineComponent({
           {
             icon: "abstract-42",
             title: "Driver Approvals",
-            number: 15,
+            number: "0",
           },
           {
             icon: "abstract-45",
             title: "Customer orders",
-            number: 32,
+            number: adminStats.customerOrders,
           },
         ],
       },
-    ] as Array<Metrics>;
+    ]);
+    const adminCount = ref<Number>(0);
 
     onMounted(async () => {
-      if (counts.isSet) {
+      if (adminStats.isSet) {
         return;
       } else {
-        UpdateCounts();
+        UpdateAdminStats();
+        summary.value[0].metrics[0].number = adminStats.activeDrivers;
+        console.log(adminStats.driver);
+        console.log(summary.value[0].metrics[0].number);
       }
     });
 
-    return { summary, customersCount, adminCount, driversCount, counts };
+    return { summary, customersCount, adminCount, driversCount, adminStats };
   },
 });
 </script>

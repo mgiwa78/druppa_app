@@ -144,41 +144,10 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import arraySort from "array-sort";
 import { useAuthStore } from "@/stores/auth";
+import ErrorHandler from "@/core/helpers/errorHandler";
+import type { DriverType } from "@/core/types/Driver";
+import { DriverEmpty } from "@/core/types/Driver";
 
-interface DriverProfile {
-  username: string;
-  email: string;
-  id: number;
-  firstName: string;
-  lastName: string;
-  profile: string;
-  city: string;
-  password: string;
-  last_login: string;
-  address: string;
-  phone_number: string;
-  gender: string;
-  state: string;
-  type: string;
-  created_at: string;
-  title: string;
-}
-interface EditDriverProfile {
-  username: string;
-  email: string;
-  id: number;
-  title: string;
-  state: string;
-  city: string;
-  address: string;
-  password: string;
-  gender: string;
-  firstName: string;
-  lastName: string;
-  phone_number: string;
-  profile?: string;
-  last_login: string;
-}
 export default defineComponent({
   name: "drivers-listing",
   components: {
@@ -228,53 +197,21 @@ export default defineComponent({
     const selectedIds = ref<Array<number>>([]);
     const isLoading = ref<boolean>(true);
 
-    const tableData = ref<Array<DriverProfile>>([]);
-    const DeftableData = ref<Array<DriverProfile>>([]);
+    const tableData = ref<Array<DriverType>>([]);
+    const DeftableData = ref<Array<DriverType>>([]);
 
-    const editProfileData = ref<EditDriverProfile>({
-      username: "",
-      email: "",
-      id: 0,
-      firstName: "",
-      lastName: "",
-      phone_number: "",
-      profile: "",
-      title: "",
-      state: "",
-      city: "",
-      address: "",
-      password: "",
-      gender: "",
-      last_login: "",
-    });
-    const viewProfileData = ref<DriverProfile>({
-      username: "",
-      email: "",
-      id: 0,
-      firstName: "",
-      lastName: "",
-      profile: "",
-      password: "",
-      city: "",
-      last_login: "",
-      address: "",
-      phone_number: "",
-      gender: "",
-      state: "",
-      type: "",
-      created_at: "",
-      title: "",
-    });
+    const editProfileData = ref<DriverType>(DriverEmpty);
+    const viewProfileData = ref<DriverType>(DriverEmpty);
 
     const { API_URL } = __CONSTANTS__;
 
     const fetchPageData = async () => {
       return await fetchDriverProfiles();
     };
-    const updateEditProfile = async (profile: DriverProfile) => {
+    const updateEditProfile = async (profile: DriverType) => {
       editProfileData.value = profile;
     };
-    const updateViewProfile = async (profile: DriverProfile) => {
+    const updateViewProfile = async (profile: DriverType) => {
       viewProfileData.value = profile;
     };
 
@@ -285,16 +222,7 @@ export default defineComponent({
         })
         .then((response) => response.data)
         .catch((error) => {
-          Swal.fire({
-            text: error.message,
-            icon: "error",
-            buttonsStyling: false,
-            confirmButtonText: "Error Fetching Data!",
-            heightAuto: false,
-            customClass: {
-              confirmButton: "btn fw-semobold btn-light-danger",
-            },
-          });
+          ErrorHandler(error);
         });
       return profiles.data;
     };
@@ -327,7 +255,7 @@ export default defineComponent({
 
     const searchItems = () => {
       if (search.value !== "") {
-        let results: Array<DriverProfile> = [];
+        let results: Array<DriverType> = [];
         for (let j = 0; j < DeftableData.value.length; j++) {
           if (searchingFunc(DeftableData.value[j], search.value)) {
             results.push(DeftableData.value[j]);
