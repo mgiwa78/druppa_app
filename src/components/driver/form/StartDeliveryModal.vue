@@ -153,9 +153,7 @@
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent, onMounted, ref } from "vue";
-import { hideModal } from "@/core/helpers/dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
-import { ErrorMessage, Field, Form as VForm } from "vee-validate";
 import * as Yup from "yup";
 import __CONSTANTS__ from "@/constants";
 import axios from "axios";
@@ -190,8 +188,7 @@ export default defineComponent({
 
     const modalRef = ref<null | HTMLElement>(null);
 
-    const { API_URL, badInternetAlert, errorAlert, successAlert } =
-      __CONSTANTS__;
+    const { API_URL } = __CONSTANTS__;
 
     const permissionsSelect = ref({
       mode: "tags",

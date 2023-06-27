@@ -147,7 +147,7 @@ export default defineComponent({
     },
   },
   setup() {
-    const { API_URL, ASSETS_URL } = __CONSTANTS__;
+    const { ASSETS_URL } = __CONSTANTS__;
 
     return {
       getAssetPath,

@@ -178,7 +178,6 @@ import { defineComponent, onMounted, ref } from "vue";
 import { ErrorMessage, Field, Form as VForm } from "vee-validate";
 import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
-import Swal from "sweetalert2/dist/sweetalert2.js";
 import * as Yup from "yup";
 import axios from "axios";
 import __CONSTANTS__ from "@/constants";

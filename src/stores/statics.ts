@@ -1,11 +1,10 @@
 import { computed, ref, watch } from "vue";
-import { defineStore, skipHydrate } from "pinia";
+import { defineStore } from "pinia";
 import { useLocalStorage } from "@vueuse/core";
 import axios from "axios";
 import __CONSTANTS__ from "@/constants";
 import Swal from "sweetalert2";
 import router from "@/router";
-import type { ErrorTypes } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import ErrorHandler from "@/core/helpers/errorHandler";
 

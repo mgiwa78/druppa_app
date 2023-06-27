@@ -160,12 +160,10 @@
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
 import { computed, defineComponent, onMounted, ref, watch } from "vue";
-import Dropdown2 from "@/components/dropdown/Dropdown2.vue";
 import TableFooter from "@/components/kt-datatable/table-partials/TableFooter.vue";
 import __CONSTANTS__ from "@/constants";
 import axios from "axios";
 import { useAuthStore } from "@/stores/auth";
-import Swal from "sweetalert2";
 import formatDate from "@/core/helpers/formatDate";
 import type { DeliveryType } from "@/core/types/Deliveries";
 import { DeliveryEmpty } from "@/core/types/Deliveries";

@@ -39,8 +39,6 @@ const useAuthStore = defineStore("auth", () => {
   const userPersist = useLocalStorage("userPersist", "");
   const token = useLocalStorage("token", "");
 
-  const loggedIn = computed(() => !!token.value);
-
   const authUser = ref<AuthUser | null>(null);
 
   function setAuth(authUser: User, authToken: string) {

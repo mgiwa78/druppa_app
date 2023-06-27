@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted } from "vue";
 import RecentOrdersTable from "@/components/driver/tables/RecentOrdersTable.vue";
 import DriverProfileStats from "@/components/driver/widgets/DriverProfileStats.vue";
 import StatisticsWidget5 from "@/components/widgets/statsistics/Widget5.vue";

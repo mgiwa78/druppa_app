@@ -87,8 +87,6 @@ import Item1 from "@/components/activity-timeline-items/Item1.vue";
 // import Item7 from "@/components/activity-timeline-items/Item7.vue";
 // import Item8 from "@/components/activity-timeline-items/Item8.vue";
 import { useStaticsStore } from "@/stores/statics";
-import { ACTIVITY_COLOUR_MAP } from "@/core/helpers/colourMaps";
-import formatDate from "@/core/helpers/formatDate";
 
 export default defineComponent({
   name: "kt-activity-drawer",

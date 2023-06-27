@@ -2,7 +2,6 @@ import type { DriverType } from "./Driver";
 import type { AdminType } from "./Admin";
 import type { CustomerType } from "./Customer";
 import type { DeliveryType } from "./Deliveries";
-import type { InvoiceType } from "./Invoice";
 import type { InventoryType } from "./Inventory";
 
 export interface ActivityType {
