@@ -387,7 +387,7 @@
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, ref, type PropType } from "vue";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import { ErrorMessage, Field, Form as VForm } from "vee-validate";
 import * as Yup from "yup";
@@ -397,31 +397,19 @@ import { useAuthStore } from "@/stores/auth";
 import { hideModal } from "@/core/helpers/dom";
 import statesInNigeria from "@/core/data/nigeriaStates";
 import citiesInNigeria from "@/core/data/citiesInNigeria";
+import type { CustomerType } from "@/core/types/Customer";
+import { CustomerEmpty } from "@/core/types/Customer";
+import ErrorHandler from "@/core/helpers/errorHandler";
 
 export default defineComponent({
   name: "edit-admin-modal",
   props: {
     ProfileData: {
-      type: Object as () => {
-        username: string;
-        email: string;
-        id: number;
-        firstName: string;
-        lastName: string;
-        phone_number: string;
-        title: string;
-        state: string;
-        city: string;
-        address: string;
-        gender: string;
-        profile?: string;
-        last_login: string;
-      },
+      type: Object as PropType<CustomerType>,
     },
   },
   components: { ErrorMessage, Field, VForm },
   setup(props) {
- 
     const { API_URL } = __CONSTANTS__;
 
     const editSubmitButtonRef = ref<null | HTMLButtonElement>(null);
@@ -430,7 +418,7 @@ export default defineComponent({
     const editCustomerModalRef = ref<null | HTMLElement>(null);
 
     const AuthStore = useAuthStore();
-    const { user , token} = AuthStore;
+    const { user, token } = AuthStore;
 
     const validationSchema = Yup.object().shape({
       firstName: Yup.string().required().label("First Name"),
@@ -484,30 +472,7 @@ export default defineComponent({
           }).then(() => hideModal(editCustomerModalRef.value));
         })
         .catch((error) => {
-          if (error.response.data.message == "User does not exist") {
-            Swal.fire({
-              text: "Invalid Email or Password",
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Try again!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn fw-semobold btn-light-danger",
-              },
-            });
-          }
-          if (error.response.data.message) {
-            Swal.fire({
-              text: `${error.response.data.message}`,
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Try again!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn fw-semobold btn-light-danger",
-              },
-            });
-          }
+          ErrorHandler(error);
         })
         .finally(() => {
           editSubmitButtonRef.value?.removeAttribute("data-kt-indicator");
@@ -522,9 +487,7 @@ export default defineComponent({
           firstName: props.ProfileData.firstName || "",
           lastName: props.ProfileData.lastName || "",
           email: props.ProfileData.email || "",
-          username: props.ProfileData.username || "",
           profile: props.ProfileData.profile || "",
-          last_login: props.ProfileData.last_login || "",
           phone_number: props.ProfileData.phone_number || "0",
           id: props.ProfileData.id || "",
           title: props.ProfileData.title || "",

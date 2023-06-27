@@ -261,7 +261,7 @@
 
         <div class="card-footer d-flex justify-content-end py-6 px-9">
           <button
-            type="reset"
+            @click.prevent="resetFields()"
             class="btn btn-light btn-active-light-primary me-2"
           >
             Discard
@@ -1050,6 +1050,14 @@ export default defineComponent({
       submitButton1.value?.removeAttribute("data-kt-indicator");
     };
 
+    const resetFields = () => {
+      State.userData = {
+        ...user,
+        confirmPassword: "",
+        ConfirmNewPassword: "",
+        newPassword: "",
+      };
+    };
     const saveChanges6 = async () => {
       if (submitButton6.value) {
         // eslint-disable-next-line
@@ -1251,6 +1259,7 @@ export default defineComponent({
       getAssetPath,
       saveChanges6,
       userDriverValidator,
+      resetFields,
     };
   },
 });

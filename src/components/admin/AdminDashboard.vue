@@ -90,7 +90,6 @@ export default defineComponent({
 
     const customersCount = ref<Number>(0);
     const driversCount = ref<Number>(0);
-
     const summary = ref<Array<Metrics>>([
       {
         title: "Drivers Summary",

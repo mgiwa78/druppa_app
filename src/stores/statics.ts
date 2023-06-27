@@ -1,4 +1,4 @@
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { defineStore, skipHydrate } from "pinia";
 import { useLocalStorage } from "@vueuse/core";
 import axios from "axios";
@@ -12,22 +12,6 @@ const AuthStore = useAuthStore();
 const { logout, token } = AuthStore;
 
 const { API_URL } = __CONSTANTS__;
-interface User {
-  id?: number;
-  profile?: string;
-  username?: string;
-  password?: string;
-  lastName: string;
-  firstName: string;
-  type?: string;
-  phone_number?: Number;
-  address?: string;
-  gender?: string;
-  state?: string;
-  created_at?: string;
-  email?: string;
-  email_verified_at?: boolean;
-}
 
 interface driverStats {
   total_deliveries: string;
@@ -54,16 +38,40 @@ const useStaticsStore = defineStore("statics", () => {
     performance: 0,
     isSet: false,
   });
-  const adminStats = ref<adminStats>({
-    admin: "0",
-    driver: "0",
-    customer: "0",
-    inActiveDrivers: "0",
-    activeDrivers: "0",
-    pendingCustomerOrders: "0",
-    transitCustomerOrders: "0",
-    customerOrders: "0",
-    isSet: false,
+
+  const adminStats = computed<adminStats>(() =>
+    adminStatsPersist.value
+      ? JSON.parse(adminStatsPersist.value)
+      : {
+          admin: "0",
+          driver: "0",
+          customer: "0",
+          inActiveDrivers: "0",
+          activeDrivers: "0",
+          pendingCustomerOrders: "0",
+          transitCustomerOrders: "0",
+          customerOrders: "0",
+          isSet: false,
+        }
+  );
+  const adminStatsPersist = useLocalStorage("adminStatsPersist", "");
+
+  watch(adminStats, () => {
+    adminStatsPersist.value = JSON.stringify(
+      adminStats.value
+        ? adminStats.value
+        : {
+            admin: "0",
+            driver: "0",
+            customer: "0",
+            inActiveDrivers: "0",
+            activeDrivers: "0",
+            pendingCustomerOrders: "0",
+            transitCustomerOrders: "0",
+            customerOrders: "0",
+            isSet: false,
+          }
+    );
   });
 
   const UpdateAdminStats = async () => {
@@ -78,7 +86,7 @@ const useStaticsStore = defineStore("statics", () => {
     adminStats.value.pendingCustomerOrders = adminStatics.pendingCustomerOrders;
     adminStats.value.transitCustomerOrders = adminStatics.transitCustomerOrders;
 
-    console.log(adminStatics);
+    adminStatsPersist.value = JSON.stringify(adminStatics);
 
     if (
       adminStats.value.customer &&

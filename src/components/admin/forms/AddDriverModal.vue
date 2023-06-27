@@ -387,6 +387,7 @@ import { useAuthStore } from "@/stores/auth";
 
 import type { DriverType } from "@/core/types/Driver";
 import { DriverEmpty } from "@/core/types/Driver";
+import ErrorHandler from "@/core/helpers/errorHandler";
 
 export default defineComponent({
   name: "add-admin-modal",
@@ -398,17 +399,15 @@ export default defineComponent({
   },
   setup() {
     const AuthStore = useAuthStore();
-    const { user, token, refreshProfile } = AuthStore;
+    const { token } = AuthStore;
 
     const submitButtonRef = ref<null | HTMLButtonElement>(null);
 
-    const backdropRef = ref<null | HTMLDivElement>(null);
     const addCustomerModalRef = ref<null | HTMLElement>(null);
 
     const modalRef = ref<null | HTMLElement>(null);
     const createAPIKeyModalRef = ref<null | HTMLElement>(null);
-    const { API_URL, badInternetAlert, errorAlert, successAlert } =
-      __CONSTANTS__;
+    const { API_URL, badInternetAlert } = __CONSTANTS__;
 
     const newDriverData = ref<DriverType>(DriverEmpty);
 
@@ -435,7 +434,6 @@ export default defineComponent({
       formData.append("firstName", newDriverData.value.firstName);
       formData.append("lastName", newDriverData.value.lastName);
       formData.append("email", newDriverData.value.email);
-      formData.append("password", newDriverData.value.password);
       formData.append("address", newDriverData.value.address);
       formData.append("city", newDriverData.value.city);
       formData.append("state", newDriverData.value.state);
@@ -462,30 +460,7 @@ export default defineComponent({
         })
 
         .catch((error) => {
-          if (error.response.data.message == "User does not exist") {
-            Swal.fire({
-              text: "Invalid Email or Password",
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Try again!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn fw-semobold btn-light-danger",
-              },
-            });
-          }
-          if (error.response.data.message) {
-            Swal.fire({
-              text: `${error.response.data.message}`,
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Try again!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn fw-semobold btn-light-danger",
-              },
-            });
-          }
+          ErrorHandler(error);
         })
         .then(() => {
           submitButtonRef.value?.removeAttribute("data-kt-indicator");

@@ -23,7 +23,7 @@
         <!--begin::Username-->
         <div class="d-flex flex-column">
           <div class="fw-bold d-flex align-items-center fs-5">
-            {{ State.userData.name }}
+            {{ State.userData.firstName + " " + State.userData.lastName }}
           </div>
           <span
             class="btn btn-sm btn-light-success fw-semobold text-muted text-hover-primary fs-7 fw-bold ms-2 fs-8 py-1 px-3"

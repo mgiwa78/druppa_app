@@ -21,6 +21,17 @@ export default function ErrorHandler(error: any) {
     });
     logout();
     router.push({ name: "sign-in" });
+  } else if (error.response.data.message == "User does not exist") {
+    Swal.fire({
+      text: "Invalid Email or Password",
+      icon: "error",
+      buttonsStyling: false,
+      confirmButtonText: "Try again!",
+      heightAuto: false,
+      customClass: {
+        confirmButton: "btn fw-semobold btn-light-danger",
+      },
+    });
   } else if (error.response.data.message) {
     Swal.fire({
       text: error.message,

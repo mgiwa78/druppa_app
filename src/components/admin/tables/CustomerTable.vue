@@ -147,41 +147,9 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import arraySort from "array-sort";
 import { useAuthStore } from "@/stores/auth";
+import { CustomerEmpty } from "@/core/types/Customer";
+import type { CustomerType } from "@/core/types/Customer";
 
-interface CustomerProfile {
-  username: string;
-  email: string;
-  id: number;
-  firstName: string;
-  lastName: string;
-  profile: string;
-  city: string;
-  password: string;
-  last_login: string;
-  address: string;
-  phone_number: string;
-  gender: string;
-  state: string;
-  type: string;
-  created_at: string;
-  title: string;
-}
-interface EditCustomerProfile {
-  username: string;
-  email: string;
-  id: number;
-  title: string;
-  state: string;
-  city: string;
-  address: string;
-  password: string;
-  gender: string;
-  firstName: string;
-  lastName: string;
-  phone_number: string;
-  profile?: string;
-  last_login: string;
-}
 export default defineComponent({
   name: "customers-listing",
   components: {
@@ -234,50 +202,18 @@ export default defineComponent({
     const tableData = ref<Array<ICustomer>>([]);
     const DeftableData = ref<Array<ICustomer>>([]);
 
-    const editProfileData = ref<EditCustomerProfile>({
-      username: "",
-      email: "",
-      id: 0,
-      firstName: "",
-      lastName: "",
-      phone_number: "",
-      profile: "",
-      title: "",
-      state: "",
-      city: "",
-      address: "",
-      password: "",
-      gender: "",
-      last_login: "",
-    });
-    const viewProfileData = ref<CustomerProfile>({
-      username: "",
-      email: "",
-      id: 0,
-      firstName: "",
-      lastName: "",
-      profile: "",
-      password: "",
-      city: "",
-      last_login: "",
-      address: "",
-      phone_number: "",
-      gender: "",
-      state: "",
-      type: "",
-      created_at: "",
-      title: "",
-    });
+    const editProfileData = ref<CustomerType>(CustomerEmpty);
+    const viewProfileData = ref<CustomerType>(CustomerEmpty);
 
     const { API_URL } = __CONSTANTS__;
 
     const fetchPageData = async () => {
       return await fetchCustomerProfiles();
     };
-    const updateEditProfile = async (profile: CustomerProfile) => {
+    const updateEditProfile = async (profile: CustomerType) => {
       editProfileData.value = profile;
     };
-    const updateViewProfile = async (profile: CustomerProfile) => {
+    const updateViewProfile = async (profile: CustomerType) => {
       viewProfileData.value = profile;
     };
 

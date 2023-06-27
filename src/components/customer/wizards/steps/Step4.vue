@@ -41,7 +41,6 @@ import { getAssetPath } from "@/core/helpers/assets";
 import { computed, defineComponent, ref } from "vue";
 import { ErrorMessage, Field } from "vee-validate";
 
-// import paystack from "vue-paystack";
 import paystack from "vue3-paystack";
 
 import __CONSTANTS__ from "@/constants";

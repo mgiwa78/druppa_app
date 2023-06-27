@@ -160,6 +160,7 @@ import { OrderEmpty } from "@/core/types/Orders";
 import StartDeliveryModal from "@/components/driver/form/StartDeliveryModal.vue";
 
 import router from "@/router";
+import ErrorHandler from "@/core/helpers/errorHandler";
 
 export default defineComponent({
   name: "kt-widget-12",

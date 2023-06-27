@@ -61,16 +61,14 @@ const useAuthStore = defineStore("auth", () => {
       });
 
     console.log(auth.user);
-    authUser.value = auth;
+    authUser.value = auth.user;
 
     isAuthenticated.value = true;
     userPersist.value = JSON.stringify(authUser.value);
   };
 
   watch(authUser, () => {
-    userPersist.value = JSON.stringify(
-      authUser.value ? authUser.value.user : null
-    );
+    userPersist.value = JSON.stringify(authUser.value ? authUser.value : null);
   });
 
   const user = computed(() =>
