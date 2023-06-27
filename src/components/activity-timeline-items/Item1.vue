@@ -18,15 +18,16 @@
       <!--begin::Timeline heading-->
       <div class="pe-3 mb-5">
         <!--begin::Title-->
-        <div class="fs-5 fw-semobold mb-2">
-          There are 2 new tasks for you in “AirPlus Mobile APp” project:
+        <div class="fs-5 fw-bold mb-2">
+          {{ data?.description }}
         </div>
         <!--end::Title-->
 
         <!--begin::Description-->
         <div class="d-flex align-items-center mt-1 fs-6">
           <!--begin::Info-->
-          <div class="text-muted me-2 fs-7">Added at 4:23 PM by</div>
+
+          <div class="text-muted me-2 fs-7">By {{ data?.user.firstName }}</div>
           <!--end::Info-->
 
           <!--begin::User-->
@@ -37,7 +38,15 @@
             data-bs-placement="top"
             title="Nina Nilson"
           >
-            <img :src="getAssetPath('media/avatars/300-14.jpg')" alt="img" />
+            {{ data?.user.lastName + " " + data?.user?.firstName }}
+            <img
+              :src="
+                data?.user.profile
+                  ? `${ASSETS_URL + data?.user.profile}`
+                  : getAssetPath('media/avatars/blank.png')
+              "
+              alt="image"
+            />
           </div>
           <!--end::User-->
         </div>
@@ -55,13 +64,15 @@
           <a
             href="#"
             class="fs-5 text-dark text-hover-primary fw-semobold w-375px min-w-200px"
-            >Meeting with customer</a
+            >{{ data?.description }}</a
           >
           <!--end::Title-->
 
           <!--begin::Label-->
           <div class="min-w-175px pe-2">
-            <span class="badge badge-light text-muted">Application Design</span>
+            <span class="badge badge-light text-muted">{{
+              data?.created_at ? formatDate(data?.created_at) : ""
+            }}</span>
           </div>
           <!--end::Label-->
 
@@ -70,14 +81,19 @@
             class="symbol-group symbol-hover flex-nowrap flex-grow-1 min-w-100px pe-2"
           >
             <!--begin::User-->
-            <div class="symbol symbol-circle symbol-25px">
-              <img :src="getAssetPath('media/avatars/300-2.jpg')" alt="img" />
-            </div>
+
             <!--end::User-->
 
             <!--begin::User-->
             <div class="symbol symbol-circle symbol-25px">
-              <img :src="getAssetPath('media/avatars/300-14.jpg')" alt="img" />
+              <img
+                :src="
+                  data?.user.profile
+                    ? `${ASSETS_URL + data?.user.profile}`
+                    : getAssetPath('media/avatars/blank.png')
+                "
+                alt="img"
+              />
             </div>
             <!--end::User-->
 
@@ -86,81 +102,26 @@
               <div
                 class="symbol-label fs-8 fw-semobold bg-primary text-inverse-primary"
               >
-                A
+                {{ data?.user.lastName[0] }}
               </div>
             </div>
             <!--end::User-->
           </div>
           <!--end::Users-->
 
-          <!--begin::Progress-->
-          <div class="min-w-125px pe-2">
+          <!-- <div class="min-w-125px pe-2">
             <span class="badge badge-light-primary">In Progress</span>
           </div>
-          <!--end::Progress-->
 
-          <!--begin::Action-->
           <a href="#" class="btn btn-sm btn-light btn-active-light-primary"
             >View</a
-          >
+          > -->
           <!--end::Action-->
         </div>
         <!--end::Record-->
 
         <!--begin::Record-->
-        <div
-          class="d-flex align-items-center border border-dashed border-gray-300 rounded min-w-750px px-7 py-3 mb-0"
-        >
-          <!--begin::Title-->
-          <a
-            href="#"
-            class="fs-5 text-dark text-hover-primary fw-semobold w-375px min-w-200px"
-            >Project Delivery Preparation</a
-          >
-          <!--end::Title-->
 
-          <!--begin::Label-->
-          <div class="min-w-175px">
-            <span class="badge badge-light text-muted"
-              >CRM System Development</span
-            >
-          </div>
-          <!--end::Label-->
-
-          <!--begin::Users-->
-          <div
-            class="symbol-group symbol-hover flex-nowrap flex-grow-1 min-w-100px"
-          >
-            <!--begin::User-->
-            <div class="symbol symbol-circle symbol-25px">
-              <img :src="getAssetPath('media/avatars/300-20.jpg')" alt="img" />
-            </div>
-            <!--end::User-->
-
-            <!--begin::User-->
-            <div class="symbol symbol-circle symbol-25px">
-              <div
-                class="symbol-label fs-8 fw-semobold bg-success text-inverse-primary"
-              >
-                B
-              </div>
-            </div>
-            <!--end::User-->
-          </div>
-          <!--end::Users-->
-
-          <!--begin::Progress-->
-          <div class="min-w-125px">
-            <span class="badge badge-light-success">Completed</span>
-          </div>
-          <!--end::Progress-->
-
-          <!--begin::Action-->
-          <a href="#" class="btn btn-sm btn-light btn-active-light-primary"
-            >View</a
-          >
-          <!--end::Action-->
-        </div>
         <!--end::Record-->
       </div>
       <!--end::Timeline details-->
@@ -172,14 +133,26 @@
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { defineComponent } from "vue";
+import { defineComponent, type PropType } from "vue";
+import type { ActivityType } from "@/core/types/Activity";
+import formatDate from "@/core/helpers/formatDate";
+import __CONSTANTS__ from "@/constants";
 
 export default defineComponent({
   name: "item-1",
   components: {},
+  props: {
+    data: {
+      type: Object as PropType<ActivityType>,
+    },
+  },
   setup() {
+    const { API_URL, ASSETS_URL } = __CONSTANTS__;
+
     return {
       getAssetPath,
+      formatDate,
+      ASSETS_URL,
     };
   },
 });

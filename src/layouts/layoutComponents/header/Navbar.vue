@@ -1,9 +1,9 @@
 <template>
   <div class="app-navbar flex-shrink-0">
-    <div class="app-navbar-item align-items-stretch ms-1 ms-md-3">
+    <!-- <div class="app-navbar-item align-items-stretch ms-1 ms-md-3">
       <KTSearch />
-    </div>
-    <!-- <div class="app-navbar-item ms-1 ms-md-3">
+    </div> -->
+    <div v-if="user.type === 'Admin'" class="app-navbar-item ms-1 ms-md-3">
       <div
         class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-30px h-30px w-md-40px h-md-40px"
         id="kt_activities_toggle"
@@ -11,7 +11,7 @@
         <KTIcon icon-name="chart-simple" icon-class="fs-2 fs-md-1" />
       </div>
     </div>
-    <div class="app-navbar-item ms-1 ms-md-3">
+    <!-- <div class="app-navbar-item ms-1 ms-md-3">
       <div
         class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-30px h-30px w-md-40px h-md-40px"
         data-kt-menu-trigger="click"
@@ -33,7 +33,7 @@
         ></span>
       </div>
     </div> -->
-    <div class="app-navbar-item ms-1 ms-md-3">
+    <!-- <div class="app-navbar-item ms-1 ms-md-3">
       <div
         class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-30px h-30px w-md-40px h-md-40px"
         data-kt-menu-trigger="click"
@@ -43,7 +43,7 @@
         <KTIcon icon-name="element-11" icon-class="fs-2 fs-md-1" />
       </div>
       <KTQuickLinksMenu />
-    </div>
+    </div> -->
     <div class="app-navbar-item ms-1 ms-md-3">
       <a
         href="#"
@@ -117,9 +117,9 @@ import __CONSTANTS__ from "@/constants";
 export default defineComponent({
   name: "header-navbar",
   components: {
-    KTSearch,
+    // KTSearch,
     // KTNotificationMenu,
-    KTQuickLinksMenu,
+    // KTQuickLinksMenu,
     KTUserMenu,
     KTThemeModeSwitcher,
   },
@@ -157,6 +157,7 @@ export default defineComponent({
       getAssetPath,
       State,
       ASSETS_URL,
+      user,
     };
   },
 });

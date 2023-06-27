@@ -8,7 +8,7 @@
           icon-name="basket"
           color="danger"
           icon-color="white"
-          :title="driverStats.total_deliveries"
+          :title="`${driverStats.total_deliveries}`"
           description="Approved and Verified"
         ></StatisticsWidget5>
       </div>
@@ -19,7 +19,7 @@
           icon-name="cheque"
           color="primary"
           icon-color="white"
-          :title="driverStats.total_distance + ' ' + 'km'"
+          :title="`${driverStats.total_distance + ' ' + 'km'}`"
           description="In Km Between delivery locations"
         ></StatisticsWidget5>
       </div>

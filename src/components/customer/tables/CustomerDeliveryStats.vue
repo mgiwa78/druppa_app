@@ -173,7 +173,7 @@ import ViewCustomerDeliveryModal from "@/components/customer/forms/ViewCustomerD
 import ErrorHandler from "@/core/helpers/errorHandler";
 
 export default defineComponent({
-  name: "kt-widget-12",
+  name: "customer-delivery-stats",
   components: {
     TableFooter,
     ViewCustomerDeliveryModal,

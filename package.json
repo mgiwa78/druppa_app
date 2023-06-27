@@ -1,6 +1,6 @@
 {
-  "name": "demo1",
-  "version": "8.1.8",
+  "name": "druppa",
+  "version": "1.0.1",
   "private": true,
   "scripts": {
     "dev": "vite",

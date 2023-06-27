@@ -89,7 +89,7 @@ export default defineComponent({
   name: "start-delivery-modal",
   props: {
     newState: {
-      type: Object as PropType<boolean | null>,
+      type: Boolean,
     },
   },
   components: {},
@@ -112,7 +112,6 @@ export default defineComponent({
         "kt_update_is_active_modal"
       ) as HTMLDivElement;
     });
-    console.log(props.newState);
     const UpdateState = async () => {
       if (!submitButtonRef.value) {
         return;

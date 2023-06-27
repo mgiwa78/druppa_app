@@ -6,6 +6,7 @@ import axios from "axios";
 import __CONSTANTS__ from "@/constants";
 
 const { API_URL } = __CONSTANTS__;
+
 interface User {
   id?: number;
   profile?: string;
@@ -46,7 +47,9 @@ const useAuthStore = defineStore("auth", () => {
     isAuthenticated.value = true;
     userPersist.value = JSON.stringify(authUser);
     errors.value = {};
+    console.log(authToken);
     token.value = authToken;
+    console.log(token.value);
   }
 
   const refreshProfile = async () => {
@@ -70,7 +73,6 @@ const useAuthStore = defineStore("auth", () => {
   watch(authUser, () => {
     userPersist.value = JSON.stringify(authUser.value ? authUser.value : null);
   });
-
   const user = computed(() =>
     userPersist.value ? JSON.parse(userPersist.value) : null
   );
@@ -104,6 +106,8 @@ const useAuthStore = defineStore("auth", () => {
 
   function logout() {
     purgeAuth();
+    // const staticsStore = useStaticsStore();
+    // staticsStore.$reset();
   }
 
   function forgotPassword(email: string) {

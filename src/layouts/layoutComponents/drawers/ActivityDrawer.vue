@@ -43,14 +43,18 @@
         >
           <!--begin::Timeline items-->
           <div class="timeline">
-            <Item1></Item1>
-            <Item2></Item2>
+            <Item1
+              v-for="item in allUserActivity.activities"
+              :key="item.id"
+              :data="item"
+            />
+            <!-- <Item2></Item2>
             <Item3></Item3>
             <Item4></Item4>
             <Item5></Item5>
             <Item6></Item6>
             <Item7></Item7>
-            <Item8></Item8>
+            <Item8></Item8> -->
           </div>
           <!--end::Timeline items-->
         </div>
@@ -59,12 +63,12 @@
       <!--end::Body-->
 
       <!--begin::Footer-->
-      <div class="card-footer py-5 text-center" id="kt_activities_footer">
+      <!-- <div class="card-footer py-5 text-center" id="kt_activities_footer">
         <a href="#" class="btn btn-bg-body text-primary">
           View All Activities
           <KTIcon icon-name="arrow-right" icon-class="fs-3 text-primary" />
         </a>
-      </div>
+      </div> -->
       <!--end::Footer-->
     </div>
   </div>
@@ -73,31 +77,49 @@
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { defineComponent } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import Item1 from "@/components/activity-timeline-items/Item1.vue";
-import Item2 from "@/components/activity-timeline-items/Item2.vue";
-import Item3 from "@/components/activity-timeline-items/Item3.vue";
-import Item4 from "@/components/activity-timeline-items/Item4.vue";
-import Item5 from "@/components/activity-timeline-items/Item5.vue";
-import Item6 from "@/components/activity-timeline-items/Item6.vue";
-import Item7 from "@/components/activity-timeline-items/Item7.vue";
-import Item8 from "@/components/activity-timeline-items/Item8.vue";
+// import Item2 from "@/components/activity-timeline-items/Item2.vue";
+// import Item3 from "@/components/activity-timeline-items/Item3.vue";
+// import Item4 from "@/components/activity-timeline-items/Item4.vue";
+// import Item5 from "@/components/activity-timeline-items/Item5.vue";
+// import Item6 from "@/components/activity-timeline-items/Item6.vue";
+// import Item7 from "@/components/activity-timeline-items/Item7.vue";
+// import Item8 from "@/components/activity-timeline-items/Item8.vue";
+import { useStaticsStore } from "@/stores/statics";
+import { ACTIVITY_COLOUR_MAP } from "@/core/helpers/colourMaps";
+import formatDate from "@/core/helpers/formatDate";
 
 export default defineComponent({
   name: "kt-activity-drawer",
   components: {
     Item1,
-    Item2,
-    Item3,
-    Item4,
-    Item5,
-    Item6,
-    Item7,
-    Item8,
+    // Item2,
+    // Item3,
+    // Item4,
+    // Item5,
+    // Item6,
+    // Item7,
+    // Item8,
   },
   setup() {
+    const staticStore = useStaticsStore();
+    const { allUserActivity, UpdateAllActivity } = staticStore;
+
+    const activityData = ref(allUserActivity);
+
+    onMounted(async () => {
+      if (allUserActivity.isSet) {
+        return;
+      } else {
+        UpdateAllActivity();
+        console.log(allUserActivity);
+        activityData.value = allUserActivity;
+      }
+    });
     return {
       getAssetPath,
+      allUserActivity,
     };
   },
 });

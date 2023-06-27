@@ -386,6 +386,7 @@ import axios from "axios";
 import statesInNigeria from "@/core/data/nigeriaStates";
 import citiesInNigeria from "@/core/data/citiesInNigeria";
 import __CONSTANTS__ from "@/constants";
+import ErrorHandler from "@/core/helpers/errorHandler";
 
 interface FormData {
   firstName: string;
@@ -410,7 +411,7 @@ export default defineComponent({
   },
 
   setup() {
-    const { API_URL, ASSETS_URL } = __CONSTANTS__;
+    const { API_URL } = __CONSTANTS__;
 
     const store = useAuthStore();
     const router = useRouter();
@@ -490,34 +491,10 @@ export default defineComponent({
         })
         .catch((error) => {
           console.log(error);
-          if (error.response.data.message) {
-            Swal.fire({
-              text: error.response.data.message,
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Try again!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn fw-semobold btn-light-danger",
-              },
-            });
-          } else {
-            Swal.fire({
-              text: error.message as string,
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Try again!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn fw-semobold btn-light-danger",
-              },
-            });
-          }
+          ErrorHandler(error);
         });
     };
-    const onSubmitRegister = async (values: any) => {
-      values = values as User;
-
+    const onSubmitRegister = async () => {
       // Clear existing errors
       store.logout();
 

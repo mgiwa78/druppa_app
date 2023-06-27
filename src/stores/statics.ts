@@ -7,6 +7,9 @@ import Swal from "sweetalert2";
 import router from "@/router";
 import type { ErrorTypes } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
+import ErrorHandler from "@/core/helpers/errorHandler";
+
+import type { ActivityType } from "@/core/types/Activity";
 
 const AuthStore = useAuthStore();
 const { logout, token } = AuthStore;
@@ -19,6 +22,12 @@ interface driverStats {
   performance: number;
   isSet: boolean;
 }
+
+interface UserActivity {
+  isSet: boolean;
+  activities: Array<ActivityType>;
+}
+
 interface adminStats {
   admin: string;
   customer: string;
@@ -32,6 +41,10 @@ interface adminStats {
 }
 
 const useStaticsStore = defineStore("statics", () => {
+  const adminStatsPersist = useLocalStorage("adminStatsPersist", "");
+  const userActivityPersist = useLocalStorage("userActivityPersist", "");
+  const allUserActivityPersist = useLocalStorage("allUserActivityPersist", "");
+
   const driverStats = ref<driverStats>({
     total_deliveries: "0",
     total_distance: "0",
@@ -54,7 +67,16 @@ const useStaticsStore = defineStore("statics", () => {
           isSet: false,
         }
   );
-  const adminStatsPersist = useLocalStorage("adminStatsPersist", "");
+  const userActivity = computed<UserActivity>(() =>
+    userActivityPersist.value
+      ? JSON.parse(userActivityPersist.value)
+      : { isSet: false, activities: [] }
+  );
+  const allUserActivity = computed<UserActivity>(() =>
+    allUserActivityPersist.value
+      ? JSON.parse(allUserActivityPersist.value)
+      : { isSet: false, activities: [] }
+  );
 
   watch(adminStats, () => {
     adminStatsPersist.value = JSON.stringify(
@@ -71,6 +93,19 @@ const useStaticsStore = defineStore("statics", () => {
             customerOrders: "0",
             isSet: false,
           }
+    );
+  });
+
+  watch(userActivity, () => {
+    userActivityPersist.value = JSON.stringify(
+      userActivity.value ? userActivity.value : { isSet: false, activities: [] }
+    );
+  });
+  watch(allUserActivity, () => {
+    allUserActivityPersist.value = JSON.stringify(
+      allUserActivity.value
+        ? allUserActivity.value
+        : { isSet: false, activities: [] }
     );
   });
 
@@ -104,7 +139,6 @@ const useStaticsStore = defineStore("statics", () => {
   const UpdateDriverStats = async () => {
     try {
       const driverStatics = await fetch("driverStatics");
-      console.log(driverStatics);
 
       driverStats.value.total_deliveries = driverStatics.total_deliveries;
       driverStats.value.total_distance = driverStatics.total_distance;
@@ -155,19 +189,41 @@ const useStaticsStore = defineStore("statics", () => {
     }
   };
 
-  const fetchCounts = async (profile) => {
-    const alll: any = await axios
-      .get(API_URL + `${profile}/count/getCount`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((response) => response.data.count)
-      .catch((error) => {
-        throw error;
-      });
-    return alll;
+  const UpdateUserActivity = async () => {
+    try {
+      const RESPONSE = await fetch("activity");
+
+      userActivity.value.activities = RESPONSE;
+      userActivityPersist.value = JSON.stringify(
+        userActivity.value
+          ? userActivity.value
+          : { isSet: false, activities: [] }
+      );
+      if (userActivity.value.activities)
+        return (userActivity.value.isSet = true);
+    } catch (error: any) {
+      ErrorHandler(error);
+    }
+  };
+  const UpdateAllActivity = async () => {
+    try {
+      const RESPONSE = await fetch("activity/all");
+
+      allUserActivity.value.activities = RESPONSE;
+      allUserActivityPersist.value = JSON.stringify(
+        allUserActivity.value
+          ? allUserActivity.value
+          : { isSet: false, activities: [] }
+      );
+      console.log(RESPONSE);
+      if (allUserActivity.value.activities)
+        return (allUserActivity.value.isSet = true);
+    } catch (error: any) {
+      ErrorHandler(error);
+    }
   };
 
-  const fetch = async (route) => {
+  const fetch = async (route: string) => {
     const RESPONSE: any = await axios
       .get(API_URL + `${route}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -234,6 +290,10 @@ const useStaticsStore = defineStore("statics", () => {
     UpdateDriverStats,
     driverStats,
     adminStats,
+    userActivity,
+    UpdateUserActivity,
+    UpdateAllActivity,
+    allUserActivity,
   };
 });
 

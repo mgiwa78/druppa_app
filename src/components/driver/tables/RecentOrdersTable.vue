@@ -226,7 +226,6 @@ export default defineComponent({
       editOrderData.value = order;
     };
     const updateVieworder = async (order: OrderType) => {
-      console.log(order);
       CustomerVieworderData.value = order;
     };
 
@@ -291,7 +290,6 @@ export default defineComponent({
 
     onMounted(async () => {
       const deliveries = await fetchPageData(1);
-      console.log(deliveries);
       DeliveriesPaginationData.value = deliveries;
 
       dataToDisplay.value = deliveries.data;

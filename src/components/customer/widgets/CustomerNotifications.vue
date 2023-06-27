@@ -1,7 +1,5 @@
 <template>
-  <!--begin::List Widget 6-->
   <div class="card card-flush">
-    <!--begin::Header-->
     <div class="card-header py-6 border-0">
       <div>
         <h3 class="card-title fw-bold text-dark">Notifications</h3>
@@ -10,7 +8,6 @@
         >
       </div>
       <div class="card-toolbar">
-        <!--begin::Menu-->
         <button
           type="button"
           class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary"
@@ -21,63 +18,65 @@
           <KTIcon icon-name="category" icon-class="fs-2" />
         </button>
         <Dropdown3></Dropdown3>
-        <!--end::Menu-->
       </div>
     </div>
-    <!--end::Header-->
 
-    <!--begin::Body-->
     <div
       class="card-body pt-0"
       style="max-height: 410.66px; overflow-x: scroll"
     >
-      <template v-for="(item, index) in list" :key="index">
-        <!--begin::Item-->
+      <template v-for="(item, index) in userActivity.activities" :key="item.id">
         <div
           :class="[
             'mb-7' && list.length - 1 !== index,
-            `bg-light-${item.color}`,
+            `bg-light-${
+              item.data_type !== null
+                ? ACTIVITY_COLOUR_MAP[item.data_type].color
+                : 'secondary'
+            }`,
           ]"
           class="d-flex align-items-center rounded p-5 mb-7"
         >
-          <!--begin::Icon-->
           <KTIcon
             icon-name="abstract-26"
-            :icon-class="`text-${item.color} fs-1 me-5`"
+            :icon-class="`text-${
+              item.data_type !== null
+                ? ACTIVITY_COLOUR_MAP[item.data_type].color
+                : 'gray-900'
+            } fs-1 me-5`"
           />
-          <!--end::Icon-->
 
-          <!--begin::Title-->
           <div class="flex-grow-1 me-2">
             <a href="#" class="fw-bold text-gray-800 text-hover-primary fs-6">{{
-              item.title
+              item.description
             }}</a>
-
-            <span class="text-muted fw-semobold d-block">{{ item.text }}</span>
           </div>
-          <!--end::Title-->
 
-          <!--begin::Lable-->
-          <span :class="`text-${item.color}`" class="fw-bold py-1">{{
-            item.number
-          }}</span>
-          <!--end::Lable-->
+          <span
+            :class="`text-${
+              item.data_type !== null
+                ? ACTIVITY_COLOUR_MAP[item.data_type].color
+                : 'gray-900'
+            }`"
+            class="fw-bold py-1"
+            >{{ formatDate(item.created_at) }}</span
+          >
         </div>
-        <!--end::Item-->
       </template>
     </div>
-    <!--end::Body-->
   </div>
-  <!--end::List Widget 6-->
 </template>
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { defineComponent, ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import Dropdown3 from "@/components/dropdown/Dropdown3.vue";
+import { useStaticsStore } from "@/stores/statics";
+import { ACTIVITY_COLOUR_MAP } from "@/core/helpers/colourMaps";
+import formatDate from "@/core/helpers/formatDate";
 
 export default defineComponent({
-  name: "kt-widget-6",
+  name: "customer-notifications",
   components: {
     Dropdown3,
   },
@@ -85,6 +84,10 @@ export default defineComponent({
     widgetClasses: String,
   },
   setup() {
+    const staticStore = useStaticsStore();
+    const { userActivity, UpdateUserActivity } = staticStore;
+
+    const activityData = ref(userActivity);
     const list = ref([
       {
         color: "warning",
@@ -116,9 +119,22 @@ export default defineComponent({
       },
     ]);
 
+    onMounted(async () => {
+      if (userActivity.isSet) {
+        return;
+      } else {
+        UpdateUserActivity();
+        console.log(userActivity);
+        activityData.value = userActivity;
+      }
+    });
     return {
       list,
       getAssetPath,
+      userActivity,
+      ACTIVITY_COLOUR_MAP,
+      formatDate,
+      staticStore,
     };
   },
 });

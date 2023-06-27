@@ -8,7 +8,7 @@
       @submit="onSubmitLogin"
       :validation-schema="login"
       :initial-values="{
-        email: 'admin@mail.com',
+        email: 'lubowitz.nichole@example.org',
         password: 'Password',
       }"
     >
@@ -183,6 +183,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import __CONSTANTS__ from "@/constants";
 import { storeToRefs } from "pinia";
+import ErrorHandler from "@/core/helpers/errorHandler";
 
 export default defineComponent({
   name: "user-sign-in",
@@ -219,53 +220,16 @@ export default defineComponent({
           type: values.userType,
         })
         .then((response) => {
+          console.log(response);
           setAuth(response.data.user, response.data.token);
           router.push({ name: "dashboard" });
         })
         .catch((error) => {
-          if (error.response.data.message === "Invalid login credentials") {
-            Swal.fire({
-              text: "Invalid Email or Password",
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Try again!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn fw-semobold btn-light-danger",
-              },
-            }).then(() => {
-              submitButton.value?.removeAttribute("data-kt-indicator");
-              submitButton.value!.disabled = false;
-            });
-          } else if (error.response.data.message === "User does not exist") {
-            Swal.fire({
-              text: "User does not exist",
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Try again!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn fw-semobold btn-light-danger",
-              },
-            }).then(() => {
-              submitButton.value?.removeAttribute("data-kt-indicator");
-              submitButton.value!.disabled = false;
-            });
-          } else {
-            Swal.fire({
-              text: `${error.message}`,
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Try again!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn fw-semobold btn-light-danger",
-              },
-            }).then(() => {
-              submitButton.value?.removeAttribute("data-kt-indicator");
-              submitButton.value!.disabled = false;
-            });
-          }
+          ErrorHandler(error);
+        })
+        .finally(() => {
+          submitButton.value?.removeAttribute("data-kt-indicator");
+          submitButton.value!.disabled = false;
         });
     };
 
