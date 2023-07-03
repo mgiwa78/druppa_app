@@ -132,7 +132,7 @@
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, ref, type PropType } from "vue";
 import __CONSTANTS__ from "@/constants";
 import type { DeliveryType } from "@/core/types/Deliveries";
 import { DeliveryEmpty } from "@/core/types/Deliveries";
@@ -145,44 +145,7 @@ export default defineComponent({
   },
   props: {
     CustomerDeliveryData: {
-      type: Object as () => {
-        customer: {
-          firstName: string;
-          lastName: string;
-        };
-        id: string;
-        customer_order_id: string;
-        tracking_number: number;
-        status: string;
-        state: string;
-        city: string;
-        origin: string;
-        destination: string;
-        pickup_date: string;
-        delivery_date: string;
-        driver: {
-          id: number;
-          created_at: string;
-          updated_at: string;
-          firstName: string;
-          phone_number: string;
-          lastName: string;
-          email: string;
-          profile: null;
-          city: string;
-          state: string;
-          type: string;
-          title: string;
-          gender: string;
-          licenseNumber: string;
-          licenseExpiration: string;
-          vehicleMake: string;
-          vehicleModel: string;
-          licensePlate: string;
-          insurance: string;
-        };
-        image: string;
-      },
+      type: Object as PropType<DeliveryType>,
     },
   },
   setup(props) {

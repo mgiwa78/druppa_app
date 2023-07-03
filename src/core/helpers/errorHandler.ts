@@ -45,10 +45,10 @@ export default function ErrorHandler(error: any) {
     });
   } else if (error.response.data.message) {
     Swal.fire({
-      text: error.message,
+      text: error.response.data.message,
       icon: "error",
       buttonsStyling: false,
-      confirmButtonText: "Error Fetching Data!",
+      confirmButtonText: "Close",
       heightAuto: false,
       customClass: {
         confirmButton: "btn fw-semobold btn-light-danger",

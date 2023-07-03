@@ -125,14 +125,14 @@
     <div class="card d-flex flex-row-fluid flex-center">
       <!--begin::Form-->
       <form
-        class="py-20 w-100 w-xl-700px px-9"
+        class="py-20 w-100 px-9"
         novalidate
         id="kt_create_account_form"
         @submit="handleStep"
       >
         <!--begin::Step 1-->
         <div class="current" data-kt-stepper-element="content">
-          <Step1 :shipmentType="formData.shipmentType"></Step1>
+          <Step1 :shipmentType="shipmentOrder.shipmentType"></Step1>
         </div>
         <!--end::Step 1-->
 
@@ -144,11 +144,7 @@
 
         <!--begin::Step 3-->
         <div data-kt-stepper-element="content">
-          <Step3
-            @update:pick-up-address="handleAddressUpdate"
-            v-model:PickUpAddress="formData.pickUp"
-            v-model:DropOffAddress="formData.dropOff"
-          ></Step3>
+          <Step3 v-model:ShipmentOrder="shipmentOrder"></Step3>
         </div>
         <!--end::Step 3-->
 
@@ -160,7 +156,10 @@
 
         <!--begin::Step 5-->
         <div data-kt-stepper-element="content">
-          <Step5></Step5>
+          <Step5
+            :Verification="verification"
+            :handleVerifyPayment="verifyPayment"
+          ></Step5>
         </div>
         <!--end::Step 5-->
 
@@ -211,6 +210,24 @@
               :reference="reference"
               :onSuccess="onSuccessfulPayment"
               :onCanel="onCancelledPayment"
+              :first_name="user.firstName"
+              last_name="user.lastName"
+              :metadata="{
+                pickupAddress: shipmentOrder.pickUp.pickupAddress,
+                pickupState: shipmentOrder.pickUp.pickupState,
+                pickupLGA: shipmentOrder.pickUp.pickupLGA,
+                pickupCity: shipmentOrder.pickUp.pickupCity,
+                dropOffAddress: shipmentOrder.dropOff.dropOffAddress,
+                dropOffCity: shipmentOrder.dropOff.dropOffCity,
+                shipmentDescription: shipmentOrder.shipment_description,
+                dropOffLGA: shipmentOrder.dropOff.dropOffLGA,
+                dropOffState: shipmentOrder.dropOff.dropOffState,
+                distance: shipmentOrder.distance,
+                userID: user.id,
+                expectedDeliveryDate: shipmentOrder.expectedDeliveryDateAndTime,
+                shipmentType: shipmentOrder.shipmentType,
+                shipmentWeight: shipmentOrder.shipmentWeight,
+              }"
             >
               Make Payment
             </paystack>
@@ -232,7 +249,7 @@
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { computed, defineComponent, onMounted, ref } from "vue";
+import { computed, defineComponent, onMounted, ref, watch } from "vue";
 import Step1 from "@/components/customer/wizards/steps/Step1.vue";
 import Step2 from "@/components/customer/wizards/steps/Step2.vue";
 import Step3 from "@/components/customer/wizards/steps/Step3.vue";
@@ -244,6 +261,9 @@ import * as Yup from "yup";
 import { useForm } from "vee-validate";
 import __CONSTANTS__ from "@/constants";
 import paystack from "vue3-paystack";
+import { useAuthStore } from "@/stores/auth";
+import ErrorHandler from "@/core/helpers/errorHandler";
+import axios from "axios";
 
 interface IStep1 {
   shipmentType: string;
@@ -253,28 +273,57 @@ interface IStep2 {
   shipmentWeight: string;
 }
 interface PickUp {
-  address: string;
-  city: string;
-  state: string;
-  LGA: string;
+  pickupAddress: string;
+  pickupCity: string;
+  pickupState: string;
+  pickupLGA: string;
 }
 interface DropOff {
-  address: string;
-  city: string;
-  state: string;
-  LGA: string;
+  dropOffAddress: string;
+  dropOffCity: string;
+  dropOffState: string;
+  dropOffLGA: string;
 }
 
 interface IStep3 {
   pickUp: PickUp;
   dropOff: DropOff;
+  expectedDeliveryDateAndTime: string;
+  shipment_description: string;
+  distance: number;
+}
+interface VerificationData {
+  status: boolean;
+  data: {
+    reference: string;
+    amount: string;
+    currency: string;
+    channel: string;
+    customer: { email: string };
+    metadata: {
+      pickupAddress: string;
+      pickupState: string;
+      pickupLGA: string;
+      pickupCity: string;
+      dropOffAddress: string;
+      dropOffCity: string;
+      dropOffLGA: string;
+      dropOffState: string;
+      distance: string;
+      userID: string;
+      expectedDeliveryDate: string;
+      shipmentType: string;
+      shipmentWeight: string;
+      shipmentDescription: string;
+    };
+  };
 }
 
 interface IStep4 {
   success: boolean;
 }
 
-interface MakeShipmentOrder extends IStep1, IStep2, IStep3 {}
+export interface MakeShipmentOrder extends IStep1, IStep2, IStep3 {}
 
 export default defineComponent({
   name: "kt-vertical-wizard",
@@ -286,37 +335,45 @@ export default defineComponent({
     paystack,
   },
   setup() {
+    const AuthStore = useAuthStore();
+    const isVerifying = ref<Boolean>(false);
+    const { user, token } = AuthStore;
     const _stepperObj = ref<StepperComponent | null>(null);
     const verticalWizardRef = ref<HTMLElement | null>(null);
     const currentStepIndex = ref(0);
 
-    const PickUpAddress = {
-      address: "sdfdsfsdffdsfs",
-      city: "",
-      state: "",
-      LGA: "",
+    const verification = ref({
+      isVerifying: false,
+      verificationData: null as VerificationData | null,
+    });
+    const PickUpAddressData = {
+      pickupAddress: "Anything",
+      pickupCity: "Umuahia",
+      pickupState: "Abia",
+      pickupLGA: "Aba North",
     };
-    const DropOffAddress = {
-      address: "",
-      city: "",
-      state: "",
-      LGA: "",
+    const DropOffAddressData = {
+      dropOffAddress: "Anything",
+      dropOffCity: "Umuahia",
+      dropOffState: "Abia",
+      dropOffLGA: "Aba North",
     };
 
-    const formData = ref<MakeShipmentOrder>({
-      shipmentType: "personal",
-      shipmentWeight: "50+",
-      pickUp: PickUpAddress,
-      dropOff: DropOffAddress,
+    const shipmentOrder = ref<MakeShipmentOrder>({
+      shipmentType: "standardShipments",
+      shipmentWeight: "2-10",
+      pickUp: PickUpAddressData,
+      dropOff: DropOffAddressData,
+      expectedDeliveryDateAndTime: "",
+      shipment_description: "shipment description",
+      distance: 47,
     });
-    const amount = 20000000;
+
+    const amount = shipmentOrder.value.distance * 50000;
     const success = ref<boolean>(false);
 
-    const email = "mail@mail.com";
+    const email = "mgiwa78@gmail.com";
 
-    const handleAddressUpdate = (add: string) => {
-      console.log(add);
-    };
     const reference = computed(() => {
       let text = "";
       let possible =
@@ -328,10 +385,10 @@ export default defineComponent({
       return text;
     });
 
-    const { PAYSTACK_PUBLIC_KEY } = __CONSTANTS__;
+    const { PAYSTACK_PUBLIC_KEY, API_URL, PAYSTACK_SECRETE_KEY } =
+      __CONSTANTS__;
 
     const onSuccessfulPayment = () => {
-      window.alert("Payment recieved");
       currentStepIndex.value++;
 
       _stepperObj.value?.goNext();
@@ -389,33 +446,169 @@ export default defineComponent({
       }
     });
 
+    watch(currentStepIndex, async (newPage, oldPage) => {
+      console.log(newPage);
+      if (currentStepIndex.value === 3) {
+        isVerifying.value = true;
+        try {
+          await verifyPayment();
+          await updatePaymentAndInvoice();
+          verification.value.isVerifying = false;
+        } catch (error) {
+          error;
+        }
+      }
+    });
+
+    const verifyPayment = async () => {
+      if (reference.value && currentStepIndex.value === 3) {
+        verification.value.isVerifying = true;
+        try {
+          const transactionRef = await axios.get(
+            `https://api.paystack.co/transaction/verify/${reference.value}`,
+            {
+              headers: { Authorization: `Bearer ${PAYSTACK_SECRETE_KEY}` },
+            }
+          );
+          console.log(transactionRef);
+          verification.value.isVerifying = false;
+
+          verification.value.verificationData = transactionRef.data;
+        } catch (error) {
+          verification.value.isVerifying = false;
+
+          console.log(error);
+        }
+      }
+    };
+
+    const updatePaymentAndInvoice = async () => {
+      const verificationData = verification.value.verificationData;
+      console.log(verificationData);
+
+      if (!verificationData) return;
+      const {
+        data: {
+          reference,
+          amount,
+          currency,
+          channel,
+          customer: { email },
+          metadata: {
+            pickupAddress,
+            pickupState,
+            pickupLGA,
+            pickupCity,
+            dropOffAddress,
+            dropOffCity,
+            dropOffLGA,
+            dropOffState,
+            distance,
+            userID,
+            expectedDeliveryDate,
+            shipmentType,
+            shipmentWeight,
+            shipmentDescription,
+          },
+        },
+      } = verificationData;
+
+      const formDateCustomerOrder = new FormData();
+      const formDataPayment = new FormData();
+      const formDataInvoice = new FormData();
+
+      formDataPayment.append("paystack_refrence_id", reference);
+      formDataPayment.append("customer_id", `${userID}`);
+      formDataPayment.append("amount", amount);
+      formDataPayment.append("currency", currency);
+      formDataPayment.append("payment_method", channel);
+      formDataPayment.append(
+        "status",
+        `${verification.value.verificationData?.status ? 1 : 0}`
+      );
+      // 2023-07-02 18:31:48
+      formDateCustomerOrder.append("customer_id", `${userID}`);
+      formDateCustomerOrder.append("payment_method", "Card");
+      formDateCustomerOrder.append("pickup_address", pickupAddress);
+      formDateCustomerOrder.append("pickup_state", pickupState);
+      formDateCustomerOrder.append("pickup_lga", pickupLGA);
+      formDateCustomerOrder.append("pickup_city", pickupCity);
+      formDateCustomerOrder.append("distance", distance);
+      formDateCustomerOrder.append("shipment_description", shipmentDescription);
+      formDateCustomerOrder.append("dropOff_address", dropOffAddress);
+      formDateCustomerOrder.append("total_payment", amount);
+      formDateCustomerOrder.append("dropOff_city", dropOffCity);
+      formDateCustomerOrder.append("dropOff_LGA", dropOffLGA);
+      formDateCustomerOrder.append("dropOff_state", dropOffState);
+
+      formDateCustomerOrder.append(
+        "expected_delivery_date",
+        expectedDeliveryDate
+      );
+
+      formDateCustomerOrder.append("service_rendered", shipmentType);
+      formDateCustomerOrder.append("shipment_weight", shipmentWeight);
+
+      try {
+        await axios
+          .post(API_URL + `payment`, formDataPayment, {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          .then(async (res) => {
+            console.log(res.data);
+            formDateCustomerOrder.append("payment_id", res.data.data.id);
+
+            await axios
+              .post(API_URL + `customerorders`, formDateCustomerOrder, {
+                headers: { Authorization: `Bearer ${token}` },
+              })
+              .then(async (Orderres) => {
+                console.log(Orderres);
+                formDataInvoice.append(
+                  "customer_order_id",
+                  Orderres.data.data.id
+                );
+                formDataInvoice.append("customer_id", userID);
+
+                await axios.post(API_URL + `invoice`, formDataInvoice, {
+                  headers: { Authorization: `Bearer ${token}` },
+                });
+              });
+          });
+        // await axios
+        //   .post(API_URL + `customerorders`, formDateCustomerOrder, {
+        //     headers: { Authorization: `Bearer ${token}` },
+        //   })
+        //   .then(async (res) => {
+        //     console.log(res);
+        //     formDataInvoice.append("customer_order_id", res.data.id);
+
+        //     await axios.post(API_URL + `invoice`, formDataInvoice, {
+        //       headers: { Authorization: `Bearer ${token}` },
+        //     });
+        //   });
+      } catch (error) {
+        console.log(error);
+      }
+    };
     const handleStep = handleSubmit((values) => {
       resetForm({
         values: {
-          ...formData.value,
+          ...shipmentOrder.value,
         },
       });
 
-      formData.value = {
-        ...formData.value,
+      shipmentOrder.value = {
+        ...shipmentOrder.value,
         ...values,
       };
-      // if (_stepperObj.value.passedStepIndex === 3 && !values.success) {
-      //   Swal.fire({
-      //     text: `Make Payment First`,
-      //     icon: "error",
-      //     buttonsStyling: false,
-      //     confirmButtonText: "Try again!",
-      //     heightAuto: false,
-      //     customClass: {
-      //       confirmButton: "btn fw-semobold btn-light-danger",
-      //     },
-      //   });
-      //   return;
-      // }
 
       currentStepIndex.value++;
-      console.log(currentStepIndex.value);
+
+      // if (currentStepIndex.value === 3) {
+      //   verifyPayments();
+      // }
+
       if (!_stepperObj.value) {
         return;
       }
@@ -462,10 +655,10 @@ export default defineComponent({
       email,
       reference,
       PAYSTACK_PUBLIC_KEY,
-      formData,
-      PickUpAddress,
-      DropOffAddress,
-      handleAddressUpdate,
+      shipmentOrder,
+      user,
+      verifyPayment,
+      verification,
     };
   },
 });

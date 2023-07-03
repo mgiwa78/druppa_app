@@ -48,12 +48,7 @@ const GenerateMenus = (type) => {
                 },
               ],
             },
-            {
-              heading: "Invoice",
-              route: "/customer/invoice/view",
-              keenthemesIcon: "bi bi-receipt",
-              bootstrapIcon: "bi bi-receipt",
-            },
+
             {
               heading: "Invoice List",
               route: "/customer/invoice/list",

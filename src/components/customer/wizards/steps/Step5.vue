@@ -8,42 +8,48 @@
       <!--end::Title-->
 
       <!--begin::Notice-->
-      <div class="text-gray-400 fw-semobold fs-6">
-        If you need more info, please
-        <router-link to="/sign-in" class="link-primary fw-bold"
-          >Sign In</router-link
-        >.
-      </div>
+
       <!--end::Notice-->
     </div>
     <!--end::Heading-->
 
     <!--begin::Body-->
-    <div class="mb-0">
+    <div class="mb-0" v-if="Verification?.isVerifying">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <div class="mb-0" v-else>
       <!--begin::Text-->
       <div class="fs-6 text-gray-600 mb-5">
-        Writing headlines for blog posts is as much an art as it is a science
-        and probably warrants its own post, but for all advise is with what
-        works for your great & amazing audience.
+        Your payment has been verified and sent to our driver, your will be call
+        shortly through your registered line.
       </div>
       <!--end::Text-->
 
       <!--begin::Alert-->
       <div
-        class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6"
+        :class="`notice d-flex bg-light-${
+          Verification?.verificationData?.status ? 'success' : 'danger'
+        } rounded border-${
+          Verification?.verificationData?.status ? 'success' : 'danger'
+        } border border-dashed p-6`"
       >
         <KTIcon
           icon-name="information-5"
-          icon-class="fs-2tx text-warning me-4"
+          :icon-class="`fs-2tx text-${
+            Verification?.verificationData?.status ? 'success' : 'danger'
+          } me-4`"
         />
         <!--begin::Wrapper-->
         <div class="d-flex flex-stack flex-grow-1">
           <!--begin::Content-->
           <div class="fw-semobold">
-            <h4 class="text-gray-800 fw-bold">We need your attention!</h4>
+            <h4 class="text-gray-800 fw-bold">Payment Success</h4>
             <div class="fs-6 text-gray-600">
-              To start using great tools, please, please
-              <a href="#" class="fw-bold">Create Team Platform</a>
+              Your Paymeny has wass successfull and your invoice has been
+              generated
+              <a href="#" class="fw-bold">View your delivey status</a>
             </div>
           </div>
           <!--end::Content-->
@@ -59,12 +65,28 @@
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { defineComponent } from "vue";
+import { defineComponent, onMounted, type PropType } from "vue";
+
+interface VerificationType {
+  isVerifying: boolean;
+  verificationData: Object | null;
+}
 
 export default defineComponent({
   name: "step-5",
   components: {},
-  setup() {
+  props: {
+    handleVerifyPayment: Function,
+    Verification: {
+      type: Object as PropType<VerificationType>,
+    },
+  },
+  setup(props) {
+    onMounted(() => {
+      if (props.handleVerifyPayment) {
+        props.handleVerifyPayment();
+      }
+    });
     return {
       getAssetPath,
     };

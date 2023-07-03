@@ -109,7 +109,7 @@
                     <td>
                       <span
                         class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                        >{{ formatDate(profile.last_login) }}</span
+                        >{{ formatDate(profile.created_at) }}</span
                       >
                       <span
                         class="text-muted fw-semobold text-muted d-block fs-7"
@@ -184,31 +184,8 @@ import formatDate from "@/core/helpers/formatDate";
 import axios from "axios";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import { useAuthStore } from "@/stores/auth";
-
-interface AdminProfile {
-  username: string;
-  email: string;
-  id: number;
-  firstName: string;
-  lastName: string;
-  profile?: string;
-  city: string;
-  last_login: string;
-  address: string;
-  phone_number: string;
-  gender: string;
-  state: string;
-  type: string;
-  created_at: string;
-  title: string;
-  permissions: Array<Permission>;
-}
-interface Permission {
-  id: number;
-  admin_id: number;
-  permission: string;
-  status: string;
-}
+import type { AdminType } from "@/core/types/Admin";
+import { AdminEmpty } from "@/core/types/Admin";
 export default defineComponent({
   name: "kt-widget-12",
   components: { AddAdminModal, EditAdminModal, ViewAdminModal, TableFooter },
@@ -224,43 +201,11 @@ export default defineComponent({
   setup(props, { emit }) {
     const AdminPaginationData = ref<any>({});
 
-    const dataToDisplay = ref<Array<AdminProfile> | null>([]);
-    const editProfileData = ref<AdminProfile>({
-      username: "",
-      email: "",
-      id: 0,
-      firstName: "",
-      lastName: "",
-      profile: "",
-      city: "",
-      last_login: "",
-      address: "",
-      phone_number: "",
-      gender: "",
-      state: "",
-      type: "",
-      created_at: "",
-      title: "",
-      permissions: [],
-    });
-    const viewProfileData = ref<AdminProfile>({
-      username: "",
-      email: "",
-      id: 0,
-      firstName: "",
-      lastName: "",
-      profile: "",
-      city: "",
-      last_login: "",
-      address: "",
-      phone_number: "",
-      gender: "",
-      state: "",
-      type: "",
-      created_at: "",
-      title: "",
-      permissions: [],
-    });
+    const dataToDisplay = ref<Array<AdminType> | null>([]);
+
+    const editProfileData = ref<AdminType>(AdminEmpty);
+    const viewProfileData = ref<AdminType>(AdminEmpty);
+
     const AuthStore = useAuthStore();
     const { token } = AuthStore;
 
@@ -314,10 +259,10 @@ export default defineComponent({
       }
     );
 
-    const updateEditProfile = async (profile: AdminProfile) => {
+    const updateEditProfile = async (profile: AdminType) => {
       editProfileData.value = profile;
     };
-    const updateViewProfile = async (profile: AdminProfile) => {
+    const updateViewProfile = async (profile: AdminType) => {
       viewProfileData.value = profile;
     };
 

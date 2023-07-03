@@ -71,8 +71,8 @@ const routes: Array<RouteRecordRaw> = [
             },
           },
           {
-            path: "view",
-            name: "Customer Invoice",
+            path: "verify",
+            name: "Verify Invoice",
             component: () => import("@/views/customer/InvoiceView.vue"),
             meta: {
               pageTitle: "Customer Invoice",

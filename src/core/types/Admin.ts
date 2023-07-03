@@ -1,3 +1,6 @@
+import { PermissionEmpty } from "./Permission";
+import type { PermissionType } from "./Permission";
+
 export interface AdminType {
   id: number;
   email: string;
@@ -15,6 +18,7 @@ export interface AdminType {
   updated_at: string;
   email_verified_at: null;
   verify_token: null;
+  permissions?: Array<PermissionType>;
 }
 
 export const AdminEmpty = {
@@ -34,4 +38,5 @@ export const AdminEmpty = {
   updated_at: "",
   email_verified_at: null,
   verify_token: null,
+  permissions: [PermissionEmpty],
 };

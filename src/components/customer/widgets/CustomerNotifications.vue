@@ -25,44 +25,51 @@
       class="card-body pt-0"
       style="max-height: 410.66px; overflow-x: scroll"
     >
-      <template v-for="(item, index) in userActivity.activities" :key="item.id">
-        <div
-          :class="[
-            'mb-7' && list.length - 1 !== index,
-            `bg-light-${
-              item.data_type !== null
-                ? ACTIVITY_COLOUR_MAP[item.data_type].color
-                : 'secondary'
-            }`,
-          ]"
-          class="d-flex align-items-center rounded p-5 mb-7"
+      <div v-if="userActivity.activities.length > 1">
+        <template
+          v-for="(item, index) in userActivity.activities"
+          :key="item.id"
         >
-          <KTIcon
-            icon-name="abstract-26"
-            :icon-class="`text-${
-              item.data_type !== null
-                ? ACTIVITY_COLOUR_MAP[item.data_type].color
-                : 'gray-900'
-            } fs-1 me-5`"
-          />
-
-          <div class="flex-grow-1 me-2">
-            <a href="#" class="fw-bold text-gray-800 text-hover-primary fs-6">{{
-              item.description
-            }}</a>
-          </div>
-
-          <span
-            :class="`text-${
-              item.data_type !== null
-                ? ACTIVITY_COLOUR_MAP[item.data_type].color
-                : 'gray-900'
-            }`"
-            class="fw-bold py-1"
-            >{{ formatDate(item.created_at) }}</span
+          <div
+            :class="[
+              'mb-7' && list.length - 1 !== index,
+              `bg-light-${
+                item.data_type !== null
+                  ? ACTIVITY_COLOUR_MAP[item.data_type]?.color
+                  : 'secondary'
+              }`,
+            ]"
+            class="d-flex align-items-center rounded p-5 mb-7"
           >
-        </div>
-      </template>
+            <KTIcon
+              icon-name="abstract-26"
+              :icon-class="`text-${
+                item.data_type !== null
+                  ? ACTIVITY_COLOUR_MAP[item.data_type]?.color
+                  : 'gray-900'
+              } fs-1 me-5`"
+            />
+
+            <div class="flex-grow-1 me-2">
+              <a
+                href="#"
+                class="fw-bold text-gray-800 text-hover-primary fs-6"
+                >{{ item.description }}</a
+              >
+            </div>
+
+            <span
+              :class="`text-${
+                item.data_type !== null
+                  ? ACTIVITY_COLOUR_MAP[item.data_type]?.color
+                  : 'gray-900'
+              }`"
+              class="fw-bold py-1"
+              >{{ formatDate(item.created_at) }}</span
+            >
+          </div>
+        </template>
+      </div>
     </div>
   </div>
 </template>
@@ -120,13 +127,8 @@ export default defineComponent({
     ]);
 
     onMounted(async () => {
-      if (userActivity.isSet) {
-        return;
-      } else {
-        UpdateUserActivity();
-        console.log(userActivity);
-        activityData.value = userActivity;
-      }
+      UpdateUserActivity();
+      activityData.value = userActivity;
     });
     return {
       list,

@@ -44,7 +44,7 @@
               <th class="min-w-150px">Reciept Id</th>
               <th class="min-w-120px">Date Issued</th>
               <th class="min-w-140px">Issued To</th>
-              <th class="min-w-120px">Payment Ref</th>
+              <th class="min-w-120px">Payment ID</th>
               <th class="min-w-120px">Cost</th>
               <th class="min-w-120px">Service Rendered</th>
 
@@ -61,7 +61,7 @@
                   <a
                     href="#"
                     class="text-dark fw-bold text-hover-primary fs-6"
-                    >{{ invoice.payment_id }}</a
+                    >{{ invoice.id }}</a
                   >
                 </td>
                 <td class="text-dark fw-bold text-hover-primary fs-6">
@@ -83,14 +83,14 @@
                   <a
                     href="#"
                     class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                    >{{ invoice.paystack_refrence_id }}</a
+                    >{{ invoice.customer_order.payment_id }}</a
                   >
                 </td>
                 <td>
                   <a
                     href="#"
                     class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                    >{{ invoice.total_payment }}</a
+                    >₦{{ invoice.customer_order.total_payment }}</a
                   >
                 </td>
 
@@ -98,7 +98,7 @@
                   <a
                     href="#"
                     class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                    >{{ invoice.service_rendered }}</a
+                    >{{ invoice.customer_order.service_rendered }}</a
                   >
                   <!-- <span
                     class="text-muted fw-semobold text-muted d-block fs-7"
@@ -117,9 +117,9 @@
                 <td class="text-end">
                   <button
                     data-bs-toggle="modal"
-                    data-bs-target="#kt_start_delivery_modal"
+                    data-bs-target="#kt_modal_view_reciept"
                     class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
-                    @click.prevent=""
+                    @click.prevent="updateViewInvoice(invoice)"
                   >
                     <KTIcon icon-name="switch" icon-class="fs-3" />
                   </button>
@@ -152,7 +152,7 @@
     <!--begin::Body-->
   </div>
   <!--end::Tables Widget 13-->
-  <!-- <StartDeliveryModal :OrderData="CustomerVieworderData"></StartDeliveryModal> -->
+  <ViewInvoiceModal :InvoiceData="viewInvoiceData"></ViewInvoiceModal>
 </template>
 
 <script lang="ts">
@@ -169,7 +169,7 @@ import formatDate from "@/core/helpers/formatDate";
 import type { InvoiceType } from "@/core/types/Invoice";
 import { InvoiceEmpty } from "@/core/types/Invoice";
 
-// import StartDeliveryModal from "@/components/driver/form/StartDeliveryModal.vue";
+import ViewInvoiceModal from "@/components/customer/forms/ViewInvoiceModal.vue";
 
 import router from "@/router";
 import ErrorHandler from "@/core/helpers/errorHandler";
@@ -180,6 +180,7 @@ export default defineComponent({
   components: {
     TableFooter,
     // StartDeliveryModal,
+    ViewInvoiceModal,
   },
   props: {
     widgetClasses: String,
@@ -195,10 +196,7 @@ export default defineComponent({
 
     const DeliveriesPaginationData = ref<any>({});
 
-    const editOrderData = ref<InvoiceType>(InvoiceEmpty);
-    const CustomerVieworderData = ref<InvoiceType>(InvoiceEmpty);
-
-    const dataToDisplay = ref<Array<InvoiceType> | null>(null);
+    const dataToDisplay = ref<Array<InvoiceType> | null>();
     const itemsPerPage = ref<number>(4);
     const totalOrders = ref<Array<number>>([0]);
     const total = ref<number>(0);
@@ -208,6 +206,7 @@ export default defineComponent({
 
     const itemsPerPageDropdownEnabled = ref<boolean>(true);
     const currentPage = ref<number>(1);
+    const viewInvoiceData = ref<InvoiceType>(InvoiceEmpty);
 
     const statusFilter = {
       Pending: "warning",
@@ -234,14 +233,6 @@ export default defineComponent({
       return 0;
     });
 
-    const updateEditorder = async (order: InvoiceType) => {
-      editOrderData.value = order;
-    };
-    const updateVieworder = async (order: InvoiceType) => {
-      console.log(order);
-      CustomerVieworderData.value = order;
-    };
-
     watch(
       () => currentPage.value,
       async (newValue) => {
@@ -252,10 +243,14 @@ export default defineComponent({
     watch(
       () => itemsPerPage.value,
       async (newValue) => {
-        const data = await fetchPageData(newValue);
+        const data = await fetchPageData(0);
         dataToDisplay.value = data.data;
       }
     );
+
+    const updateViewInvoice = async (profile: InvoiceType) => {
+      viewInvoiceData.value = profile;
+    };
 
     const pageChange = (page: number) => {
       currentPage.value = page;
@@ -321,12 +316,10 @@ export default defineComponent({
       dataToDisplay,
       itemsPerPageDropdownEnabled,
       ASSETS_URL,
-      editOrderData,
-      updateEditorder,
-      CustomerVieworderData,
-      updateVieworder,
       formatDate,
       statusFilter,
+      updateViewInvoice,
+      viewInvoiceData,
     };
   },
 });

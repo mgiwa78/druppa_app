@@ -10,7 +10,6 @@ const { API_URL } = __CONSTANTS__;
 interface User {
   id?: number;
   profile?: string;
-  username?: string;
   password?: string;
   lastName: string;
   firstName: string;
@@ -71,7 +70,7 @@ const useAuthStore = defineStore("auth", () => {
   watch(authUser, () => {
     userPersist.value = JSON.stringify(authUser.value ? authUser.value : null);
   });
-  const user = computed(() =>
+  const user = computed<User>(() =>
     userPersist.value ? JSON.parse(userPersist.value) : null
   );
 

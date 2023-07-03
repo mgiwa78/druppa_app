@@ -35,8 +35,6 @@
             class="btn-check"
             name="shipmentType"
             value="standardShipments"
-            :modelValue="shipmentType"
-            @input="$emit('update:modelValue', $event.target.value)"
             id="kt_select_shipment_type_standard"
           />
           <label
@@ -252,9 +250,8 @@ export default defineComponent({
     Field,
     ErrorMessage,
   },
-  emits: ["update:modelValue"],
   props: { shipmentType: String },
-  setup(props, { emit }) {
+  setup(props) {
     return {
       getAssetPath,
     };

@@ -129,7 +129,7 @@
           <!--begin::Button-->
           <button
             ref="submitButtonRef"
-            type="submit"
+            v-on:click.prevent="StartDelivery()"
             id="kt_start_delivery_modal_submit"
             class="btn btn-primary"
           >
@@ -160,17 +160,13 @@ import axios from "axios";
 import formatDate from "@/core/helpers/formatDate";
 
 import Multiselect from "@vueform/multiselect";
-import type { OrderType } from "@/core/types/Orders";
+import { OrderEmpty, type OrderType } from "@/core/types/Orders";
 import type { PropType } from "vue";
-
-interface FormData {
-  firstName: string;
-  lastName: string;
-  userName: string;
-  email: string;
-  password: string;
-  permissions: Array<string>;
-}
+// import type { AdminType } from "@/core/types/Admin";
+import { PermissionEmpty } from "@/core/types/Permission";
+import { AdminEmpty } from "@/core/types/Admin";
+import ErrorHandler from "@/core/helpers/errorHandler";
+import { useAuthStore } from "@/stores/auth";
 
 export default defineComponent({
   name: "start-delivery-modal",
@@ -180,7 +176,7 @@ export default defineComponent({
     },
   },
   components: {},
-  setup() {
+  setup(props) {
     const submitButtonRef = ref<null | HTMLButtonElement>(null);
 
     const startDeleveryModalRef = ref<null | HTMLDivElement>(null);
@@ -189,6 +185,9 @@ export default defineComponent({
     const modalRef = ref<null | HTMLElement>(null);
 
     const { API_URL } = __CONSTANTS__;
+
+    const AuthStore = useAuthStore();
+    const { user, token } = AuthStore;
 
     const permissionsSelect = ref({
       mode: "tags",
@@ -212,14 +211,7 @@ export default defineComponent({
         },
       ],
     });
-    const newAdminData = ref<FormData>({
-      firstName: "",
-      lastName: "",
-      email: "",
-      userName: "",
-      password: "",
-      permissions: [],
-    });
+    const orderData = ref<OrderType>(OrderEmpty);
 
     const validationSchema = Yup.object().shape({
       firstName: Yup.string().required().label("First Name"),
@@ -235,7 +227,7 @@ export default defineComponent({
         "kt_start_delivery_modal"
       ) as HTMLDivElement;
     });
-    const CreateAdminProfile = async () => {
+    const StartDelivery = async () => {
       if (submitButtonRef.value) {
         // eslint-disable-next-line
         submitButtonRef.value!.disabled = true;
@@ -245,17 +237,17 @@ export default defineComponent({
 
       const formData = new FormData();
 
-      formData.append("firstName", newAdminData.value.firstName);
-      formData.append("lastName", newAdminData.value.lastName);
-      formData.append("email", newAdminData.value.email);
-      formData.append("username", newAdminData.value.userName);
-      formData.append("password", newAdminData.value.password);
-
       await axios
-        .post(API_URL + "createAdminProfile", formData)
+        .patch(
+          API_URL + `deliveries/driver/assignDelivery/${props.OrderData?.id}`,
+          formData,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
         .then(() => {
           Swal.fire({
-            text: "Profile has been created!",
+            text: "Delivery Initiated successfully!",
             icon: "success",
             buttonsStyling: false,
             confirmButtonText: "Ok!",
@@ -267,35 +259,11 @@ export default defineComponent({
         })
 
         .catch((error) => {
-          if (error.response.data.message == "User does not exist") {
-            Swal.fire({
-              text: "Invalid Email or Password",
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Try again!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn fw-semobold btn-light-danger",
-              },
-            }).then(() => {
-              submitButtonRef.value?.removeAttribute("data-kt-indicator");
-              submitButtonRef.value!.disabled = false;
-            });
-          } else {
-            Swal.fire({
-              text: `${error.message}`,
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Try again!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn fw-semobold btn-light-danger",
-              },
-            }).then(() => {
-              submitButtonRef.value?.removeAttribute("data-kt-indicator");
-              submitButtonRef.value!.disabled = false;
-            });
-          }
+          ErrorHandler(error);
+        })
+        .finally(() => {
+          submitButtonRef.value?.removeAttribute("data-kt-indicator");
+          submitButtonRef.value!.disabled = false;
         });
     };
     const submit = async () => {
@@ -303,12 +271,7 @@ export default defineComponent({
         return;
       }
 
-      //Disable button
-      submitButtonRef.value.disabled = true;
-      // Activate indicator
-      submitButtonRef.value.setAttribute("data-kt-indicator", "on");
-
-      await CreateAdminProfile();
+      await StartDelivery();
 
       backdropRef.value = document.querySelector(
         ".modal-backdrop"
@@ -329,7 +292,7 @@ export default defineComponent({
     };
 
     return {
-      newAdminData,
+      orderData,
       validationSchema,
       submit,
       submitButtonRef,
@@ -338,6 +301,7 @@ export default defineComponent({
       permissionsSelect,
       Multiselect,
       formatDate,
+      StartDelivery,
     };
   },
 });

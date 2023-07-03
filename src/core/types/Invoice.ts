@@ -2,37 +2,27 @@ import type { DriverType } from "./Driver";
 import { DriverEmpty } from "./Driver";
 import { CustomerEmpty } from "./Customer";
 import type { CustomerType } from "./Customer";
-
+import { OrderEmpty } from "./Orders";
+import type { OrderType } from "./Orders";
+import type { PaymentType } from "./Payment";
+import { PaymentEmpty } from "./Payment";
 export interface InvoiceType {
   customer: CustomerType;
+  customer_order: OrderType;
+  payment: PaymentType;
+  customer_order_id: number;
+
+  id: number;
   customer_id: number;
-  service_rendered: string;
-  delivery_address: string;
-  pickup_address: number;
-  payment_method: string;
-  currency: string;
-  expected_delivery_date: string;
-  expected_delivery_time: string;
-  payment_id: string;
-  paystack_refrence_id: string;
-  total_payment: string;
   created_at: string;
-  updated_at: string;
 }
 
 export const InvoiceEmpty = {
   customer: CustomerEmpty,
+  customer_order: OrderEmpty,
+  payment: PaymentEmpty,
   customer_id: 0,
-  service_rendered: "",
-  delivery_address: "",
-  pickup_address: 0,
-  payment_method: "",
-  currency: "",
-  expected_delivery_date: "",
-  expected_delivery_time: "",
-  payment_id: "",
-  paystack_refrence_id: "",
-  total_payment: "",
   created_at: "",
-  updated_at: "",
+  customer_order_id: 0,
+  id: 0,
 };

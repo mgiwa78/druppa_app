@@ -35,27 +35,44 @@
         ></StatisticsWidget5>
       </div>
     </div>
+
     <div class="row g-2 g-xl-8">
       <div class="col-xl-8">
-        <RecentOrdersTable widget-classes="mb-5 mb-xl-8" />
+        <RecentOrdersTable widget-classes="mb-5 mb-xl-8 pb-8" />
       </div>
       <div class="col-xl-4">
         <DriverProfileStats />
+      </div>
+    </div>
+    <div class="row g-2 g-xl-8">
+      <div class="col-xl-6">
+        <CurrentDelivery
+          className="h-xl-100"
+          :image="getAssetPath('media/stock/600x600/img-65.jpg')"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
+
 import { defineComponent, onMounted } from "vue";
 import RecentOrdersTable from "@/components/driver/tables/RecentOrdersTable.vue";
 import DriverProfileStats from "@/components/driver/widgets/DriverProfileStats.vue";
+import CurrentDelivery from "@/components/driver/widgets/CurrentDelivery.vue";
 import StatisticsWidget5 from "@/components/widgets/statsistics/Widget5.vue";
 import { useStaticsStore } from "@/stores/statics";
 
 export default defineComponent({
   name: "driver-dashboard",
-  components: { RecentOrdersTable, StatisticsWidget5, DriverProfileStats },
+  components: {
+    RecentOrdersTable,
+    StatisticsWidget5,
+    DriverProfileStats,
+    CurrentDelivery,
+  },
   setup() {
     const StaticsStore = useStaticsStore();
     const { UpdateDriverStats, driverStats } = StaticsStore;
@@ -67,7 +84,7 @@ export default defineComponent({
         UpdateDriverStats();
       }
     });
-    return { driverStats };
+    return { driverStats, getAssetPath };
   },
 });
 </script>

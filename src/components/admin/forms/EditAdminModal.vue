@@ -95,26 +95,7 @@
 
               <div class="mb-5 row">
                 <!--begin::Label-->
-                <div class="col-6">
-                  <label class="fw-bold required fs-5 fw-semobold mb-2"
-                    >Username</label
-                  >
-                  <!--end::Label-->
 
-                  <!--begin::Input-->
-                  <Field
-                    type="text"
-                    class="form-control form-control-solid"
-                    placeholder="Username"
-                    name="username"
-                    v-model="editAdminData.username"
-                  />
-                  <div class="fv-plugins-message-container">
-                    <div class="fv-help-block">
-                      <ErrorMessage name="username" />
-                    </div>
-                  </div>
-                </div>
                 <div class="col-6">
                   <label
                     class="fw-bold font-weight-bolder required fs-5 fw-semobold mb-2"
@@ -264,49 +245,21 @@
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, ref, type PropType } from "vue";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import { ErrorMessage, Field, Form as VForm } from "vee-validate";
 import * as Yup from "yup";
 import axios from "axios";
 import __CONSTANTS__ from "@/constants";
 import { useAuthStore } from "@/stores/auth";
+import type { AdminType } from "@/core/types/Admin";
+import { AdminEmpty } from "@/core/types/Admin";
 
-// interface AdminProfile {
-//   username: string;
-//   email: string;
-//   id: number | null;
-//   firstName: string;
-//   lastName: string;
-//   profile?: string;
-//   last_login: string;
-//   permissions: Array<Permission>;
-// }
-// interface Permission {
-//   id: number;
-//   admin_id: number;
-//   permission: string;
-//   status: string;
-// }
 export default defineComponent({
   name: "edit-admin-modal",
   props: {
     ProfileData: {
-      type: Object as () => {
-        username: string;
-        email: string;
-        id: number;
-        firstName: string;
-        lastName: string;
-        profile?: string;
-        last_login: string;
-        permissions: {
-          id: number;
-          admin_id: number;
-          permission: string;
-          status: string;
-        }[];
-      },
+      type: Object as PropType<AdminType>,
     },
   },
   components: { ErrorMessage, Field, VForm },
@@ -362,10 +315,9 @@ export default defineComponent({
 
       formData.append("firstName", editAdminData.value.lastName!);
       formData.append("lastName", editAdminData.value.firstName!);
-      formData.append("username", editAdminData.value.username!);
       formData.append("phone_number", editAdminData.value.phone_number!);
-      // formData.append("gender", editAdminData.value.gender!);
-      // formData.append("phone_number", `${editAdminData.value.phone_number}`);
+      formData.append("gender", editAdminData.value.gender!);
+      formData.append("phone_number", `${editAdminData.value.phone_number}`);
       formData.append("email", editAdminData.value.email!);
       // formData.append("state", editAdminData.value.state!);
 
@@ -396,24 +348,15 @@ export default defineComponent({
           firstName: props.ProfileData.firstName || "",
           lastName: props.ProfileData.lastName || "",
           email: props.ProfileData.email || "",
-          username: props.ProfileData.username || "",
+          gender: props.ProfileData.gender || "",
           profile: props.ProfileData.profile || "",
-          last_login: props.ProfileData.last_login || "",
-          phone_number: props.ProfileData.last_login || "",
+          phone_number: props.ProfileData.phone_number || "",
           id: props.ProfileData.id || "",
           permissions: [] || "",
         };
       }
       return {
-        firstName: "",
-        lastName: "",
-        email: "",
-        username: "",
-        profile: "",
-        last_login: "",
-        phone_number: undefined,
-        id: undefined,
-        permissions: [],
+        AdminEmpty,
       };
     });
 

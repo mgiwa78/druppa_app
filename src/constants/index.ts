@@ -5,6 +5,8 @@ const API_URL: string = "http://localhost:8000/api/";
 const ASSETS_URL: string = "http://127.0.0.1:8000";
 const PAYSTACK_PUBLIC_KEY: string =
   "pk_test_04ce7b3f751546859d4307b453c37740a7bf55ac";
+const PAYSTACK_SECRETE_KEY: string =
+  "sk_test_d766fc5b40a2b70285c9f52048431c24fe009e17";
 
 const successAlert = async (message: string) => {
   await Swal.fire({
@@ -129,6 +131,7 @@ const __CONSTANTS__ = {
   getDatesBetweenDates,
   confirmDate,
   PAYSTACK_PUBLIC_KEY,
+  PAYSTACK_SECRETE_KEY,
 };
 
 export default __CONSTANTS__;

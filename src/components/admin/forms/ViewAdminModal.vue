@@ -117,7 +117,7 @@
                   <div class="fw-bold mt-5">Permissions</div>
                   <div class="text-gray-600">
                     {{
-                      viewAdminData.permissions.length
+                      viewAdminData.permissions?.length
                         ? viewAdminData.permissions.forEach((perm) => perm)
                         : "No Permissions"
                     }}
@@ -142,17 +142,11 @@
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, ref, type PropType } from "vue";
 import __CONSTANTS__ from "@/constants";
-
-interface FormData {
-  firstName: string;
-  lastName: string;
-  userName: string;
-  email: string;
-  password: string;
-  permissions: Array<string>;
-}
+import type { AdminType } from "@/core/types/Admin";
+import { PermissionEmpty } from "@/core/types/Permission";
+import { AdminEmpty } from "@/core/types/Admin";
 
 export default defineComponent({
   name: "add-admin-modal",
@@ -161,29 +155,7 @@ export default defineComponent({
   },
   props: {
     ProfileData: {
-      type: Object as () => {
-        username: string;
-        email: string;
-        id: number;
-        firstName: string;
-        lastName: string;
-        profile?: string;
-        city: string;
-        last_login: string;
-        address: string;
-        phone_number: string;
-        gender: string;
-        state: string;
-        type: string;
-        created_at: string;
-        title: string;
-        permissions: {
-          id: number;
-          admin_id: number;
-          permission: string;
-          status: string;
-        }[];
-      },
+      type: Object as PropType<AdminType>,
     },
   },
   setup(props) {
@@ -196,37 +168,21 @@ export default defineComponent({
           firstName: props.ProfileData.firstName || "",
           lastName: props.ProfileData.lastName || "",
           email: props.ProfileData.email || "",
-          username: props.ProfileData.username || "",
           created_at: props.ProfileData.created_at || "",
           title: props.ProfileData.title || "",
           city: props.ProfileData.city || "",
           profile: props.ProfileData.profile || "",
           gender: props.ProfileData.gender || "",
           type: props.ProfileData.type || "",
-          last_login: props.ProfileData.last_login || "",
           state: props.ProfileData.state || "",
           phone_number: props.ProfileData.phone_number || "",
           address: props.ProfileData.address || "",
           id: props.ProfileData.id || "",
-          permissions: props.ProfileData.permissions || "",
+          permissions: props.ProfileData.permissions || [PermissionEmpty],
         };
       }
       return {
-        firstName: "",
-        lastName: "",
-        email: "",
-        username: "",
-        profile: "",
-        type: "",
-        gender: "",
-        created_at: "",
-        address: "",
-        state: "",
-        title: "",
-        last_login: "",
-        phone_number: undefined,
-        id: undefined,
-        permissions: [],
+        ...AdminEmpty,
       };
     });
     return {
