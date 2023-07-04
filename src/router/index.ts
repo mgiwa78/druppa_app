@@ -91,6 +91,15 @@ const routes: Array<RouteRecordRaw> = [
         },
         children: [
           {
+            path: "makeorder",
+            name: "makeorder",
+            component: () => import("@/views/customer/MakeOrder.vue"),
+            meta: {
+              pageTitle: "Make Order",
+              breadcrumbs: ["Shipment", "Make Order"],
+            },
+          },
+          {
             path: "records",
             name: "records",
             component: () => import("@/views/customer/ShipmentRecords.vue"),
@@ -99,15 +108,7 @@ const routes: Array<RouteRecordRaw> = [
               breadcrumbs: ["Shipment", "Records"],
             },
           },
-          {
-            path: "makeOrder",
-            name: "Make Order",
-            component: () => import("@/views/customer/MakeOrder.vue"),
-            meta: {
-              pageTitle: "Shipment Records",
-              breadcrumbs: ["Shipment", "Make Order"],
-            },
-          },
+
           {
             path: "tracking",
             name: "Tracking",
@@ -118,6 +119,33 @@ const routes: Array<RouteRecordRaw> = [
             },
           },
         ],
+      },
+      {
+        path: "/order/myOrder",
+        name: "myOrder",
+        component: () => import("@/views/customer/MyOrders.vue"),
+        meta: {
+          pageTitle: "My Orders",
+          breadcrumbs: ["My Order"],
+        },
+      },
+      {
+        path: "/Verifypickup/:tracking_number",
+        name: "Verify pickup",
+        component: () => import("@/views/driver/VerifyPickup.vue"),
+        meta: {
+          pageTitle: "Pick up",
+          breadcrumbs: ["My Order"],
+        },
+      },
+      {
+        path: "/Verifydropoff/:tracking_number",
+        name: "Verify dropoff",
+        component: () => import("@/views/driver/VerifyDropOffPage.vue"),
+        meta: {
+          pageTitle: "Dropoff",
+          breadcrumbs: ["My Order"],
+        },
       },
       {
         path: "/driver/deliveries",

@@ -132,7 +132,7 @@
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { computed, defineComponent, ref, type PropType } from "vue";
+import { computed, defineComponent,  type PropType } from "vue";
 import __CONSTANTS__ from "@/constants";
 import type { DeliveryType } from "@/core/types/Deliveries";
 import { DeliveryEmpty } from "@/core/types/Deliveries";
@@ -149,7 +149,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { API_URL, ASSETS_URL } = __CONSTANTS__;
+    const {  ASSETS_URL } = __CONSTANTS__;
 
     const CustomerViewDeliveryData = computed(() => {
       console.log(props.CustomerDeliveryData);

@@ -200,7 +200,7 @@ export default defineComponent({
     const total = ref<number>(0);
 
     const AuthStore = useAuthStore();
-    const { user, token, refreshProfile } = AuthStore;
+    const { token } = AuthStore;
 
     const itemsPerPageDropdownEnabled = ref<boolean>(true);
     const currentPage = ref<number>(1);

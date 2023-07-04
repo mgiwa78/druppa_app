@@ -71,7 +71,11 @@
               <!--begin::Col-->
               <div class="col-lg-8">
                 <span class="fw-bold fs-6 text-dark">{{
-                  OrderData?.pick_up
+                  OrderData?.pickup_address +
+                  ", " +
+                  OrderData?.pickup_city +
+                  ", " +
+                  OrderData?.pickup_lga
                 }}</span>
               </div>
               <!--end::Col-->
@@ -86,7 +90,11 @@
               <!--begin::Col-->
               <div class="col-lg-8">
                 <span class="fw-bold fs-6 text-dark">{{
-                  OrderData?.drop_off
+                  OrderData?.dropOff_address +
+                  ", " +
+                  OrderData?.dropOff_city +
+                  ", " +
+                  OrderData?.dropOff_LGA
                 }}</span>
               </div>
               <!--end::Col-->
@@ -162,9 +170,7 @@ import formatDate from "@/core/helpers/formatDate";
 import Multiselect from "@vueform/multiselect";
 import { OrderEmpty, type OrderType } from "@/core/types/Orders";
 import type { PropType } from "vue";
-// import type { AdminType } from "@/core/types/Admin";
-import { PermissionEmpty } from "@/core/types/Permission";
-import { AdminEmpty } from "@/core/types/Admin";
+
 import ErrorHandler from "@/core/helpers/errorHandler";
 import { useAuthStore } from "@/stores/auth";
 

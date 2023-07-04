@@ -1,11 +1,10 @@
-import type { DriverType } from "./Driver";
-import { DriverEmpty } from "./Driver";
 import { CustomerEmpty } from "./Customer";
 import type { CustomerType } from "./Customer";
 import { OrderEmpty } from "./Orders";
 import type { OrderType } from "./Orders";
 import type { PaymentType } from "./Payment";
 import { PaymentEmpty } from "./Payment";
+
 export interface InvoiceType {
   customer: CustomerType;
   customer_order: OrderType;

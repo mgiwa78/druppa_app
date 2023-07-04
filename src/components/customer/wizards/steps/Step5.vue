@@ -66,11 +66,8 @@
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent, onMounted, type PropType } from "vue";
+import type { VerificationType } from "../MakeOrderWizard.vue";
 
-interface VerificationType {
-  isVerifying: boolean;
-  verificationData: Object | null;
-}
 
 export default defineComponent({
   name: "step-5",

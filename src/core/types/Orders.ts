@@ -1,7 +1,7 @@
-import type { PaymentType } from "./Payment";
-import { PaymentEmpty } from "./Payment";
 import { CustomerEmpty } from "./Customer";
 import type { CustomerType } from "./Customer";
+import { DeliveryEmpty } from "./Deliveries";
+import type { DeliveryType } from "./Deliveries";
 
 export interface OrderType {
   customer: CustomerType;
@@ -10,13 +10,14 @@ export interface OrderType {
   service_rendered: string;
   request_description: string;
   total_payment: string;
+  delivery: DeliveryType;
   payment_method: string;
   expected_delivery_date: string;
-
   shipment_description: string;
   pickup_address: string;
   pickup_state: string;
   pickup_lga: string;
+  status: string;
   pickup_city: string;
 
   dropOff_LGA: string;
@@ -24,12 +25,15 @@ export interface OrderType {
   dropOff_city: string;
   dropOff_address: string;
   shipment_weight: string;
+  created_at: string;
 }
 
 export const OrderEmpty = {
   customer: CustomerEmpty,
   id: 0,
   payment_id: "",
+  status: "",
+  delivery: DeliveryEmpty,
 
   service_rendered: "",
   request_description: "",
@@ -47,4 +51,5 @@ export const OrderEmpty = {
   dropOff_city: "",
   dropOff_address: "",
   shipment_weight: "",
+  created_at: "",
 };

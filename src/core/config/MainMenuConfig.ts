@@ -35,12 +35,17 @@ const GenerateMenus = (type) => {
               bootstrapIcon: "bi bi-truck",
               sub: [
                 {
+                  heading: "Make Order",
+                  route: "/shipment/makeorder",
+                },
+                {
                   heading: "Records",
                   route: "/shipment/records",
                 },
+
                 {
-                  heading: "Make Order",
-                  route: "/shipment/makeOrder",
+                  heading: "My Order",
+                  route: "/order/myOrder",
                 },
                 {
                   heading: "Tracking",

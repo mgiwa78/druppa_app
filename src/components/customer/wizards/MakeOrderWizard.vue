@@ -253,7 +253,6 @@ import { computed, defineComponent, onMounted, ref, watch } from "vue";
 import Step1 from "@/components/customer/wizards/steps/Step1.vue";
 import Step2 from "@/components/customer/wizards/steps/Step2.vue";
 import Step3 from "@/components/customer/wizards/steps/Step3.vue";
-import Step4 from "@/components/customer/wizards/steps/Step4.vue";
 import Step5 from "@/components/customer/wizards/steps/Step5.vue";
 import { StepperComponent } from "@/assets/ts/components";
 import Swal from "sweetalert2/dist/sweetalert2.js";
@@ -262,7 +261,6 @@ import { useForm } from "vee-validate";
 import __CONSTANTS__ from "@/constants";
 import paystack from "vue3-paystack";
 import { useAuthStore } from "@/stores/auth";
-import ErrorHandler from "@/core/helpers/errorHandler";
 import axios from "axios";
 
 interface IStep1 {
@@ -292,7 +290,7 @@ interface IStep3 {
   shipment_description: string;
   distance: number;
 }
-interface VerificationData {
+export interface VerificationData {
   status: boolean;
   data: {
     reference: string;
@@ -318,7 +316,10 @@ interface VerificationData {
     };
   };
 }
-
+export interface VerificationType {
+  isVerifying: boolean;
+  verificationData: VerificationData | null;
+}
 interface IStep4 {
   success: boolean;
 }
@@ -342,9 +343,9 @@ export default defineComponent({
     const verticalWizardRef = ref<HTMLElement | null>(null);
     const currentStepIndex = ref(0);
 
-    const verification = ref({
+    const verification = ref<VerificationType>({
       isVerifying: false,
-      verificationData: null as VerificationData | null,
+      verificationData: null,
     });
     const PickUpAddressData = {
       pickupAddress: "Anything",
@@ -446,7 +447,7 @@ export default defineComponent({
       }
     });
 
-    watch(currentStepIndex, async (newPage, oldPage) => {
+    watch(currentStepIndex, async (newPage) => {
       console.log(newPage);
       if (currentStepIndex.value === 3) {
         isVerifying.value = true;
@@ -493,7 +494,6 @@ export default defineComponent({
           amount,
           currency,
           channel,
-          customer: { email },
           metadata: {
             pickupAddress,
             pickupState,

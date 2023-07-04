@@ -1,28 +1,15 @@
 <template>
-  <!--begin::Modal - Create Api Key-->
-
-  <!--begin::Modal dialog-->
-
-  <!--begin::Modal content-->
   <div class="card pt-7">
-    <!--begin::Modal header-->
-
-    <!--end::Modal header-->
     <div style="height: 30px !important" class="card-header">
-      <!--begin::Modal title-->
       <h2>Track Your Shipment</h2>
-      <!--end::Modal title-->
     </div>
-    <!--begin::Form-->
     <VForm
       id="kt_modal_create_api_key_form"
       class="form"
       @submit="submit"
       :validation-schema="validationSchema"
     >
-      <!--begin::Modal body-->
       <div class="modal-body py-10 px-lg-17">
-        <!--begin::Scroll-->
         <div
           class="scroll-y me-n7 pe-7"
           id="kt_modal_create_api_key_scroll"
@@ -33,13 +20,9 @@
           data-kt-scroll-wrappers="#kt_modal_create_api_key_scroll"
           data-kt-scroll-offset="300px"
         >
-          <!--begin::Input group-->
           <div class="mb-5 fv-row">
-            <!--begin::Label-->
             <label class="required fs-5 fw-semobold mb-2">API Name</label>
-            <!--end::Label-->
 
-            <!--begin::Input-->
             <Field
               type="text"
               class="form-control form-control-solid"
@@ -52,21 +35,11 @@
                 <ErrorMessage name="apiName" />
               </div>
             </div>
-            <!--end::Input-->
           </div>
-          <!--end::Input group-->
-
-          <!--begin::Input group-->
-
-          <!--end::Input group-->
         </div>
-        <!--end::Scroll-->
       </div>
-      <!--end::Modal body-->
 
-      <!--begin::Modal footer-->
       <div class="modal-footer flex-center pb-10">
-        <!--begin::Button-->
         <button
           type="reset"
           id="kt_modal_create_api_key_cancel"
@@ -74,9 +47,7 @@
         >
           Discard
         </button>
-        <!--end::Button-->
 
-        <!--begin::Button-->
         <button
           ref="submitButtonRef"
           type="submit"
@@ -91,15 +62,9 @@
             ></span>
           </span>
         </button>
-        <!--end::Button-->
       </div>
-      <!--end::Modal footer-->
     </VForm>
-    <!--end::Form-->
   </div>
-  <!--end::Modal content-->
-  <!--end::Modal dialog-->
-  <!--end::Modal - Create Api Key-->
 </template>
 
 <script lang="ts">

@@ -84,6 +84,7 @@ import formatDate from "@/core/helpers/formatDate";
 import { useAuthStore } from "@/stores/auth";
 import Multiselect from "@vueform/multiselect";
 import type { PropType } from "vue";
+import ErrorHandler from "@/core/helpers/errorHandler";
 
 export default defineComponent({
   name: "start-delivery-modal",
@@ -147,38 +148,12 @@ export default defineComponent({
           });
         })
         .catch((error) => {
-          if (error.response.data.message == "User does not exist") {
-            Swal.fire({
-              text: "Invalid Email or Password",
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Try again!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn fw-semobold btn-light-warning",
-              },
-            }).then(() => {
-              submitButtonRef.value?.removeAttribute("data-kt-indicator");
-              submitButtonRef.value!.disabled = false;
-            });
-          } else {
-            Swal.fire({
-              text: `${error.message}`,
-              icon: "error",
-              buttonsStyling: false,
-              confirmButtonText: "Try again!",
-              heightAuto: false,
-              customClass: {
-                confirmButton: "btn fw-semobold btn-light-warning",
-              },
-            }).then(() => {
-              submitButtonRef.value?.removeAttribute("data-kt-indicator");
-              submitButtonRef.value!.disabled = false;
-            });
-          }
+          ErrorHandler(error);
         })
         .finally(() => {
           hideModal(startDeleveryModalRef.value);
+          submitButtonRef.value?.removeAttribute("data-kt-indicator");
+          submitButtonRef.value!.disabled = false;
         });
     };
     const submit = async () => {

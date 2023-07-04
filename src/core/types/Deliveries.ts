@@ -7,7 +7,7 @@ export interface DeliveryType {
   customer: CustomerType;
   id: string;
   customer_order_id: string;
-  tracking_number: number;
+  tracking_number: string;
   status: string;
   state: string;
   city: string;
@@ -23,7 +23,7 @@ export const DeliveryEmpty = {
   customer: CustomerEmpty,
   id: "",
   customer_order_id: "",
-  tracking_number: 0,
+  tracking_number: "0",
   status: "",
   state: "",
   city: "",

@@ -158,12 +158,10 @@
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
 import { computed, defineComponent, onMounted, ref, watch } from "vue";
-import Dropdown2 from "@/components/dropdown/Dropdown2.vue";
 import TableFooter from "@/components/kt-datatable/table-partials/TableFooter.vue";
 import __CONSTANTS__ from "@/constants";
 import axios from "axios";
 import { useAuthStore } from "@/stores/auth";
-import Swal from "sweetalert2";
 import formatDate from "@/core/helpers/formatDate";
 
 import type { InvoiceType } from "@/core/types/Invoice";
@@ -171,7 +169,6 @@ import { InvoiceEmpty } from "@/core/types/Invoice";
 
 import ViewInvoiceModal from "@/components/customer/forms/ViewInvoiceModal.vue";
 
-import router from "@/router";
 import ErrorHandler from "@/core/helpers/errorHandler";
 
 export default defineComponent({
@@ -179,7 +176,6 @@ export default defineComponent({
 
   components: {
     TableFooter,
-    // StartDeliveryModal,
     ViewInvoiceModal,
   },
   props: {
@@ -202,7 +198,7 @@ export default defineComponent({
     const total = ref<number>(0);
 
     const AuthStore = useAuthStore();
-    const { user, token, logout } = AuthStore;
+    const { token } = AuthStore;
 
     const itemsPerPageDropdownEnabled = ref<boolean>(true);
     const currentPage = ref<number>(1);
@@ -242,7 +238,7 @@ export default defineComponent({
     );
     watch(
       () => itemsPerPage.value,
-      async (newValue) => {
+      async () => {
         const data = await fetchPageData(0);
         dataToDisplay.value = data.data;
       }

@@ -2565,6 +2565,11 @@ punycode@^2.1.0:
   resolved "https://registry.npmjs.org/punycode/-/punycode-2.3.0.tgz"
   integrity sha512-rRV+zQD8tVFys26lAGR9WUuS4iUAngJScM+ZRSKtvl5tKeZ2t5bvdNFdNHBW9FWR4guGHlgmsZ1G7BSm2wTbuA==
 
+qrcode.vue@^3.4.0:
+  version "3.4.0"
+  resolved "https://registry.npmjs.org/qrcode.vue/-/qrcode.vue-3.4.0.tgz"
+  integrity sha512-4XeImbv10Fin16Fl2DArCMhGyAdvIg2jb7vDT+hZiIAMg/6H6mz9nUZr/dR8jBcun5VzNzkiwKhiqOGbloinwA==
+
 queue-microtask@^1.2.2:
   version "1.2.3"
   resolved "https://registry.npmjs.org/queue-microtask/-/queue-microtask-1.2.3.tgz"
@@ -3191,11 +3196,6 @@ vue-eslint-parser@^9.0.0, vue-eslint-parser@^9.0.1:
     esquery "^1.4.0"
     lodash "^4.17.21"
     semver "^7.3.6"
-
-vue-google-maps-location-selector@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.npmjs.org/vue-google-maps-location-selector/-/vue-google-maps-location-selector-1.0.1.tgz"
-  integrity sha512-JSaVWdeNgPMsS4xB8Ja3K/3IIX2I0/oPCGiPWHUw7YU8uVZU7skGZHeRKi+VqNotWHSlwQ7qwf1nqfSG7uTkUw==
 
 vue-i18n@^9.1.8:
   version "9.2.2"

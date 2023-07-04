@@ -226,13 +226,12 @@
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { computed, defineComponent, ref, type PropType } from "vue";
+import { computed, defineComponent, type PropType } from "vue";
 import __CONSTANTS__ from "@/constants";
 import formatDate from "@/core/helpers/formatDate";
 
 import type { InvoiceType } from "@/core/types/Invoice";
 import { InvoiceEmpty } from "@/core/types/Invoice";
-import formateDate from "@/core/helpers/formatDate";
 export default defineComponent({
   name: "add-delivery-modal",
   components: {

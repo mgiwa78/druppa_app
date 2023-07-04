@@ -1,7 +1,5 @@
 <template>
-  <!--begin::Tables Widget 13-->
   <div :class="widgetClasses" class="card">
-    <!--begin::Header-->
     <div class="card-header border-0 pt-5">
       <h3 class="card-title align-items-start flex-column">
         <span class="card-label fw-bold fs-3 mb-1">Deliveries</span>
@@ -11,11 +9,8 @@
         >
       </h3>
     </div>
-    <!--end::Header-->
 
-    <!--begin::Body-->
     <div class="card-body py-3">
-      <!--begin::Table container-->
       <div
         v-if="dataToDisplay?.length === 0"
         class="d-flex align-items-center justify-content-center w-100 py-5"
@@ -34,11 +29,9 @@
         v-if="dataToDisplay?.length && dataToDisplay"
         class="table-responsive"
       >
-        <!--begin::Table-->
         <table
           class="table table-row-bordered table-row-gray-100 align-middle gs-0 gy-3"
         >
-          <!--begin::Table head-->
           <thead>
             <tr class="fw-bold text-muted">
               <th class="min-w-150px">Order Id</th>
@@ -52,9 +45,7 @@
               <th class="min-w-100px text-end">Actions</th>
             </tr>
           </thead>
-          <!--end::Table head-->
 
-          <!--begin::Table body-->
           <tbody>
             <template v-for="delivery in dataToDisplay" :key="delivery.id">
               <tr>
@@ -128,13 +119,11 @@
                     class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
                   >
                     <KTIcon icon-name="pencil" icon-class="fs-3" />
-                  </button> -->
+                   </button>-->
                 </td>
               </tr>
             </template>
           </tbody>
-
-          <!--end::Table body-->
         </table>
         <div class="px-10">
           <TableFooter
@@ -145,13 +134,9 @@
             :items-per-page-dropdown-enabled="itemsPerPageDropdownEnabled"
           />
         </div>
-        <!--end::Table-->
       </div>
-      <!--end::Table container-->
     </div>
-    <!--begin::Body-->
   </div>
-  <!--end::Tables Widget 13-->
   <ViewCustomerDeliveryModal
     :CustomerDeliveryData="CustomerViewDeliveryData"
   ></ViewCustomerDeliveryModal>

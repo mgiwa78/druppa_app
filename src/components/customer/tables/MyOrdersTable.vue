@@ -1,26 +1,21 @@
 <template>
-  <!--begin::Tables Widget 13-->
-  <div :class="widgetClasses" class="card">
-    <!--begin::Header-->
+  <div class="card">
     <div class="card-header border-0 pt-5">
       <h3 class="card-title align-items-start flex-column">
-        <span class="card-label fw-bold fs-3 mb-1">Pending Orders</span>
+        <span class="card-label fw-bold fs-3 mb-1">Orders</span>
 
         <span class="text-muted mt-1 fw-semobold fs-7"
-          >{{ dataToDisplay?.length }} Orders</span
+          >{{ totalItems }} Orders</span
         >
       </h3>
     </div>
-    <!--end::Header-->
 
-    <!--begin::Body-->
     <div class="card-body py-3">
-      <!--begin::Table container-->
       <div
         v-if="dataToDisplay?.length === 0"
         class="d-flex align-items-center justify-content-center w-100 py-5"
       >
-        <h4>No Pending Orders</h4>
+        <h4>No Orders</h4>
       </div>
       <div
         v-if="!dataToDisplay"
@@ -30,92 +25,99 @@
           class="spinner-border spinner-border-sm align-middle ms-2 w-25px h-25px"
         ></div>
       </div>
-      <div
-        v-if="dataToDisplay?.length && dataToDisplay"
-        class="table-responsive"
-      >
-        <!--begin::Table-->
+      <div v-if="dataToDisplay !== null" class="table-responsive">
         <table
           class="table table-row-bordered table-row-gray-100 align-middle gs-0 gy-3"
         >
-          <!--begin::Table head-->
           <thead>
             <tr class="fw-bold text-muted">
-              <th class="min-w-150px">Order Id</th>
-              <th class="min-w-120px">Order Placed</th>
-              <th class="min-w-140px">Pickup</th>
-              <th class="min-w-120px">Dropoff</th>
-              <th class="min-w-120px">Shipment Type</th>
+              <th class="min-w-150px">Tracking Number</th>
+              <th class="min-w-120px">Driver</th>
+              <th class="min-w-140px">Origin</th>
+              <th class="min-w-120px">Destination</th>
+              <th class="min-w-120px">State</th>
+
               <th class="min-w-120px">Status</th>
 
               <th class="min-w-100px text-end">Actions</th>
             </tr>
           </thead>
-          <!--end::Table head-->
 
-          <!--begin::Table body-->
           <tbody>
-            <template v-for="order in dataToDisplay" :key="order.id">
+            <template v-for="Order in dataToDisplay" :key="Order.id">
               <tr>
                 <td>
-                  <span class="text-dark fw-bold text-hover-primary fs-6">{{
-                    order.id
-                  }}</span>
+                  <a
+                    href="#"
+                    class="text-dark fw-bold text-hover-primary fs-6"
+                    >{{
+                      Order.delivery
+                        ? Order.delivery?.tracking_number
+                        : "Pending Delivery"
+                    }}</a
+                  >
                 </td>
                 <td class="text-dark fw-bold text-hover-primary fs-6">
-                  {{ formatDate(order.created_at) }}
+                  {{
+                    Order.delivery
+                      ? Order.delivery?.driver.firstName +
+                        " " +
+                        Order.delivery?.driver.lastName
+                      : "Pending Delivery"
+                  }}
                 </td>
                 <td>
-                  <span
+                  <a
+                    href="#"
                     class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                    >{{
-                      order.pickup_address +
-                      ", " +
-                      order.pickup_city +
-                      ", " +
-                      order.pickup_lga
-                    }}</span
+                    >{{ Order.pickup_address }}</a
                   >
-                </td>
-
-                <td>
                   <span
-                    class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                    >{{
-                      order.dropOff_address +
-                      ", " +
-                      order.dropOff_city +
-                      ", " +
-                      order.dropOff_LGA
-                    }}</span
-                  >
-                </td>
-
-                <td>
-                  <span
-                    class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                    >{{ order.service_rendered }}</span
-                  >
-                  <!-- <span
                     class="text-muted fw-semobold text-muted d-block fs-7"
-                    >{{ order.city }}</span
-                  > -->
+                    >{{
+                      Order.delivery
+                        ? formatDate(Order.delivery?.pickup_date)
+                        : "Pending Delivery"
+                    }}</span
+                  >
                 </td>
 
                 <td>
-                  <span
-                    :class="`badge-light-${statusFilter[order.status]}`"
-                    class="badge"
-                    >{{ order.status }}</span
+                  <a
+                    href="#"
+                    class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
+                    >{{ Order.dropOff_address }}</a
                   >
+                  <span
+                    class="text-muted fw-semobold text-muted d-block fs-7"
+                    >{{ formatDate(Order.created_at) }}</span
+                  >
+                </td>
+
+                <td>
+                  <a
+                    href="#"
+                    class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
+                    >{{ Order.pickup_address }}</a
+                  >
+                  <span
+                    class="text-muted fw-semobold text-muted d-block fs-7"
+                    >{{ Order.pickup_city }}</span
+                  >
+                </td>
+
+                <td>
+                  <span :class="`badge-light-${Order.status}`" class="badge">{{
+                    Order.delivery.status
+                  }}</span>
                 </td>
 
                 <td class="text-end">
                   <button
                     data-bs-toggle="modal"
-                    data-bs-target="#kt_start_delivery_modal"
+                    data-bs-target="#kt_modal_view_customer_order"
                     class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
-                    @click.prevent="updateVieworder(order)"
+                    @click.prevent="updateViewOrder(Order)"
                   >
                     <KTIcon icon-name="switch" icon-class="fs-3" />
                   </button>
@@ -124,13 +126,11 @@
                     class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
                   >
                     <KTIcon icon-name="pencil" icon-class="fs-3" />
-                  </button> -->
+                   </button>-->
                 </td>
               </tr>
             </template>
           </tbody>
-
-          <!--end::Table body-->
         </table>
         <div class="px-10">
           <TableFooter
@@ -141,14 +141,12 @@
             :items-per-page-dropdown-enabled="itemsPerPageDropdownEnabled"
           />
         </div>
-        <!--end::Table-->
       </div>
-      <!--end::Table container-->
     </div>
-    <!--begin::Body-->
   </div>
-  <!--end::Tables Widget 13-->
-  <StartDeliveryModal :OrderData="CustomerVieworderData"></StartDeliveryModal>
+  <ViewCustomerOrderModal
+    :CustomerOrderData="CustomerViewOrderData"
+  ></ViewCustomerOrderModal>
 </template>
 
 <script lang="ts">
@@ -161,17 +159,14 @@ import { useAuthStore } from "@/stores/auth";
 import formatDate from "@/core/helpers/formatDate";
 import type { OrderType } from "@/core/types/Orders";
 import { OrderEmpty } from "@/core/types/Orders";
-
-import StartDeliveryModal from "@/components/driver/form/StartDeliveryModal.vue";
-
+import ViewCustomerOrderModal from "@/components/customer/forms/ViewCustomerOrderModal.vue";
 import ErrorHandler from "@/core/helpers/errorHandler";
 
 export default defineComponent({
-  name: "kt-widget-12",
-
+  name: "customer-Order-stats",
   components: {
     TableFooter,
-    StartDeliveryModal,
+    ViewCustomerOrderModal,
   },
   props: {
     widgetClasses: String,
@@ -188,24 +183,20 @@ export default defineComponent({
     const DeliveriesPaginationData = ref<any>({});
 
     const editOrderData = ref<OrderType>(OrderEmpty);
-    const CustomerVieworderData = ref<OrderType>(OrderEmpty);
+    const CustomerViewOrderData = ref<OrderType>(OrderEmpty);
 
     const dataToDisplay = ref<Array<OrderType> | null>(null);
-    const itemsPerPage = ref<number>(4);
-    const totalOrders = ref<Array<number>>([0]);
+    const itemsPerPage = ref<number>(10);
+    const totalDeliveries = ref<Array<number>>([0]);
     const total = ref<number>(0);
 
     const AuthStore = useAuthStore();
-    const { token } = AuthStore;
+    const { user, token } = AuthStore;
 
     const itemsPerPageDropdownEnabled = ref<boolean>(true);
     const currentPage = ref<number>(1);
 
-    const statusFilter = {
-      Pending: "warning",
-      "In Progress": "primary",
-      Delivered: "success",
-    };
+    const checkedRows = ref<Array<number>>([]);
 
     watch(
       () => itemsPerPage.value,
@@ -214,23 +205,23 @@ export default defineComponent({
         emit("on-items-per-page-change", val);
       }
     );
-
     const totalItems = computed(() => {
-      if (totalOrders.value) {
-        if (totalOrders.value.length <= itemsPerPage.value) {
+      if (totalDeliveries.value) {
+        if (totalDeliveries.value.length <= itemsPerPage.value) {
           return total.value;
         } else {
-          return totalOrders.value.length;
+          return totalDeliveries.value.length;
         }
       }
       return 0;
     });
 
-    const updateEditorder = async (order: OrderType) => {
-      editOrderData.value = order;
+    const updateEditOrder = async (Order: OrderType) => {
+      editOrderData.value = Order;
     };
-    const updateVieworder = async (order: OrderType) => {
-      CustomerVieworderData.value = order;
+    const updateViewOrder = async (Order: OrderType) => {
+      console.log(Order);
+      CustomerViewOrderData.value = Order;
     };
 
     watch(
@@ -240,13 +231,14 @@ export default defineComponent({
         dataToDisplay.value = data.data;
       }
     );
-    watch(
-      () => itemsPerPage.value,
-      async (newValue) => {
-        const data = await fetchPageData(newValue);
-        dataToDisplay.value = data.data;
-      }
-    );
+    // watch(
+    //   () => itemsPerPage.value,
+    //   async (newValue) => {
+    //     currentPage.value = 1;
+    //     const data = await fetchPageData(currentPage.value);
+    //     dataToDisplay.value = data;
+    //   }
+    // );
 
     const pageChange = (page: number) => {
       currentPage.value = page;
@@ -257,9 +249,8 @@ export default defineComponent({
       const Orders = await axios
         .get(
           API_URL +
-            "getPendingOrders" +
-            `/${itemsPerPage.value}` +
-            `?page=${page}`,
+            "customerorders/all/customer/" +
+            `${itemsPerPage.value}?page=${page}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -269,6 +260,7 @@ export default defineComponent({
           dataToDisplay.value = null;
           ErrorHandler(error);
         });
+
       return Orders.data;
     };
 
@@ -294,28 +286,31 @@ export default defineComponent({
     onMounted(async () => {
       const deliveries = await fetchPageData(1);
       DeliveriesPaginationData.value = deliveries;
+      const { data } = deliveries;
+      dataToDisplay.value = data;
 
-      dataToDisplay.value = deliveries.data;
       total.value = deliveries.total;
       currentPage.value = deliveries.current_page;
+
+      // dataToDisplay.value = "deliveries.data";
     });
 
     return {
+      checkedRows,
       getAssetPath,
       pageChange,
       currentPage,
       itemsPerPage,
-      totalOrders,
+      totalDeliveries,
       totalItems,
       dataToDisplay,
       itemsPerPageDropdownEnabled,
       ASSETS_URL,
       editOrderData,
-      updateEditorder,
-      CustomerVieworderData,
-      updateVieworder,
+      updateEditOrder,
+      CustomerViewOrderData,
+      updateViewOrder,
       formatDate,
-      statusFilter,
     };
   },
 });
