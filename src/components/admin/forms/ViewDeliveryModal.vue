@@ -89,7 +89,7 @@
                   <div class="fw-bold mt-5">Origin</div>
                   <div class="text-gray-600">
                     <a href="#" class="text-gray-600 text-hover-primary">
-                      {{ viewDeliveryData.origin }}</a
+                      {{ viewDeliveryData.customer_order.pickup_address }}</a
                     >
                   </div>
                 </div>
@@ -98,7 +98,7 @@
                 <div class="col-6">
                   <div class="fw-bold mt-5">Destination</div>
                   <div class="text-gray-600">
-                    {{ viewDeliveryData.destination }}
+                    {{ viewDeliveryData.customer_order.pickup_address }}
                   </div>
                 </div>
                 <div class="col-3">
@@ -160,12 +160,9 @@ export default defineComponent({
           customer: props.DeliveryData.customer,
           id: props.DeliveryData.id || "",
           customer_order_id: props.DeliveryData.customer_order_id || "",
+          customer_order: props.DeliveryData.customer_order || "",
           tracking_number: props.DeliveryData.tracking_number || "",
           status: props.DeliveryData.status || "",
-          state: props.DeliveryData.state || "",
-          destination: props.DeliveryData.destination || "",
-          city: props.DeliveryData.city || "",
-          origin: props.DeliveryData.origin || "",
           pickup_date: props.DeliveryData.pickup_date || "",
           delivery_date: props.DeliveryData.delivery_date || "",
           driver: {

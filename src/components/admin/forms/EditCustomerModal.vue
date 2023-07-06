@@ -469,12 +469,18 @@ export default defineComponent({
             customClass: {
               confirmButton: "btn btn-primary",
             },
-          }).then(() => hideModal(editCustomerModalRef.value));
+          }).then(() => {
+            hideModal(editCustomerModalRef.value);
+          });
         })
         .catch((error) => {
           ErrorHandler(error);
+          hideModal(editCustomerModalRef.value);
+          editSubmitButtonRef.value?.removeAttribute("data-kt-indicator");
+          editSubmitButtonRef.value!.disabled = false;
         })
         .finally(() => {
+          hideModal(editCustomerModalRef.value);
           editSubmitButtonRef.value?.removeAttribute("data-kt-indicator");
           editSubmitButtonRef.value!.disabled = false;
         });
@@ -521,9 +527,6 @@ export default defineComponent({
         return;
       }
       await updateProfile();
-
-      editSubmitButtonRef.value.disabled = true;
-      editSubmitButtonRef.value.setAttribute("data-kt-indicator", "on");
     };
 
     return {

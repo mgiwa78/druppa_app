@@ -194,6 +194,31 @@
                 </div>
                 <!--end::Input-->
               </div>
+              <div class="mb-5 row">
+                <!--begin::Label-->
+                <div class="col-6">
+                  <label class="fw-bold required fs-5 fw-semobold mb-2"
+                    >Phone Number</label
+                  >
+                  <!--end::Label-->
+
+                  <!--begin::Input-->
+                  <Field
+                    type="text"
+                    class="form-control form-control-solid"
+                    placeholder="Phone"
+                    name="phone_number"
+                    v-model="newAdminData.phone_number"
+                  />
+                  <div class="fv-plugins-message-container">
+                    <div class="fv-help-block">
+                      <ErrorMessage name="phone_number" />
+                    </div>
+                  </div>
+                </div>
+
+                <!--end::Input-->
+              </div>
               <!--end::Input group-->
 
               <!--begin::Input group-->
@@ -264,6 +289,7 @@ interface FormData {
   lastName: string;
   userName: string;
   email: string;
+  phone_number: string;
   password: string;
   permissions: Array<string>;
 }
@@ -314,6 +340,7 @@ export default defineComponent({
       userName: "",
       password: "",
       permissions: [],
+      phone_number: "",
     });
 
     const validationSchema = Yup.object().shape({
@@ -322,7 +349,8 @@ export default defineComponent({
       email: Yup.string().required().label("Email"),
       userName: Yup.string().required().label("UserName"),
       password: Yup.string().required().label("Password"),
-      permissions: Yup.string().required().label("Permissions"),
+      phone_number: Yup.string().required().label("Phone Number"),
+      // permissions: Yup.string().required().label("Permissions"),
     });
 
     onMounted(() => {
@@ -345,9 +373,11 @@ export default defineComponent({
       formData.append("email", newAdminData.value.email);
       formData.append("username", newAdminData.value.userName);
       formData.append("password", newAdminData.value.password);
+      formData.append("phone_number", newAdminData.value.phone_number);
+      formData.append("permissions", JSON.stringify(permissionsSelect.value));
 
       await axios
-        .post(API_URL + "createAdminProfile", formData, {
+        .post(API_URL + "admin", formData, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then(() => {

@@ -59,11 +59,9 @@
             <template v-for="delivery in dataToDisplay" :key="delivery.id">
               <tr>
                 <td>
-                  <a
-                    href="#"
-                    class="text-dark fw-bold text-hover-primary fs-6"
-                    >{{ delivery.tracking_number }}</a
-                  >
+                  <span class="text-dark fw-bold text-hover-primary fs-6">{{
+                    delivery.tracking_number
+                  }}</span>
                 </td>
                 <td class="text-dark fw-bold text-hover-primary fs-6">
                   {{
@@ -73,10 +71,15 @@
                   }}
                 </td>
                 <td>
-                  <a
-                    href="#"
+                  <span
                     class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                    >{{ delivery.origin }}</a
+                    >{{
+                      delivery.customer_order.pickup_address +
+                      "" +
+                      delivery.customer_order.pickup_city +
+                      "" +
+                      delivery.customer_order.pickup_state
+                    }}</span
                   >
                   <span
                     class="text-muted fw-semobold text-muted d-block fs-7"
@@ -85,10 +88,15 @@
                 </td>
 
                 <td>
-                  <a
-                    href="#"
+                  <span
                     class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                    >{{ delivery.destination }}</a
+                    >{{
+                      delivery.customer_order.dropOff_address +
+                      "" +
+                      delivery.customer_order.dropOff_city +
+                      "" +
+                      delivery.customer_order.dropOff_state
+                    }}</span
                   >
                   <span
                     class="text-muted fw-semobold text-muted d-block fs-7"
@@ -97,14 +105,13 @@
                 </td>
 
                 <td>
-                  <a
-                    href="#"
+                  <span
                     class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                    >{{ delivery.state }}</a
+                    >{{ delivery.customer_order.pickup_city }}</span
                   >
                   <span
                     class="text-muted fw-semobold text-muted d-block fs-7"
-                    >{{ delivery.city }}</span
+                    >{{ delivery.customer_order.pickup_state }}</span
                   >
                 </td>
 

@@ -10,7 +10,7 @@ export interface OrderType {
   service_rendered: string;
   request_description: string;
   total_payment: string;
-  delivery: DeliveryType;
+  delivery: any;
   payment_method: string;
   expected_delivery_date: string;
   shipment_description: string;

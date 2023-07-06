@@ -8,7 +8,14 @@
       @submit="onSubmitLogin"
       :validation-schema="login"
       :initial-values="{
-        email: 'lubowitz.nichole@example.org',
+        email:
+          type === 'Customer'
+            ? 'customer@mail.com'
+            : type === 'Admin'
+            ? 'admin@mail.com'
+            : type === 'Driver'
+            ? 'driver@mail.com'
+            : '',
         password: 'Password',
       }"
     >
@@ -90,6 +97,7 @@
           <Field
             class="form-check-input"
             name="userType"
+            v-model="type"
             type="radio"
             value="Customer"
           />
@@ -201,7 +209,7 @@ export default defineComponent({
     const { isAuthenticated } = storeToRefs(authStore);
 
     const router = useRouter();
-
+    const type = ref("");
     const submitButton = ref<HTMLButtonElement | null>(null);
 
     const logUserIn = async (values) => {
@@ -219,17 +227,18 @@ export default defineComponent({
           type: values.userType,
         })
         .then((response) => {
-          console.log(response);
           setAuth(response.data.user, response.data.token);
           router.push({ name: "dashboard" });
         })
         .catch((error) => {
-          ErrorHandler(error);
-        })
-        .finally(() => {
           submitButton.value?.removeAttribute("data-kt-indicator");
           submitButton.value!.disabled = false;
+          ErrorHandler(error);
         });
+      // .finally(() => {
+      //   submitButton.value?.removeAttribute("data-kt-indicator");
+      //   submitButton.value!.disabled = false;
+      // });
     };
 
     onMounted(() => {
@@ -268,6 +277,7 @@ export default defineComponent({
       login,
       submitButton,
       getAssetPath,
+      type,
     };
   },
 });

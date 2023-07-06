@@ -76,7 +76,7 @@
                   <a
                     href="#"
                     class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                    >{{ delivery.origin }}</a
+                    >{{ delivery.customer_order.pickup_address }}</a
                   >
                   <span
                     class="text-muted fw-semobold text-muted d-block fs-7"
@@ -88,7 +88,7 @@
                   <a
                     href="#"
                     class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                    >{{ delivery.destination }}</a
+                    >{{ delivery.customer_order.dropOff_address }}</a
                   >
                   <span
                     class="text-muted fw-semobold text-muted d-block fs-7"
@@ -100,17 +100,21 @@
                   <a
                     href="#"
                     class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
-                    >{{ delivery.state }}</a
+                    >{{ delivery.customer_order.pickup_state }}</a
                   >
                   <span
                     class="text-muted fw-semobold text-muted d-block fs-7"
-                    >{{ delivery.city }}</span
+                    >{{ delivery.customer_order.pickup_city }}</span
                   >
                 </td>
 
                 <td>
                   <span
-                    :class="`badge-light-${delivery.status}`"
+                    :class="`badge-light-${
+                      delivery.status
+                        ? STATUS_COLOUR_MAP[delivery.status].color
+                        : 'gray'
+                    }`"
                     class="badge"
                     >{{ delivery.status }}</span
                   >
@@ -170,6 +174,7 @@ import formatDate from "@/core/helpers/formatDate";
 import type { DeliveryType } from "@/core/types/Deliveries";
 import { DeliveryEmpty } from "@/core/types/Deliveries";
 import ViewDeliveryModal from "@/components/admin/forms/ViewDeliveryModal.vue";
+import { STATUS_COLOUR_MAP } from "@/core/helpers/colourMaps";
 
 export default defineComponent({
   name: "kt-widget-12",
@@ -325,6 +330,7 @@ export default defineComponent({
       viewDeliveryData,
       updateViewProfile,
       formatDate,
+      STATUS_COLOUR_MAP,
     };
   },
 });

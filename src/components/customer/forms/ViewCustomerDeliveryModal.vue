@@ -89,7 +89,13 @@
                   <div class="fw-bold mt-5">Origin</div>
                   <div class="text-gray-600">
                     <a href="#" class="text-gray-600 text-hover-primary">
-                      {{ CustomerViewDeliveryData.origin }}</a
+                      {{
+                        CustomerViewDeliveryData.customer_order.pickup_address +
+                        "," +
+                        CustomerViewDeliveryData.customer_order.pickup_city +
+                        "," +
+                        CustomerViewDeliveryData.customer_order.pickup_state
+                      }}</a
                     >
                   </div>
                 </div>
@@ -98,7 +104,13 @@
                 <div class="col-6">
                   <div class="fw-bold mt-5">Destination</div>
                   <div class="text-gray-600">
-                    {{ CustomerViewDeliveryData.destination }}
+                    {{
+                      CustomerViewDeliveryData.customer_order.dropOff_address +
+                      "," +
+                      CustomerViewDeliveryData.customer_order.dropOff_city +
+                      "," +
+                      CustomerViewDeliveryData.customer_order.dropOff_state
+                    }}
                   </div>
                 </div>
                 <div class="col-3">
@@ -132,7 +144,7 @@
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { computed, defineComponent,  type PropType } from "vue";
+import { computed, defineComponent, type PropType } from "vue";
 import __CONSTANTS__ from "@/constants";
 import type { DeliveryType } from "@/core/types/Deliveries";
 import { DeliveryEmpty } from "@/core/types/Deliveries";
@@ -149,7 +161,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const {  ASSETS_URL } = __CONSTANTS__;
+    const { ASSETS_URL } = __CONSTANTS__;
 
     const CustomerViewDeliveryData = computed(() => {
       console.log(props.CustomerDeliveryData);
@@ -159,12 +171,9 @@ export default defineComponent({
           customer: props.CustomerDeliveryData.customer,
           id: props.CustomerDeliveryData.id || "",
           customer_order_id: props.CustomerDeliveryData.customer_order_id || "",
+          customer_order: props.CustomerDeliveryData.customer_order || "",
           tracking_number: props.CustomerDeliveryData.tracking_number || "",
           status: props.CustomerDeliveryData.status || "",
-          state: props.CustomerDeliveryData.state || "",
-          destination: props.CustomerDeliveryData.destination || "",
-          city: props.CustomerDeliveryData.city || "",
-          origin: props.CustomerDeliveryData.origin || "",
           pickup_date: props.CustomerDeliveryData.pickup_date || "",
           delivery_date: props.CustomerDeliveryData.delivery_date || "",
           driver: {

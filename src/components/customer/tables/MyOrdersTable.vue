@@ -107,9 +107,17 @@
                 </td>
 
                 <td>
-                  <span :class="`badge-light-${Order.status}`" class="badge">{{
-                    Order.delivery.status
-                  }}</span>
+                  <span
+                    :class="`badge-light-${
+                      Order?.delivery
+                        ? STATUS_COLOUR_MAP[Order?.delivery.status]?.color
+                        : STATUS_COLOUR_MAP[Order?.status]?.color
+                    }`"
+                    class="badge"
+                    >{{
+                      Order?.delivery ? Order?.delivery.status : Order?.status
+                    }}</span
+                  >
                 </td>
 
                 <td class="text-end">
@@ -161,6 +169,7 @@ import type { OrderType } from "@/core/types/Orders";
 import { OrderEmpty } from "@/core/types/Orders";
 import ViewCustomerOrderModal from "@/components/customer/forms/ViewCustomerOrderModal.vue";
 import ErrorHandler from "@/core/helpers/errorHandler";
+import { STATUS_COLOUR_MAP } from "@/core/helpers/colourMaps";
 
 export default defineComponent({
   name: "customer-Order-stats",
@@ -288,7 +297,7 @@ export default defineComponent({
       DeliveriesPaginationData.value = deliveries;
       const { data } = deliveries;
       dataToDisplay.value = data;
-
+      console.log(data);
       total.value = deliveries.total;
       currentPage.value = deliveries.current_page;
 
@@ -311,7 +320,9 @@ export default defineComponent({
       CustomerViewOrderData,
       updateViewOrder,
       formatDate,
+      STATUS_COLOUR_MAP,
     };
   },
 });
 </script>
+@/core/types/1Orders@/core/types/1Orders

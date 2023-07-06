@@ -95,58 +95,6 @@
 
               <div class="mb-5 row">
                 <!--begin::Label-->
-
-                <div class="col-6">
-                  <label
-                    class="fw-bold font-weight-bolder required fs-5 fw-semobold mb-2"
-                    >Permissions</label
-                  >
-                  <!--end::Label-->
-
-                  <Field
-                    name="permissions"
-                    data-control="select2"
-                    data-hide-search="true"
-                    data-placeholder="Select a Permissions..."
-                    class="form-select form-select-solid"
-                    as="select"
-                    v-model="editAdminData.permissions"
-                  >
-                    <option value="">Select a Category...</option>
-                    <option value="1">CRM</option>
-                    <option value="2">Project Alice</option>
-                    <option value="3">Keenthemes</option>
-                    <option value="4">General</option>
-                  </Field>
-                  <div class="fv-plugins-message-container">
-                    <div class="fv-help-block">
-                      <ErrorMessage name="permissions" />
-                    </div>
-                  </div>
-                </div>
-                <!--
-                <div class="col-6">
-                  <label
-                    class="fw-bold font-weight-bolder required fs-5 fw-semobold mb-2"
-                    >Password</label
-                  >
-
-                <Field
-                    type="text"
-                    class="form-control form-control-solid"
-                    placeholder="Your API Name"
-                    name="password"
-                    v-model="editAdminData.password"
-                  />
-                  <div class="fv-plugins-message-container">
-                    <div class="fv-help-block">
-                      <ErrorMessage name="password" />
-                    </div>
-                  </div>
-                </div> -->
-              </div>
-              <div class="mb-5 row">
-                <!--begin::Label-->
                 <div class="col-6">
                   <label class="fw-bold required fs-5 fw-semobold mb-2"
                     >Phone Number</label
@@ -193,7 +141,62 @@
               <!--end::Input group-->
 
               <!--begin::Input group-->
+              <div class="mb-5 row">
+                <!--begin::Label-->
 
+                <div class="col-6">
+                  <label class="fw-bold font-weight-bolderfs-5 fw-semobold mb-2"
+                    >Permissions</label
+                  >
+                  <!--end::Label-->
+                  <Multiselect
+                    class="form-select form-select-solid"
+                    v-model="permissionsSelect.value"
+                    v-bind="permissionsSelect"
+                  >
+                    <template
+                      v-slot:tag="{ option, handleTagRemove, disabled }"
+                    >
+                      <div class="multiselect-tag is-user">
+                        <img :src="option.image" />
+                        {{ option.name }}
+                        <i
+                          v-if="!disabled"
+                          @click.prevent
+                          @mousedown.prevent.stop="
+                            handleTagRemove(option, $event)
+                          "
+                        ></i>
+                      </div>
+                    </template>
+
+                    <template v-slot:option="{ option }">
+                      <img class="user-image" :src="option.image" />
+                      {{ option.name }}
+                    </template>
+                  </Multiselect>
+                </div>
+                <!--
+                <div class="col-6">
+                  <label
+                    class="fw-bold font-weight-bolder required fs-5 fw-semobold mb-2"
+                    >Password</label
+                  >
+
+                <Field
+                    type="text"
+                    class="form-control form-control-solid"
+                    placeholder="Your API Name"
+                    name="password"
+                    v-model="editAdminData.password"
+                  />
+                  <div class="fv-plugins-message-container">
+                    <div class="fv-help-block">
+                      <ErrorMessage name="password" />
+                    </div>
+                  </div>
+                </div> -->
+              </div>
               <!--end::Input group-->
 
               <!--end::Input group-->
@@ -254,6 +257,9 @@ import __CONSTANTS__ from "@/constants";
 import { useAuthStore } from "@/stores/auth";
 import type { AdminType } from "@/core/types/Admin";
 import { AdminEmpty } from "@/core/types/Admin";
+import Multiselect from "@vueform/multiselect";
+import ErrorHandler from "@/core/helpers/errorHandler";
+import { watch } from "fs";
 
 export default defineComponent({
   name: "edit-admin-modal",
@@ -262,7 +268,7 @@ export default defineComponent({
       type: Object as PropType<AdminType>,
     },
   },
-  components: { ErrorMessage, Field, VForm },
+  components: { ErrorMessage, Field, VForm, Multiselect },
   setup(props) {
     const { API_URL } = __CONSTANTS__;
 
@@ -273,6 +279,51 @@ export default defineComponent({
     const AuthStore = useAuthStore();
     const { user, token } = AuthStore;
 
+    const permissionsSelect = ref({
+      mode: "tags",
+      value: [] as any,
+      placeholder: "Select permissions",
+      search: true,
+      trackBy: "name",
+      label: "name",
+      options: [
+        {
+          value: "editDriver",
+          name: "Edit Driver",
+        },
+        {
+          value: "addDriver",
+          name: "Add Driver",
+        },
+        {
+          value: "deleteDriver",
+          name: "Delete Driver",
+        },
+      ],
+    });
+
+    const editAdminData = computed(() => {
+      console.log("object");
+      if (props.ProfileData && props.ProfileData.id) {
+        updatePermissionsSelect();
+
+        return {
+          firstName: props.ProfileData.firstName || "",
+          lastName: props.ProfileData.lastName || "",
+          email: props.ProfileData.email || "",
+          gender: props.ProfileData.gender || "",
+          profile: props.ProfileData.profile || "",
+          phone_number: props.ProfileData.phone_number || "",
+          id: props.ProfileData.id || "",
+          permissions:
+            props.ProfileData.permissions?.map((item) => item.permission) || [],
+        };
+      }
+
+      return {
+        AdminEmpty,
+      };
+    });
     // const editAdminData = ref<AdminProfile>({
     //   firstName: "",
     //   lastName: "",
@@ -283,14 +334,16 @@ export default defineComponent({
     //   id: null,
     //   permissions: [],
     // });
-
+    const updatePermissionsSelect = () => {
+      permissionsSelect.value.value = props.ProfileData?.permissions
+        ? props.ProfileData?.permissions.map((item) => item.permission)
+        : [];
+    };
     const validationSchema = Yup.object().shape({
       firstName: Yup.string().required().label("First Name"),
       lastName: Yup.string().required().label("Last Name"),
       email: Yup.string().required().label("Email"),
-      username: Yup.string().required().label("UserName"),
       phone_number: Yup.string().required().label("phone_number"),
-      permissions: Yup.string().required().label("Permissions"),
     });
 
     // watch([props.ProfileData], () => {
@@ -317,48 +370,32 @@ export default defineComponent({
       formData.append("lastName", editAdminData.value.firstName!);
       formData.append("phone_number", editAdminData.value.phone_number!);
       formData.append("gender", editAdminData.value.gender!);
-      formData.append("phone_number", `${editAdminData.value.phone_number}`);
+      formData.append("permissions", `${editAdminData.value.permissions}`);
       formData.append("email", editAdminData.value.email!);
+      formData.append("_method", "put");
       // formData.append("state", editAdminData.value.state!);
 
       await axios
-        .post(API_URL + `admin/${editAdminData.value.id}`, formData, {
+        .post(API_URL + `admin`, formData, {
           method: "put",
           headers: { Authorization: `Bearer ${token}` },
         })
-        .then((res) => console.log(res))
-        .catch((error) => {
-          return Swal.fire({
-            text: error.message,
-            icon: "error",
+        .then(() => {
+          Swal.fire({
+            text: "Profile has been updated!",
+            icon: "success",
             buttonsStyling: false,
-            confirmButtonText: "Try again!",
+            confirmButtonText: "Ok!",
             heightAuto: false,
             customClass: {
-              confirmButton: "btn fw-semobold btn-light-danger",
+              confirmButton: "btn btn-primary",
             },
           });
+        })
+        .catch((error) => {
+          ErrorHandler(error);
         });
     };
-
-    const editAdminData = computed(() => {
-      if (props.ProfileData && props.ProfileData.id) {
-        console.log(props.ProfileData);
-        return {
-          firstName: props.ProfileData.firstName || "",
-          lastName: props.ProfileData.lastName || "",
-          email: props.ProfileData.email || "",
-          gender: props.ProfileData.gender || "",
-          profile: props.ProfileData.profile || "",
-          phone_number: props.ProfileData.phone_number || "",
-          id: props.ProfileData.id || "",
-          permissions: [] || "",
-        };
-      }
-      return {
-        AdminEmpty,
-      };
-    });
 
     const submit = async () => {
       if (!submitButtonRef.value) {
@@ -382,6 +419,7 @@ export default defineComponent({
       modalRef,
       createAPIKeyModalRef,
       getAssetPath,
+      permissionsSelect,
     };
   },
 });

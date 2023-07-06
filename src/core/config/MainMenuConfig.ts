@@ -214,23 +214,23 @@ const GenerateMenus = (type) => {
               ],
             },
 
-            {
-              sectionTitle: "Reports",
-              route: "/myprofile",
-              keenthemesIcon: "bi bi-file-text",
-              bootstrapIcon: "bi bi-file-text",
-              sub: [
-                {
-                  heading: "Delivery",
-                  route: "/reports/delivery",
-                },
+            // {
+            //   sectionTitle: "Reports",
+            //   route: "/myprofile",
+            //   keenthemesIcon: "bi bi-file-text",
+            //   bootstrapIcon: "bi bi-file-text",
+            //   sub: [
+            //     {
+            //       heading: "Delivery",
+            //       route: "/reports/delivery",
+            //     },
 
-                {
-                  heading: "Inventory",
-                  route: "/profile/edit",
-                },
-              ],
-            },
+            //     {
+            //       heading: "Inventory",
+            //       route: "/profile/edit",
+            //     },
+            //   ],
+            // },
             {
               sectionTitle: "My Profile",
               route: "/myprofile",

@@ -1,12 +1,8 @@
 <template>
   <div class="card card-flush" :class="className">
-    <!--begin::Body-->
     <div class="card-body py-9">
-      <!--begin::Row-->
       <div class="row gx-9 h-100">
-        <!--begin::Col-->
         <div class="col-sm-6 mb-10 mb-sm-0">
-          <!--begin::Image-->
           <div
             class="bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-400px min-h-sm-100 h-100"
             :style="{
@@ -14,68 +10,75 @@
               backgroundImage: `url(${image})`,
             }"
           ></div>
-          <!--end::Image-->
         </div>
-        <!--end::Col-->
 
-        <!--begin::Col-->
         <div class="col-sm-6">
-          <!--begin::Wrapper-->
           <div class="d-flex flex-column h-100">
-            <!--begin::Header-->
             <div class="mb-7">
-              <!--begin::Headin-->
               <div class="d-flex flex-stack mb-6">
-                <!--begin::Title-->
                 <div class="flex-shrink-0 me-5">
                   <span
                     class="text-gray-400 fs-7 fw-bold me-2 d-block lh-1 pb-1"
                     >Current Delivery</span
                   >
-
-                  <span class="text-gray-800 fs-1 fw-bold">9 Degree</span>
+                  <span class="text-gray-400 fs-1 fw-bold">ID : </span>
+                  <span class="text-gray-800 fs-1 fw-bold">{{
+                    PendingDelivery?.id
+                  }}</span>
                 </div>
-                <!--end::Title-->
 
                 <span
                   class="badge badge-light-primary flex-shrink-0 align-self-center py-3 px-4 fs-7"
-                  >In Process</span
+                  >{{ PendingDelivery?.status }}</span
                 >
               </div>
-              <!--end::Heading-->
 
-              <!--begin::Items-->
               <div class="d-flex align-items-center flex-wrap d-grid gap-2">
-                <!--begin::Item-->
                 <div class="d-flex align-items-center me-5 me-xl-13">
-                  <!--begin::Symbol-->
                   <div class="symbol symbol-30px symbol-circle me-3">
                     <img
-                      :src="getAssetPath('media/avatars/300-3.jpg')"
-                      class=""
-                      alt=""
+                      :src="
+                        PendingDelivery?.customer.profile
+                          ? `${ASSETS_URL + PendingDelivery?.customer.profile}`
+                          : getAssetPath('media/avatars/blank.png')
+                      "
+                      alt="image"
                     />
                   </div>
-                  <!--end::Symbol-->
 
-                  <!--begin::Info-->
                   <div class="m-0">
-                    <span class="fw-semibold text-gray-400 d-block fs-8"
-                      >Manager</span
-                    >
-                    <router-link
-                      to="/crafted/pages/profile/overview"
+                    <span class="fw-semibold text-gray-400 d-block fs-8">{{
+                      PendingDelivery?.customer.type
+                    }}</span>
+                    <span
                       class="fw-bold text-gray-800 text-hover-primary fs-7"
-                      >Robert Fox</router-link
+                      >{{
+                        PendingDelivery?.customer.lastName +
+                        " " +
+                        PendingDelivery?.customer.firstName
+                      }}</span
                     >
                   </div>
-                  <!--end::Info-->
                 </div>
-                <!--end::Item-->
+                <div class="d-flex align-items-center me-5 me-xl-13">
+                  <div class="symbol symbol-30px symbol-circle me-3">
+                    <span class="menu-icon"
+                      ><i class="bi bi-phone bi fs-1"></i
+                    ></span>
+                  </div>
 
-                <!--begin::Item-->
+                  <div class="m-0">
+                    <span class="fw-semibold text-gray-400 d-block fs-8"
+                      >Phone Number</span
+                    >
+                    <span
+                      class="fw-bold text-gray-800 text-hover-primary fs-7"
+                      >{{ PendingDelivery?.customer.phone_number }}</span
+                    >
+                  </div>
+                </div>
+
                 <div class="d-flex align-items-center">
-                  <!--begin::Symbol-->
                   <div class="symbol symbol-30px symbol-circle me-3">
                     <span class="symbol-label bg-success">
                       <KTIcon
@@ -84,71 +87,65 @@
                       />
                     </span>
                   </div>
-                  <!--end::Symbol-->
 
-                  <!--begin::Info-->
                   <div class="m-0">
                     <span class="fw-semibold text-gray-400 d-block fs-8"
-                      >Budget</span
+                      >Price</span
                     >
-                    <span class="fw-bold text-gray-800 fs-7">$64.800</span>
+                    <span class="fw-bold text-gray-800 fs-7">
+                      ₦{{
+                        PendingDelivery?.customer_order.total_payment
+                          ? new Intl.NumberFormat().format(
+                              Number(
+                                PendingDelivery?.customer_order.total_payment
+                              )
+                            )
+                          : ""
+                      }}</span
+                    >
                   </div>
-                  <!--end::Info-->
                 </div>
-                <!--end::Item-->
               </div>
-              <!--end::Items-->
             </div>
-            <!--end::Header-->
 
-            <!--begin::Body-->
             <div class="mb-6">
-              <!--begin::Text-->
               <span class="fw-semibold text-gray-600 fs-6 mb-8 d-block">
-                Flat cartoony illustrations with vivid unblended colors and
-                asymmetrical beautiful purple hair lady
+                {{ PendingDelivery?.customer_order.shipment_description }}
               </span>
-              <!--end::Text-->
 
-              <!--begin::Stats-->
               <div class="d-flex">
-                <!--begin::Stat-->
                 <div
                   class="border border-gray-300 border-dashed rounded min-w-100px w-100 py-2 px-4 me-6 mb-3"
                 >
-                  <!--begin::Date-->
-                  <span class="fs-6 text-gray-700 fw-bold">Feb 6, 2021 </span>
-                  <!--end::Date-->
+                  <span class="fs-6 text-gray-700 fw-bold">{{
+                    PendingDelivery?.customer_order.created_at
+                      ? formatDate(PendingDelivery?.customer_order.created_at)
+                      : ""
+                  }}</span>
 
-                  <!--begin::Label-->
-                  <div class="fw-semibold text-gray-400">Due Date</div>
-                  <!--end::Label-->
+                  <div class="fw-semibold text-gray-400">Order Placed At</div>
                 </div>
-                <!--end::Stat-->
 
-                <!--begin::Stat-->
                 <div
                   class="border border-gray-300 border-dashed rounded min-w-100px w-100 py-2 px-4 mb-3"
                 >
-                  <!--begin::Number-->
-                  <span class="fs-6 text-gray-700 fw-bold"
-                    >$ <span class="ms-n1">284,900</span></span
+                  <span class="fs-6 text-gray-700 fw-bold">
+                    <span class="ms-n1">{{
+                      PendingDelivery?.customer_order.expected_delivery_date
+                        ? formatDate(
+                            PendingDelivery?.customer_order
+                              .expected_delivery_date
+                          )
+                        : ""
+                    }}</span></span
                   >
-                  <!--end::Number-->
 
-                  <!--begin::Label-->
-                  <div class="fw-semibold text-gray-400">Budget</div>
-                  <!--end::Label-->
+                  <div class="fw-semibold text-gray-400">Expected By</div>
                 </div>
-                <!--end::Stat-->
               </div>
-              <!--end::Stats-->
             </div>
-            <!--end::Body-->
 
-            <!--begin::Footer-->
-            <div class="d-flex flex-stack mt-auto bd-highlight">
-              <!--begin::Users group-->
+            <!-- <div class="d-flex flex-stack mt-auto bd-highlight">
               <div class="symbol-group symbol-hover flex-nowrap">
                 <div class="symbol-group symbol-hover flex-nowrap">
                   <div class="symbol symbol-35px symbol-circle">
@@ -171,9 +168,7 @@
                   </div>
                 </div>
               </div>
-              <!--end::Users group-->
 
-              <!--begin::Actions-->
               <a
                 href="#"
                 class="d-flex align-items-center text-primary opacity-75-hover fs-6 fw-semibold"
@@ -181,34 +176,37 @@
                 View Project
                 <KTIcon icon-name="exit-right-corner" icon-class="fs-4 ms-1" />
               </a>
-              <!--end::Actions-->
-            </div>
-            <!--end::Footer-->
+            </div> -->
           </div>
-          <!--end::Wrapper-->
         </div>
-        <!--end::Col-->
       </div>
-      <!--end::Row-->
     </div>
-    <!--end::Body-->
   </div>
 </template>
 
 <script lang="ts">
 import { getAssetPath } from "@/core/helpers/assets";
-import { defineComponent } from "vue";
+import type { DeliveryType } from "@/core/types/Deliveries";
+import { defineComponent, type PropType } from "vue";
+import __CONSTANTS__ from "@/constants";
+import formatDate from "@/core/helpers/formatDate";
 
 export default defineComponent({
   name: "default-dashboard-widget-8",
   components: {},
   props: {
+    PendingDelivery: {
+      type: Object as PropType<DeliveryType>,
+    },
     className: { type: String, required: false },
     image: { type: String, required: true },
   },
   setup() {
+    const { ASSETS_URL } = __CONSTANTS__;
     return {
       getAssetPath,
+      ASSETS_URL,
+      formatDate,
     };
   },
 });

@@ -51,13 +51,11 @@
 
               <!--begin::Col-->
               <div class="col-lg-8">
-                <span class="fw-bold fs-6 text-dark"
-                  >{{
-                    OrderData?.customer.firstName +
-                    " " +
-                    OrderData?.customer.lastName
-                  }}Johnson</span
-                >
+                <span class="fw-bold fs-6 text-dark">{{
+                  OrderData?.customer.firstName +
+                  " " +
+                  OrderData?.customer.lastName
+                }}</span>
               </div>
               <!--end::Col-->
             </div>
@@ -312,3 +310,4 @@ export default defineComponent({
   },
 });
 </script>
+@/core/types/1Orders

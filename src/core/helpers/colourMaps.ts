@@ -15,3 +15,17 @@ export const ACTIVITY_COLOUR_MAP = {
     color: "warning",
   },
 };
+export const STATUS_COLOUR_MAP = {
+  "Pending Pickup": {
+    color: "warning",
+  },
+  Pending: {
+    color: "info",
+  },
+  Delivered: {
+    color: "success",
+  },
+  "In Transit": {
+    color: "primary",
+  },
+};

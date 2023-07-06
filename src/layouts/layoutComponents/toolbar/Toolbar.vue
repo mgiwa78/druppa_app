@@ -12,7 +12,23 @@
     >
       <KTPageTitle />
       <!--begin::Actions-->
+      <div
+        v-if="user.type === 'Customer'"
+        class="d-flex align-items-center gap-2 gap-lg-3"
+      >
+        <!--begin::Secondary button-->
 
+        <!--end::Secondary button-->
+        <!--begin::Primary button-->
+        <a
+          href="#"
+          class="btn btn-sm fw-bold btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#kt_modal_make_order"
+          >Make Order</a
+        >
+        <!--end::Primary button-->
+      </div>
       <!--end::Actions-->
     </div>
     <!--end::Toolbar container-->
@@ -24,6 +40,7 @@
 import { defineComponent } from "vue";
 import { toolbarWidthFluid } from "@/core/helpers/config";
 import KTPageTitle from "@/layouts/layoutComponents/toolbar/PageTitle.vue";
+import { useAuthStore } from "@/stores/auth";
 
 export default defineComponent({
   name: "layout-toolbar",
@@ -31,8 +48,11 @@ export default defineComponent({
     KTPageTitle,
   },
   setup() {
+    const AuthStore = useAuthStore();
+    const { user, token, refreshProfile } = AuthStore;
     return {
       toolbarWidthFluid,
+      user,
     };
   },
 });
