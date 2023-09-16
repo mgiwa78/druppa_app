@@ -1,0 +1,1 @@
+const o={"App\\Models\\Admin":{color:"warning"},"App\\Models\\Customer":{color:"success"},"App\\Models\\Inventory":{color:"dager"},"App\\Models\\info":{color:"warning"},"App\\Models\\Warehouse":{color:"warning"}},r={"Pending Pickup":{color:"warning"},Pending:{color:"info"},Delivered:{color:"success"},"In Transit":{color:"primary"}};export{o as A,r as S};
